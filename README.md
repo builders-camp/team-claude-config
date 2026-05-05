@@ -1,0 +1,234 @@
+# team-claude-config
+
+The shared Claude config for the Builders Camp team.
+
+This repo holds the global rules, agents, and skills we both want Claude to use across every project, on every machine. Install it once per laptop, pull updates as we improve them.
+
+---
+
+## What this is
+
+When you install this repo, three things end up symlinked into your `~/.claude/` directory:
+
+- **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
+- **`agents/`** — five specialized subagents (`@pm`, `@implementer`, `@reviewer`, `@qa`, `@researcher`). Claude routes work to them based on task shape.
+- **`skills/`** — eleven slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, etc.) for specific lifecycle moments.
+
+Because these live globally in `~/.claude/`, they apply to every project you open with Claude Code — not just one repo. Per-repo `CLAUDE.md` files (when they exist) layer *on top* of this global config.
+
+---
+
+## Install
+
+```bash
+git clone git@github.com:builders-camp/team-claude-config.git ~/team-claude-config
+cd ~/team-claude-config
+./install.sh
+```
+
+That's it. The installer symlinks files into `~/.claude/`, so future updates flow live — usually no need to re-run `install.sh` after a `git pull`. Re-run it only when new skill or agent files are added (so they get linked).
+
+To update:
+
+```bash
+cd ~/team-claude-config && git pull && ./install.sh
+```
+
+You'll also see a Slack notification in our team channel when either of us pushes a change here, with the exact pull-and-install command.
+
+---
+
+## How updates feel
+
+`install.sh` is non-destructive:
+
+- Existing `~/.claude/CLAUDE.md` (if it's a real file, not a symlink) gets backed up to `CLAUDE.md.bak` before we replace it with the symlink.
+- Personal skills or agents you've added to `~/.claude/skills/<name>/` or `~/.claude/agents/<name>.md` are **preserved** — the installer skips any name that already exists as a real file. To switch to the shared version, delete your local one and re-run.
+
+So you can keep personal experiments alongside team config. They don't collide.
+
+---
+
+## The mental model
+
+Two layers of config:
+
+**Global (this repo, lives at `~/.claude/`)**
+House rules, agents, and skills that apply to every project we touch.
+
+**Per-repo (lives at `<repo>/.claude/` and `<repo>/CLAUDE.md`)**
+Project-specific context: tech stack, deploy process, repo-specific rules. Use `/bootstrap` (described below) to scaffold this in a fresh repo.
+
+When Claude is working in a repo, it sees both — global first, then repo-local on top. Repo-local wins on conflicts.
+
+---
+
+## How work flows
+
+The default flow for any non-trivial task:
+
+```
+You ask Claude to do something
+        ↓
+Claude routes to @pm (auto, per CLAUDE.md)
+        ↓
+@pm classifies: SINGLE / BATCH / EPIC / DIRECT
+        ↓
+@pm hands off to a specialist with a self-contained brief:
+        ├── @researcher   — discovery, options, framing
+        ├── @implementer  — bounded code changes
+        ├── @qa           — acceptance criteria, release safety
+        └── @reviewer     — architecture audit, deep review
+        ↓
+Specialist returns its output contract
+        ↓
+@pm names the next command (e.g. /test, /deploy)
+```
+
+`@pm` is auto-invoked. The specialists run on its handoff. You don't usually call them by name unless you want to skip triage.
+
+`@pm` is **not** invoked for: pure conversation, clarifying questions about Claude's own prior output, follow-ups inside an already-active workflow.
+
+---
+
+## Agents
+
+All agents enforce **output contracts** — a structured block they must emit before exiting. This keeps handoffs clean and prevents "running commentary with no result."
+
+| Agent | When to use | Stops at |
+|---|---|---|
+| `@pm` | First touch for any non-trivial task. Classifies and routes. | Naming the specialist + handoff brief |
+| `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
+| `@implementer` | Bounded code changes, bug fixes, small features with clear scope | Implementation or implementation brief |
+| `@qa` | Acceptance criteria, user journey validation, release readiness | Validation boundary + checklist |
+| `@reviewer` | Architecture audit, large refactors, security/performance review | Review + recommended remediation |
+
+All agents have **scope-drift guardrails**: if the work shifts out of their lane, they hand back to `@pm` instead of overreaching. They also have soft tool-call budgets to prevent endless exploration.
+
+---
+
+## Skills (slash commands)
+
+Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and meta (managing the system itself).
+
+### Lifecycle
+
+| Command | What it does |
+|---|---|
+| `/plan` | Execution-ready plan: goal, assumptions, scope, milestones, risks, acceptance criteria |
+| `/research` | High-level concept research: best practices, failure patterns, recommendation |
+| `/fix` | Minimal safe patch: failing behavior → root cause → smallest fix → risks → tests |
+| `/test` | Regression-preventing tests: happy path + 2 edge cases + 1 failure case |
+| `/qa` | Product QA checklist: user journeys, functional + non-functional checks, release safety |
+| `/deep-review` | Full audit (architecture, code quality, tests, performance). **Use only for** large features, refactors, or security/performance work |
+| `/deploy` | Safe feature-branch deploy: commit → branch → preflight (TS compile) → push → open PR. **Never auto-merges.** |
+| `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → migration check (Supabase). **Manual trigger only.** |
+
+### Orchestration
+
+| Command | What it does |
+|---|---|
+| `/pm` | Same triage logic as `@pm`, but invoked manually. Use when you want explicit orchestration on a list of tasks. |
+
+### Meta (managing the system)
+
+| Command | What it does |
+|---|---|
+| `/bootstrap` | Scaffolds per-repo Claude OS structure (`CLAUDE.md`, `.claude/skills/`, standards, registries) in a new repo. Run once per project. |
+| `/improve` | Promote durable patterns into `CLAUDE.md` or skills. Shows diff before applying. |
+
+---
+
+## House rules (from `CLAUDE.md`)
+
+The global `CLAUDE.md` enforces these defaults across every session. Highlights:
+
+**Default behavior**
+Smallest correct change. No unnecessary abstraction. Explicit over clever. Minimal diffs.
+
+**Planning**
+Small changes → implement directly. Multi-layer or architecture → propose a short plan first. Max one clarification question if blocked.
+
+**Quality after changes**
+List what could break. Suggest tests. Suggest monitoring or rollback. Reproduce bugs via test before fixing when feasible.
+
+**Supabase**
+If the CLI is linked, Claude runs migrations directly via `supabase db push --linked`. Always shows the migration plan first. Production data changes get row counts before push. If CLI isn't linked, hands back to user.
+
+**Deep review escalation**
+`/deep-review` is **not** the default. Use it only for: large features (> 5 files or multiple domains), refactors, security-sensitive code, or performance-sensitive paths.
+
+**Output discipline**
+Concise structured headers. No long explanations unless asked. Stop when objective is complete. After code changes: briefly state files changed and why.
+
+The full `CLAUDE.md` is the source of truth. This summary just exists so you don't have to read it every time.
+
+---
+
+## Adding a new skill
+
+1. Create `skills/<skill-name>/SKILL.md`
+2. Use the YAML frontmatter convention from existing skills:
+   ```
+   name: <skill-name>
+   description: <one line — when should Claude use this>
+   disable-model-invocation: <true|false>
+   allowed-tools: <comma-separated list>
+   argument-hint: [<what the skill expects>]
+   ```
+3. Body: short, structured. Process steps, output format, stop condition. Look at `skills/plan/SKILL.md` as the canonical minimal example.
+4. Open a PR. Slack notification will fire on merge.
+5. Either of us runs `./install.sh` to symlink the new skill into our local `~/.claude/skills/`.
+
+**Don't duplicate `CLAUDE.md` rules inside skills.** Skills should focus on their specific output protocol.
+
+---
+
+## Adding a new agent
+
+1. Create `agents/<agent-name>.md`
+2. Frontmatter:
+   ```
+   name: <agent-name>
+   description: <one line — when @pm or the user should route work here>
+   tools: <comma-separated>
+   model: <sonnet | opus | haiku>
+   maxTurns: <integer>
+   memory: <project | session>
+   ```
+3. Body must include:
+   - **Execution guardrails** — output contract, scope-drift handoff rules, tool budget
+   - **What you own** — the lane
+   - **Core behavior** — numbered steps
+   - **Decision principles** — the bias
+   - **Output contract** — the structured block this agent emits
+   - **Stop conditions**
+4. Update `@pm`'s routing rules if the new agent should be auto-routed to.
+5. PR + install.
+
+Match the structure of existing agents. Consistency across agents is what makes the system predictable.
+
+---
+
+## When to update what
+
+| Change | Where |
+|---|---|
+| New global house rule | `CLAUDE.md` |
+| New reusable workflow | New skill |
+| New specialist role | New agent |
+| Repo-specific tech stack, deploy steps, conventions | That repo's local `CLAUDE.md` (use `/bootstrap`) |
+| One-off project decision | Don't put it here. Notion or a repo ADR. |
+
+---
+
+## Troubleshooting
+
+**A skill or agent isn't being invoked.**
+Run `ls -la ~/.claude/skills/` and `ls -la ~/.claude/agents/` — should show symlinks pointing into `~/team-claude-config/`. If a name you expect isn't there, you probably have a personal version that's blocking it. Delete the personal one and re-run `./install.sh`.
+
+**`CLAUDE.md` changes don't seem to apply.**
+Confirm `~/.claude/CLAUDE.md` is a symlink (`ls -la ~/.claude/CLAUDE.md`). If not, re-run `./install.sh` — it backs up the existing file and replaces with the symlink.
+
+**Slack notification didn't fire after a push.**
+Check `.github/workflows/slack-notify.yml` — it runs on push to `main`. If your push went to a branch, no notification. If it went to `main`, check the Actions tab in GitHub for failures.
