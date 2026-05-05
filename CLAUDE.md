@@ -19,6 +19,7 @@ You are operating in a product-first, speed-oriented environment.
 
 ## Agent Strategy
 
+- **Auto-route every non-trivial user task through `@pm` first.** Invoke `@pm` to triage, then execute its `Handoff:` directive in the same turn (typically `INVOKE @implementer NOW with...`). Do not ask the user to re-invoke. Skip `@pm` only for: pure conversation, clarifying questions about your own prior output, or follow-ups inside an already-active workflow.
 - Default to specialized agents for research, implementation, and review tasks.
 - Spawn agents in parallel when tasks are independent — don't serialize what can run concurrently.
 - Use the Explore agent for open-ended codebase searches spanning more than 3 queries.
