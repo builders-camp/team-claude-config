@@ -27,6 +27,59 @@ You are operating in a product-first, speed-oriented environment.
 - Use the reviewer agent after large or security-sensitive changes.
 - This file applies inside subagents too — behavior and constraints are consistent across all agents.
 
+### Agent architecture
+
+This repository has a single product orchestrator and a set of specialists.
+
+**Orchestrator**
+
+- **`@pm`** — single entry point for all product, feature, and engineering tasks. Classifies the request, decides which specialists need to run, and routes accordingly. Never does the work itself.
+
+**Upstream specialists** (run before implementation when load-bearing)
+
+- **`@discovery`** — runs JTBD → OST → MoSCoW for unshaped feature ideas. Writes artifacts to Notion. Recommends which downstream specialists should run next.
+- **`@designer`** — produces strategic design briefs (IA, flows, interaction patterns, accessibility) for features with material UI/flow surface. No mockups.
+- **`@engineer`** — produces strategic engineering briefs (architecture, anti-patterns, dependency calls) for architecturally non-trivial features. No code. Anti-overengineering rules baked in.
+
+**Downstream specialists**
+
+- **`@researcher`** — codebase / library / pattern research
+- **`@implementer`** — bug fixes, bounded changes, implementation work
+- **`@reviewer`** — deep review, audits
+- **`@qa`** — acceptance criteria, release readiness
+
+**Routing rule for callers**
+
+Always invoke `@pm` first (per the routing gate above). It will route from there. Do not invoke specialists directly unless `@pm` has handed off explicitly with an `INVOKE @<agent>` directive.
+
+The single exception: re-invocations after a validation gate. When `@pm` has stopped for validation and you've reviewed the artifacts in Notion, re-invoke `@pm` (not the specialists) with a validation signal like "validated, proceed."
+
+**Validation gate**
+
+When `@pm` invokes upstream specialists (`@discovery` / `@designer` / `@engineer`), it will stop for validation before proceeding to `@implementer`. Two strategies:
+
+- **Single gate (default)**: stop once after all upstream specialists have run.
+- **Per-specialist gate (high-stakes features)**: stop after each specialist.
+
+`@pm` chooses the strategy and states it in `Validation strategy:` of its contract block.
+
+**What goes to which agent**
+
+| Input | First specialist |
+|---|---|
+| "Fix this bug" | `@implementer` |
+| "Find where X lives in the code" | `@researcher` |
+| "I want to build a feature that…" | `@discovery` |
+| "Customer interviews say X — what should we do?" | `@discovery` |
+| "Add an export button to the dashboard" (well-defined, low risk) | `@implementer` |
+| "Add a new section to the dashboard" (UI surface, flow change) | `@designer` → `@implementer` |
+| "Build a real-time sync system" (architecturally non-trivial) | `@engineer` → `@implementer` |
+| "Build a new onboarding flow" (UI + architecture) | `@discovery` → `@designer` → `@engineer` → `@implementer` |
+| "Audit our auth code" | `@reviewer` |
+| "Define acceptance for the export feature" | `@qa` |
+
+When in doubt, `@pm` errs toward more discovery, not less. Cheap to discover that something is well-shaped already; expensive to discover late that an unshaped idea was routed straight to implementation.
+
 ## Quality & Risk
 
 After meaningful code changes:
