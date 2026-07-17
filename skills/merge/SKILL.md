@@ -1,8 +1,8 @@
 ---
 name: merge
-description: Safe PR merge with check verification, post-merge cleanup, and migration reminder.
+description: Safe PR merge with check verification, post-merge cleanup, migration reminder, and edge-function deploy reminder.
 disable-model-invocation: true
-allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(supabase migration list *), Bash(supabase db push *)
+allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *)
 argument-hint: "[PR number — defaults to current branch's PR]"
 ---
 
@@ -43,7 +43,13 @@ Use only when the user explicitly asks to merge a PR. Never auto-trigger.
    - If any are local-only, run `supabase db push --linked`. Confirm one-by-one in the printed plan.
    - If the CLI is not linked, tell the user explicitly which migrations need applying and how.
 
-7. Output a merge summary.
+7. Edge-function deploy reminder — if the merged diff includes any file under a `supabase/functions/<name>/` directory (new or modified — check `gh pr diff <num> --name-only` against that path):
+   - Edge functions do **not** auto-deploy on merge/push, unlike the rest of the app (which deploys via Vercel or similar CI on push to main) — this is a common gap projects miss, not specific to one repo. Do not assume it deploys itself.
+   - List each distinct function directory touched by the diff.
+   - Tell the user explicitly, per function: `supabase functions deploy <name> --linked` (or the project's equivalent deploy command). Do not run it yourself unless the user explicitly asks — this changes a live, deployed artifact outside the migration/branch-protection safety net this skill otherwise relies on.
+   - If the diff also touches shared/imported code under `supabase/functions/_shared/` (or an equivalent shared-helpers path), call out that every function importing from it needs redeploying too, not just the ones directly changed — a shared-helper change alone won't surface in a simple directory diff.
+
+8. Output a merge summary.
 
 Output:
 <merge>
@@ -51,6 +57,7 @@ PR: #<num> — <title>
 Merge commit: <sha>
 Branch deleted: <branch> (remote + local)
 Migrations applied: <list, or "none in diff">
+Edge functions to deploy: <list of function names + deploy command, or "none in diff">
 Watch: <Vercel deploy URL or other monitor target if known, else "production deploy via main">
 Rollback: revert merge commit on GitHub, or `git revert -m 1 <sha>` then push.
 </merge>
