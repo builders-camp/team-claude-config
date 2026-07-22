@@ -100,6 +100,11 @@ When feasible:
 - Production data inserts/updates count as hard-to-reverse. State the row counts and tables affected before pushing, then proceed.
 - If the CLI is not linked, fall back to telling the user to run the migration themselves.
 
+### GitHub Pull Requests
+
+- Open new PRs as draft by default (`gh pr create --draft`). Only mark ready for review once the change is actually meant for review/CI — many repos gate expensive workflows (e.g. Playwright smoke suites) on non-draft status specifically to avoid burning CI minutes on WIP pushes.
+- Mark a PR ready for review only when explicitly asked, or when the work is genuinely done and awaiting review — not as a default next step after opening it.
+
 ## Review Escalation
 
 Do NOT run deep architectural review by default.

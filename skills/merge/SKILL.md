@@ -2,7 +2,7 @@
 name: merge
 description: Safe PR merge with check verification, post-merge cleanup, migration reminder, and edge-function deploy reminder.
 disable-model-invocation: true
-allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *)
+allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(git worktree *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *)
 argument-hint: "[PR number — defaults to current branch's PR]"
 ---
 
@@ -34,9 +34,10 @@ Use only when the user explicitly asks to merge a PR. Never auto-trigger.
 
 5. Post-merge cleanup:
    - `git fetch origin`.
-   - If currently on the merged feature branch, switch to `main` (or the PR's base branch): `git checkout <base>`.
-   - `git pull --ff-only`.
-   - Delete the local feature branch: `git branch -d <branch>`. Skip if it has unmerged work locally.
+   - Check `git worktree list` for a worktree checked out on `<branch>`.
+     - If the branch is checked out in a **separate worktree** (not the current folder): do not `git checkout` or `git pull` there — never switch branches inside a folder another session may be using. Instead run `git worktree remove <path>` for that worktree, then `git branch -d <branch>` from the current folder.
+       - If the worktree has uncommitted changes, `git worktree remove` will refuse — stop and tell the user rather than forcing it.
+     - Otherwise (branch is checked out in the current folder, or not checked out anywhere): switch to `main` (or the PR's base branch) with `git checkout <base>`, `git pull --ff-only`, then delete the local feature branch with `git branch -d <branch>`. Skip the delete if it has unmerged work locally.
 
 6. Migration reminder — if the merged diff includes any file under `supabase/migrations/`:
    - Run `supabase migration list --linked` and check whether each new file is already applied on remote.
