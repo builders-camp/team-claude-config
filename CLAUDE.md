@@ -105,6 +105,29 @@ When feasible:
 - Open new PRs as draft by default (`gh pr create --draft`). Only mark ready for review once the change is actually meant for review/CI — many repos gate expensive workflows (e.g. Playwright smoke suites) on non-draft status specifically to avoid burning CI minutes on WIP pushes.
 - Mark a PR ready for review only when explicitly asked, or when the work is genuinely done and awaiting review — not as a default next step after opening it.
 
+### GitHub Issues
+
+- When creating a GitHub issue (`gh issue create`), write the body to a temp file in one of two shapes and open it with `gh issue create --body-file`, never a free-form `--body` string.
+  - If the target repo has its own `.github/ISSUE_TEMPLATE/`, treat those templates as authoritative over the shapes below.
+  - **Bug / tech debt** — small, self-contained, found during other work:
+    ```
+    ## Context
+    ## Why it matters
+    ## Options
+    ## Decision
+    ```
+  - **Feature / Task** — bigger, needs research/design/engineering input before it's build-ready:
+    ```
+    ## Summary
+    ## Current state
+    ## Recommendation
+    ## Open questions
+    ## Not doing
+    ## Notion epic
+    ```
+- For the Feature/Task shape's "## Notion epic": if given a Notion link for the epic this decomposes from, put it there. If not given one, write "Needs Notion epic — not yet scoped." Never guess or invent a Notion link.
+- A Feature/Task issue is not build-ready while "## Open questions" still has unresolved items — flag that explicitly rather than proceeding to implementation.
+
 ## Review Escalation
 
 Do NOT run deep architectural review by default.
