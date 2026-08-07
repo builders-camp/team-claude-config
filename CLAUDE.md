@@ -125,8 +125,9 @@ When feasible:
     ## Not doing
     ## Notion epic
     ```
+  - Use Bug/tech debt if: found incidentally while doing other work, fixable without new research/design/engineering input, and scoped to one component. Use Feature/Task if: needs upstream input (`@discovery`/`@designer`/`@engineer`) before it's buildable, or decomposes from a larger initiative.
 - For the Feature/Task shape's "## Notion epic": if given a Notion link for the epic this decomposes from, put it there. If not given one, write "Needs Notion epic — not yet scoped." Never guess or invent a Notion link.
-- A Feature/Task issue is not build-ready while "## Open questions" still has unresolved items — flag that explicitly rather than proceeding to implementation.
+- A Feature/Task issue is not build-ready while "## Open questions" still has unresolved items. Don't start implementation off it — say so in chat, and leave the issue open with those questions visible rather than resolving them silently.
 
 ## Review Escalation
 
