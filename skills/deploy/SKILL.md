@@ -23,8 +23,28 @@ argument-hint: "[branch or feature to deploy]"
 9. **Never push directly to main.** Always use a feature branch.
 10. Open a PR (do NOT merge):
     - Title: latest commit subject (verbatim, no rewrite).
-    - Body: latest commit body + a short test/verification checklist tied to the actual diff. Do not invent context that isn't in the commit or the changed files.
-    - Use `gh pr create` against `main` (or the project's default base). Print the PR URL.
+    - Before writing the body, run `gh pr list` against the target repo and check for other open PRs touching the same files, migrations, or database tables/triggers as this change. Note any overlap by name.
+    - If the target repo has `.github/PULL_REQUEST_TEMPLATE.md`, treat its section structure as authoritative over the shape below.
+    - Write the body to a temp file in this shape (calibrate section length to the actual complexity — a one-line fix gets one-line sections; never invent context that isn't in the commit or the changed files):
+      ```
+      ## Problem
+      What's broken, missing, or needed. Real context, a few sentences — not a one-liner, not a wall of text.
+
+      ## Solution
+      How this fixes it, with enough detail that someone who didn't write the code understands the approach and any real design decisions made.
+
+      ## What changed
+      Bullet list, plain language, no unexplained internal function/table names without context.
+
+      ## How to verify
+      Concrete steps a reviewer can actually follow — not "tests pass," actual steps.
+
+      ## Risk & overlap
+      - Overlap: does this PR share commits, migrations, or database tables/triggers with any other currently-open PR? Name it, or say "none found."
+      - Blast radius: contained to one function, or does it touch production data / send real emails / create real calendar events?
+      - Anything else a reviewer needs to know before merging that isn't obvious from the diff.
+      ```
+    - Use `gh pr create --body-file <path>` against `main` (or the project's default base). Print the PR URL.
     - Never pass `--merge`, `--auto`, or any auto-merge flag.
 11. Output a deploy summary.
 

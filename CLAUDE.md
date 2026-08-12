@@ -105,6 +105,14 @@ When feasible:
 - Open new PRs as draft by default (`gh pr create --draft`). Only mark ready for review once the change is actually meant for review/CI — many repos gate expensive workflows (e.g. Playwright smoke suites) on non-draft status specifically to avoid burning CI minutes on WIP pushes.
 - Mark a PR ready for review only when explicitly asked, or when the work is genuinely done and awaiting review — not as a default next step after opening it.
 
+### GitHub PR/Issue Labeling
+
+- Whenever you create a new PR or issue (`gh pr create`, `gh issue create`), immediately apply exactly two labels in the same turn before considering the task done:
+  - **Priority** — one of `P0-critical` (revenue/data integrity, fix first), `P1-high` (security, important bug clusters), `P2-medium` (reliability, dev process, features), `P3-low` (cosmetic, tech debt, docs). Classify the specific PR/issue against this fixed rubric.
+  - **Type** — one of `bug`, `documentation`, `duplicate`, `enhancement`, `good first issue`, `help wanted`, `invalid`, `question`, `wontfix`. Pick whichever fits from context.
+- Apply via `gh pr edit <num> --add-label "<priority>" --add-label "<type>"` or `gh issue edit <num> --add-label ...`.
+- This only covers PRs/issues created through Claude Code — it does not catch ones opened manually on GitHub.com or by other tools. If that changes, revisit with a GitHub Actions workflow instead.
+
 ### GitHub Issues
 
 - When creating a GitHub issue (`gh issue create`), write the body to a temp file in one of two shapes and open it with `gh issue create --body-file`, never a free-form `--body` string.
