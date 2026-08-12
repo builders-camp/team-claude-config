@@ -113,6 +113,30 @@ When feasible:
 - Apply via `gh pr edit <num> --add-label "<priority>" --add-label "<type>"` or `gh issue edit <num> --add-label ...`.
 - This only covers PRs/issues created through Claude Code — it does not catch ones opened manually on GitHub.com or by other tools. If that changes, revisit with a GitHub Actions workflow instead.
 
+### GitHub Issues
+
+- When creating a GitHub issue (`gh issue create`), write the body to a temp file in one of two shapes and open it with `gh issue create --body-file`, never a free-form `--body` string.
+  - If the target repo has its own `.github/ISSUE_TEMPLATE/`, treat those templates as authoritative over the shapes below.
+  - **Bug / tech debt** — small, self-contained, found during other work:
+    ```
+    ## Context
+    ## Why it matters
+    ## Options
+    ## Decision
+    ```
+  - **Feature / Task** — bigger, needs research/design/engineering input before it's build-ready:
+    ```
+    ## Summary
+    ## Current state
+    ## Recommendation
+    ## Open questions
+    ## Not doing
+    ## Notion epic
+    ```
+  - Use Bug/tech debt if: found incidentally while doing other work, fixable without new research/design/engineering input, and scoped to one component. Use Feature/Task if: needs upstream input (`@discovery`/`@designer`/`@engineer`) before it's buildable, or decomposes from a larger initiative.
+- For the Feature/Task shape's "## Notion epic": if given a Notion link for the epic this decomposes from, put it there. If not given one, write "Needs Notion epic — not yet scoped." Never guess or invent a Notion link.
+- A Feature/Task issue is not build-ready while "## Open questions" still has unresolved items. Don't start implementation off it — say so in chat, and leave the issue open with those questions visible rather than resolving them silently.
+
 ## Review Escalation
 
 Do NOT run deep architectural review by default.
