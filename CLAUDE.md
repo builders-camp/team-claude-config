@@ -103,6 +103,7 @@ When feasible:
 
 ### Worktrees (default for new work)
 
+- **TRIGGER — before modifying any file for a new task, create a worktree/branch from updated `origin/main` first.** Don't edit in place on whatever branch happens to be checked out. Exceptions are limited to the skip cases listed below (continuing work on the currently checked-out branch, tiny edits to current branch, pure read/research, or explicit user instruction to edit in place).
 - **NEVER commit or push directly to `main` (or `master`) unless the user explicitly says "commit to main" or "hotfix to main".** All non-trivial work — feature, bugfix, experiment, refactor — goes through a worktree branch + PR. If you find yourself about to `git commit` on `main` without an explicit instruction, STOP and create the worktree first. Migrations already pushed to prod do not retroactively justify committing app code to main; the two are independent.
 - For any new non-trivial task that introduces a new branch (new feature, new bugfix, new experiment), default to creating a git worktree under `~/worktrees/<short-name>` and doing the work there. Do not switch the user's main checkout's branch.
 - You have standing permission to run `git worktree add`, `git worktree remove`, and `git worktree prune` without asking.
@@ -128,6 +129,11 @@ When feasible:
   - **Type** — one of `bug`, `documentation`, `duplicate`, `enhancement`, `good first issue`, `help wanted`, `invalid`, `question`, `wontfix`. Pick whichever fits from context.
 - Apply via `gh pr edit <num> --add-label "<priority>" --add-label "<type>"` or `gh issue edit <num> --add-label ...`.
 - This only covers PRs/issues created through Claude Code — it does not catch ones opened manually on GitHub.com or by other tools. If that changes, revisit with a GitHub Actions workflow instead.
+
+#### PR templates
+
+- When creating a PR (`gh pr create`), if the target repo has its own `.github/PULL_REQUEST_TEMPLATE.md`, always use it as the PR body via `--body-file`, never ad hoc `--body` text. Same pattern as the ISSUE_TEMPLATE deferral rule below, applied to PRs.
+- If no `PULL_REQUEST_TEMPLATE.md` exists, fall back to a concise descriptive body written to a temp file and passed via `--body-file`.
 
 ### GitHub Issues
 
