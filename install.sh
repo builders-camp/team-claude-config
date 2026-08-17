@@ -47,4 +47,38 @@ for agent_file in "$REPO_DIR/agents"/*.md; do
 done
 
 echo ""
+echo "Syncing .github/workflows to team repos..."
+
+# Sync .github/workflows to repos listed in .repos
+if [ -f "$REPO_DIR/.repos" ]; then
+  repos_to_sync=()
+  while IFS= read -r repo_path || [ -n "$repo_path" ]; do
+    # Skip empty lines and comments
+    [[ -z "$repo_path" || "$repo_path" =~ ^# ]] && continue
+
+    # Expand ~ to $HOME
+    repo_path="${repo_path/#\~/$HOME}"
+
+    if [ -d "$repo_path/.git" ]; then
+      mkdir -p "$repo_path/.github/workflows"
+      cp "$REPO_DIR/.github/workflows/"* "$repo_path/.github/workflows/" 2>/dev/null || true
+      echo "  ✓ Synced to $(basename "$repo_path")"
+      repos_to_sync+=("$repo_path")
+    else
+      echo "  ⊘ Skipped $(basename "$repo_path") — not found locally"
+    fi
+  done < "$REPO_DIR/.repos"
+
+  if [ ${#repos_to_sync[@]} -gt 0 ]; then
+    echo ""
+    echo "Next: commit the synced workflows in each repo:"
+    for repo_path in "${repos_to_sync[@]}"; do
+      echo "  cd $repo_path && git add .github/workflows/ && git commit -m 'ci: sync workflows from team-claude-config'"
+    done
+  fi
+else
+  echo "  ⊘ No .repos file found — skipping workflow sync"
+fi
+
+echo ""
 echo "Done. Run 'git pull && ./install.sh' to update shared config."

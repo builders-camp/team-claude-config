@@ -49,6 +49,42 @@ So you can keep personal experiments alongside team config. They don't collide.
 
 ---
 
+## Syncing GitHub workflows across repos
+
+Beyond global Claude rules, we also share GitHub workflows (like auto-assign reviewers). `install.sh` automatically syncs `.github/workflows/` to your team repos.
+
+**List your repos** in `.repos`:
+
+```
+~/repos/github/builderscamp/builderscamp-homepage-refresh
+~/repos/github/builderscamp/producthon
+~/team-claude-config
+```
+
+One repo per line. Paths use `~/` (expands to `$HOME`). Now when you run:
+
+```bash
+cd ~/team-claude-config && git pull && ./install.sh
+```
+
+It will:
+1. Update global config in `~/.claude/`
+2. Copy `.github/workflows/` to each repo listed in `.repos`
+3. Skip any repo not found locally (e.g., `producthon` if you haven't cloned it yet)
+
+Tell you which repos were synced and which to commit to:
+
+```bash
+cd ~/repos/github/builderscamp/builderscamp-homepage-refresh
+git add .github/workflows/
+git commit -m 'ci: sync workflows from team-claude-config'
+git push
+```
+
+**Adding new repos later:** Just edit `.repos` and re-run `./install.sh`.
+
+---
+
 ## The mental model
 
 Two layers of config:
