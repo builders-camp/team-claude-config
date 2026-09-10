@@ -124,7 +124,7 @@ Otherwise, infer with stated assumptions and proceed.
 
 ## Output format
 
-Markdown. Read by humans in Notion. The handoff to `@pm` (after validation) will include only the Musts and Shoulds, so make those defenses especially crisp.
+Markdown. Read by humans in the local discovery file (`docs/features/<slug>/discovery.md`). The handoff to `@pm` (after validation) will include only the Musts and Shoulds, so make those defenses especially crisp.
 
 Header: `# MoSCoW Prioritization — <feature name>`
 

@@ -108,7 +108,7 @@ If the caller's context is rich enough, do not ask. Produce the canvas with `[in
 
 ## Output format
 
-Markdown only. No JSON. No tool-specific syntax. The canvas is read by humans in Notion and by the next skill (`ost`) as plain text.
+Markdown only. No JSON. No tool-specific syntax. The canvas is read by humans in the local discovery file (`docs/features/<slug>/discovery.md`) and by the next skill (`ost`) as plain text.
 
 Header: `# JTBD Canvas — <one-line feature name>`
 

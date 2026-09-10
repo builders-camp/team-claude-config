@@ -45,7 +45,8 @@ This repository has a single product orchestrator and a set of specialists.
 
 **Upstream specialists** (run before implementation when load-bearing)
 
-- **`@discovery`** — runs JTBD → OST → MoSCoW for unshaped feature ideas. Writes artifacts to Notion. Recommends which downstream specialists should run next.
+- **`@visionary`** — rare, optional pre-step even further upstream than `@discovery`. Only for product/company direction itself, explicit strategy vocabulary (vision, north star, 10x, why now, moonshot), or new product line/business model/platform-level bets. Writes `docs/vision.md` or `docs/features/<slug>/vision.md`. Bias toward skipping — routine feature requests go straight to `@discovery`.
+- **`@discovery`** — runs JTBD → OST → MoSCoW for unshaped feature ideas. Writes artifacts to `docs/features/<slug>/discovery.md`. Recommends which downstream specialists should run next.
 - **`@designer`** — produces strategic design briefs (IA, flows, interaction patterns, accessibility) for features with material UI/flow surface. No mockups.
 - **`@engineer`** — produces strategic engineering briefs (architecture, anti-patterns, dependency calls) for architecturally non-trivial features. No code. Anti-overengineering rules baked in.
 
@@ -60,7 +61,7 @@ This repository has a single product orchestrator and a set of specialists.
 
 Always invoke `@pm` first (per the routing gate above). It will route from there. Do not invoke specialists directly unless `@pm` has handed off explicitly with an `INVOKE @<agent>` directive.
 
-The single exception: re-invocations after a validation gate. When `@pm` has stopped for validation and you've reviewed the artifacts in Notion, re-invoke `@pm` (not the specialists) with a validation signal like "validated, proceed."
+The single exception: re-invocations after a validation gate. When `@pm` has stopped for validation and you've reviewed the artifacts in the local file(s) under `docs/features/<slug>/`, re-invoke `@pm` (not the specialists) with a validation signal like "validated, proceed."
 
 **Validation gate**
 
@@ -71,12 +72,15 @@ When `@pm` invokes upstream specialists (`@discovery` / `@designer` / `@engineer
 
 `@pm` chooses the strategy and states it in `Validation strategy:` of its contract block.
 
+Each specialist writes its artifact to a local file under `docs/features/<slug>/` (`discovery.md`, `design-brief.md`, `engineering-brief.md`). `@pm` owns final synthesis at the validation gate: it assembles the upstream artifacts into `docs/features/<slug>/prd.md` (full PRD, if `@discovery` ran) or `docs/features/<slug>/brief.md` (lighter synthesis, if only `@designer`/`@engineer` ran) before stopping for validation.
+
 **What goes to which agent**
 
 | Input | First specialist |
 |---|---|
 | "Fix this bug" | `@implementer` |
 | "Find where X lives in the code" | `@researcher` |
+| "I want to rethink what our product even is / find our 10x opportunity" | `@visionary` → `@discovery` → ... |
 | "I want to build a feature that…" | `@discovery` |
 | "Customer interviews say X — what should we do?" | `@discovery` |
 | "Add an export button to the dashboard" (well-defined, low risk) | `@implementer` |

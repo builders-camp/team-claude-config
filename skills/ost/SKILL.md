@@ -116,7 +116,7 @@ Otherwise, infer and tag honestly.
 
 ## Output format
 
-Markdown only. The tree is read in Notion by humans and as plain text by the next skill (`moscow`).
+Markdown only. The tree is read in the local discovery file (`docs/features/<slug>/discovery.md`) by humans and as plain text by the next skill (`moscow`).
 
 Header: `# Opportunity Solution Tree — <feature name>`
 
