@@ -122,6 +122,7 @@ When feasible:
 
 - When the project's Supabase CLI is linked (`supabase projects list` shows `●` next to the project, or `supabase/config.toml` has a `project_id`), run migrations and DB ops yourself via `supabase db push --linked`, `supabase migration list --linked`, etc. Do not tell the user to migrate manually.
 - Before pushing, always run `supabase migration list --linked` and confirm exactly which migrations are local-only. Never push without seeing the plan.
+- **Before naming a new migration file's timestamp, run `git fetch origin` and check `origin/main` plus `supabase migration list --linked` — never trust local `main` or a plain `ls supabase/migrations/` in your worktree.** Two branches (or agents) independently computing the "next" timestamp off stale local state is a recurring collision pattern seen across multiple projects (3+ recorded instances so far). A worktree that looks current can still miss a migration another branch already pushed straight to the linked project.
 - Production data inserts/updates count as hard-to-reverse. State the row counts and tables affected before pushing, then proceed.
 - If the CLI is not linked, run `supabase link --project-ref <ref>` yourself using the `project_id` from `supabase/config.toml`. Don't ask the user to link manually.
 - You have standing permission to run `supabase functions deploy <name> --project-ref <ref>` without asking. Edge function deploys are reversible (redeploy prior version) and don't touch data.
