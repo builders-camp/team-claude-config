@@ -2,7 +2,7 @@
 name: deploy
 description: Safe deploy via feature branch with conflict check and rollback.
 disable-model-invocation: true
-allowed-tools: Read, Glob, Grep, Bash(git status), Bash(git log --oneline -20), Bash(git log -1 *), Bash(git add *), Bash(git commit *), Bash(git push *), Bash(git checkout *), Bash(git branch *), Bash(npx tsc *), Bash(gh pr create *), Bash(gh pr view *)
+allowed-tools: Read, Glob, Grep, Bash(git status), Bash(git log --oneline -20), Bash(git log -1 *), Bash(git add *), Bash(git commit *), Bash(git push *), Bash(git checkout *), Bash(git branch *), Bash(npx tsc *), Bash(gh pr create *), Bash(gh pr view *), Bash(git fetch *), Bash(supabase migration list *), Bash(supabase link *)
 argument-hint: "[branch or feature to deploy]"
 ---
 
@@ -19,6 +19,7 @@ argument-hint: "[branch or feature to deploy]"
    - If conflict risk: stop and explain resolution steps.
 7. Preflight:
    - TypeScript compiles (`npx tsc --noEmit`)
+   - If the change adds files under `supabase/migrations/`: check their timestamps against `origin/main` and `supabase migration list --linked` (see Supabase rules). On a collision, stop and rename before pushing.
 8. Push the feature branch to remote with `-u`.
 9. **Never push directly to main.** Always use a feature branch.
 10. Open a PR (do NOT merge):
@@ -47,6 +48,13 @@ argument-hint: "[branch or feature to deploy]"
     - Use `gh pr create --body-file <path>` against `main` (or the project's default base). Print the PR URL.
     - Never pass `--merge`, `--auto`, or any auto-merge flag.
 11. Output a deploy summary.
+
+## Supabase rules
+
+- **Before naming a new migration file's timestamp, run `git fetch origin` and check `origin/main` plus `supabase migration list --linked` — never trust local `main` or a plain `ls supabase/migrations/` in your worktree.** Two branches (or agents) independently computing the "next" timestamp off stale local state is a recurring collision pattern seen across multiple projects (3+ recorded instances so far). A worktree that looks current can still miss a migration another branch already pushed straight to the linked project.
+- If the CLI is not linked, run `supabase link --project-ref <ref>` yourself using the `project_id` from `supabase/config.toml`. Don't ask the user to link manually.
+- Migrations are applied by `/merge`, not by `/deploy`.
+- **Production data inserts/updates/deletes are hard to reverse.** State the tables and row counts affected, then ask and wait for an explicit "yes" before running. No yes, no write.
 
 Output:
 <deploy>

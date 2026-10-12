@@ -1,0 +1,15 @@
+{
+  "description": "Load the Builders Camp house rules and @pm routing gate at the start of every session.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cat \"${CLAUDE_PLUGIN_ROOT}/CLAUDE.md\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "team-os",
+  "version": "0.0.1",
+  "description": "Builders Camp ops skills (placeholder): newsletter, outreach, mentors, Cheque-Formação, end-of-day review.",
+  "author": {
+    "name": "Builders Camp"
+  },
+  "repository": "https://github.com/builders-camp/team-claude-config"
+}

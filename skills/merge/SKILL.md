@@ -2,7 +2,7 @@
 name: merge
 description: Safe PR merge with check verification, post-merge cleanup, migration reminder, and edge-function deploy reminder.
 disable-model-invocation: true
-allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(git worktree *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *)
+allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(git worktree *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *), Bash(supabase link *), Bash(supabase functions deploy *)
 argument-hint: "[PR number — defaults to current branch's PR]"
 ---
 
@@ -41,8 +41,10 @@ Use only when the user explicitly asks to merge a PR. Never auto-trigger.
 
 6. Migration reminder — if the merged diff includes any file under `supabase/migrations/`:
    - Run `supabase migration list --linked` and check whether each new file is already applied on remote.
-   - If any are local-only, run `supabase db push --linked`. Confirm one-by-one in the printed plan.
-   - If the CLI is not linked, tell the user explicitly which migrations need applying and how.
+   - Never push without seeing the plan: confirm exactly which migrations are local-only.
+   - If any local-only migration inserts, updates, or deletes production data, stop: state the tables and row counts affected and wait for an explicit "yes" before pushing.
+   - Otherwise run `supabase db push --linked`. Confirm one-by-one in the printed plan.
+   - If the CLI is not linked, run `supabase link --project-ref <ref>` using the `project_id` from `supabase/config.toml`, then continue. If there is no `project_id`, tell the user explicitly which migrations need applying and how.
 
 7. Edge-function deploy reminder — if the merged diff includes any file under a `supabase/functions/<name>/` directory (new or modified — check `gh pr diff <num> --name-only` against that path):
    - Edge functions do **not** auto-deploy on merge/push, unlike the rest of the app (which deploys via Vercel or similar CI on push to main) — this is a common gap projects miss, not specific to one repo. Do not assume it deploys itself.
@@ -55,6 +57,13 @@ Use only when the user explicitly asks to merge a PR. Never auto-trigger.
      - If the diff is ambiguous or mixes both, flag it explicitly and ask the user for the intended order rather than guessing.
 
 8. Output a merge summary.
+
+## Supabase rules
+
+- When the project's Supabase CLI is linked (`supabase projects list` shows `●` next to the project, or `supabase/config.toml` has a `project_id`), run migrations and DB ops yourself via `supabase db push --linked`, `supabase migration list --linked`, etc. Do not tell the user to migrate manually.
+- Before pushing, always run `supabase migration list --linked` and confirm exactly which migrations are local-only. Never push without seeing the plan.
+- **Production data inserts/updates/deletes are hard to reverse.** State the tables and row counts affected, then ask and wait for an explicit "yes" before running. No yes, no write.
+- Edge function deploys (`supabase functions deploy <name> --project-ref <ref>`) are reversible (redeploy prior version) and don't touch data. Once the user asks for them (step 7), run them without a further confirmation.
 
 Output:
 <merge>

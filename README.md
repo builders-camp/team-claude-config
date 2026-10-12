@@ -1,151 +1,127 @@
 # team-claude-config
 
-The shared Claude config for the Builders Camp team.
+Builders Camp's Claude Code plugin marketplace.
 
-This repo holds the global rules, agents, and skills we both want Claude to use across every project, on every machine. Install it once per laptop, pull updates as we improve them.
+This repo is a marketplace (`builders-camp`) with two plugins:
 
----
+| Plugin | What | Who installs it |
+|---|---|---|
+| `delivery` | The delivery harness: `@pm` routing, discovery, design, engineering, implement, review, QA, deploy, merge. 9 agents, 16 skills, 1 SessionStart hook. | Each developer, once per machine |
+| `team-os` | Builders Camp ops skills (placeholder — see [plugins/team-os/README.md](plugins/team-os/README.md)) | Each person, once |
 
-## What this is
-
-When you install this repo, three things end up symlinked into your `~/.claude/` directory:
-
-- **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
-- **`agents/`** — five specialized subagents (`@pm`, `@implementer`, `@reviewer`, `@qa`, `@researcher`). Claude routes work to them based on task shape.
-- **`skills/`** — eleven slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, etc.) for specific lifecycle moments.
-
-Because these live globally in `~/.claude/`, they apply to every project you open with Claude Code — not just one repo. Per-repo `CLAUDE.md` files (when they exist) layer *on top* of this global config.
+Plugins install at user scope, so they work in every repo you open, and never take over your personal `~/.claude/CLAUDE.md`.
 
 ---
 
 ## Install
 
-```bash
-git clone git@github.com:builders-camp/team-claude-config.git ~/team-claude-config
-cd ~/team-claude-config
-./install.sh
-```
-
-That's it. The installer symlinks files into `~/.claude/`, so future updates flow live — usually no need to re-run `install.sh` after a `git pull`. Re-run it only when new skill or agent files are added (so they get linked).
-
-To update:
+One command per person:
 
 ```bash
-cd ~/team-claude-config && git pull && ./install.sh
+claude plugin install delivery --marketplace builders-camp/team-claude-config
 ```
 
-You'll also see a Slack notification in our team channel when either of us pushes a change here, with the exact pull-and-install command.
+Optional, for the ops placeholder:
+
+```bash
+claude plugin install team-os --marketplace builders-camp/team-claude-config
+```
+
+Restart Claude Code after installing. To update later:
+
+```bash
+claude plugin update delivery@builders-camp
+```
+
+To switch the harness off in one project: `claude plugin disable delivery@builders-camp --scope project`.
+
+### Moving from `install.sh`
+
+`install.sh` still works exactly as before (symlinks `CLAUDE.md`, skills and agents into `~/.claude/`, syncs workflows to repos in `.repos`). It is kept for the transition only. To move to the plugin:
+
+1. Remove the symlinks `install.sh` created: `~/.claude/CLAUDE.md` (restore `~/.claude/CLAUDE.md.bak` if you had one), and the symlinked entries in `~/.claude/skills/` and `~/.claude/agents/` that point into this repo.
+2. Run the install command above.
+
+Don't run both: you'd load the house rules twice and see each skill and agent twice.
 
 ---
 
-## How updates feel
+## Layout
 
-`install.sh` is non-destructive:
+```
+.claude-plugin/
+  marketplace.json      # the builders-camp marketplace (lists both plugins)
+  plugin.json           # delivery plugin manifest (plugin root = repo root)
+CLAUDE.md               # house rules + routing gate, loaded by the SessionStart hook
+hooks/hooks.json        # delivery: SessionStart hook
+agents/                 # delivery: 9 agents
+skills/                 # delivery: 16 skills
+plugins/team-os/        # team-os plugin (placeholder)
+install.sh, .repos      # legacy installer + workflow sync
+```
 
-- Existing `~/.claude/CLAUDE.md` (if it's a real file, not a symlink) gets backed up to `CLAUDE.md.bak` before we replace it with the symlink.
-- Personal skills or agents you've added to `~/.claude/skills/<name>/` or `~/.claude/agents/<name>.md` are **preserved** — the installer skips any name that already exists as a real file. To switch to the shared version, delete your local one and re-run.
-
-So you can keep personal experiments alongside team config. They don't collide.
+`delivery` keeps its files at the repo root so `install.sh` keeps working unchanged.
 
 ---
 
-## Syncing GitHub workflows across repos
+## Where rules live
 
-Beyond global Claude rules, we also share GitHub workflows (like auto-assign reviewers). `install.sh` automatically syncs `.github/workflows/` to your team repos.
+- **Always-on** (house rules, `@pm` routing gate): `CLAUDE.md`. The `delivery` SessionStart hook loads it into every session (startup, resume, clear, compact).
+- **Situational** rules live in the skill that uses them:
+  - Worktrees and "never commit to main" → `/implement`
+  - Supabase (linking, migration timestamps, `db push`, prod data writes, edge functions) → `/deploy` and `/merge`
+- **Repo-specific** rules and skills stay in that repo's own `CLAUDE.md` and `.claude/` (use `/bootstrap` to scaffold).
 
-**List your repos** in `.repos`:
-
-```
-~/repos/github/builderscamp/builderscamp-homepage-refresh
-~/repos/github/builderscamp/producthon
-~/team-claude-config
-```
-
-One repo per line. Paths use `~/` (expands to `$HOME`). Now when you run:
-
-```bash
-cd ~/team-claude-config && git pull && ./install.sh
-```
-
-It will:
-1. Update global config in `~/.claude/`
-2. Copy `.github/workflows/` to each repo listed in `.repos`
-3. Skip any repo not found locally (e.g., `producthon` if you haven't cloned it yet)
-
-Tell you which repos were synced and which to commit to:
-
-```bash
-cd ~/repos/github/builderscamp/builderscamp-homepage-refresh
-git add .github/workflows/
-git commit -m 'ci: sync workflows from team-claude-config'
-git push
-```
-
-**Adding new repos later:** Just edit `.repos` and re-run `./install.sh`.
-
----
-
-## The mental model
-
-Two layers of config:
-
-**Global (this repo, lives at `~/.claude/`)**
-House rules, agents, and skills that apply to every project we touch.
-
-**Per-repo (lives at `<repo>/.claude/` and `<repo>/CLAUDE.md`)**
-Project-specific context: tech stack, deploy process, repo-specific rules. Use `/bootstrap` (described below) to scaffold this in a fresh repo.
-
-When Claude is working in a repo, it sees both — global first, then repo-local on top. Repo-local wins on conflicts.
+When Claude works in a repo it sees both: the plugin's rules, then the repo's own on top. Repo-local wins on conflicts.
 
 ---
 
 ## How work flows
 
-The default flow for any non-trivial task:
-
 ```
 You ask Claude to do something
         ↓
-Claude routes to @pm (auto, per CLAUDE.md)
+Routing gate (SessionStart hook) → @pm
         ↓
 @pm classifies: SINGLE / BATCH / EPIC / DIRECT
         ↓
-@pm hands off to a specialist with a self-contained brief:
-        ├── @researcher   — discovery, options, framing
-        ├── @implementer  — bounded code changes
-        ├── @qa           — acceptance criteria, release safety
-        └── @reviewer     — architecture audit, deep review
+Upstream, only when load-bearing:
+        @visionary (rare) → @discovery → @designer → @engineer
+        ↓ writes docs/features/<slug>/…, stops for your validation
+/implement → worktree branch from origin/main
         ↓
-Specialist returns its output contract
+@implementer — bounded code changes
         ↓
-@pm names the next command (e.g. /test, /deploy)
+@qa / @reviewer — acceptance, release safety, deep review
+        ↓
+/deploy → PR (never merges)    →    /merge (manual) → migrations, cleanup
 ```
 
-`@pm` is auto-invoked. The specialists run on its handoff. You don't usually call them by name unless you want to skip triage.
+`@researcher` (codebase/library research, options) runs on `@pm`'s handoff whenever a question needs answering first.
 
 `@pm` is **not** invoked for: pure conversation, clarifying questions about Claude's own prior output, follow-ups inside an already-active workflow.
 
 ---
 
-## Agents
+## Agents (9)
 
-All agents enforce **output contracts** — a structured block they must emit before exiting. This keeps handoffs clean and prevents "running commentary with no result."
+All agents enforce **output contracts** and **scope-drift guardrails**: if the work leaves their lane, they hand back to `@pm`. When installed as the plugin, agent types are namespaced (`delivery:pm`, `delivery:implementer`, …).
 
 | Agent | When to use | Stops at |
 |---|---|---|
 | `@pm` | First touch for any non-trivial task. Classifies and routes. | Naming the specialist + handoff brief |
-| `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
-| `@implementer` | Bounded code changes, bug fixes, small features with clear scope | Implementation or implementation brief |
-| `@qa` | Acceptance criteria, user journey validation, release readiness | Validation boundary + checklist |
+| `@visionary` | Rare. Product/company direction, strategy bets | `vision.md` |
+| `@discovery` | Unshaped feature ideas: JTBD → OST → MoSCoW | `discovery.md` + next specialists |
+| `@designer` | New UI surface, flow or IA changes | `design-brief.md` |
+| `@engineer` | Architecturally non-trivial features | `engineering-brief.md` |
+| `@researcher` | Codebase discovery, options analysis, decision framing | Recommendation + next owner |
+| `@implementer` | Bounded code changes, bug fixes, small features | Implementation or implementation brief |
+| `@qa` | Acceptance criteria, user journeys, release readiness | Validation boundary + checklist |
 | `@reviewer` | Architecture audit, large refactors, security/performance review | Review + recommended remediation |
-
-All agents have **scope-drift guardrails**: if the work shifts out of their lane, they hand back to `@pm` instead of overreaching. They also have soft tool-call budgets to prevent endless exploration.
 
 ---
 
-## Skills (slash commands)
-
-Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and meta (managing the system itself).
+## Skills (16)
 
 ### Lifecycle
 
@@ -153,96 +129,65 @@ Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and m
 |---|---|
 | `/plan` | Execution-ready plan: goal, assumptions, scope, milestones, risks, acceptance criteria |
 | `/research` | High-level concept research: best practices, failure patterns, recommendation |
+| `/implement` | Worktree branch from `origin/main`, then hand off to `@implementer` |
 | `/fix` | Minimal safe patch: failing behavior → root cause → smallest fix → risks → tests |
 | `/test` | Regression-preventing tests: happy path + 2 edge cases + 1 failure case |
 | `/qa` | Product QA checklist: user journeys, functional + non-functional checks, release safety |
-| `/deep-review` | Full audit (architecture, code quality, tests, performance). **Use only for** large features, refactors, or security/performance work |
-| `/deploy` | Safe feature-branch deploy: commit → branch → preflight (TS compile) → push → open PR. **Never auto-merges.** |
-| `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → migration check (Supabase). **Manual trigger only.** |
+| `/deep-review` | Full audit. **Only for** large features, refactors, or security/performance work |
+| `/deploy` | Feature branch → preflight → push → PR. **Never auto-merges.** |
+| `/merge` | Pre-merge gate → squash merge → cleanup → Supabase migrations. **Manual trigger only.** |
 
-### Orchestration
-
-| Command | What it does |
-|---|---|
-| `/pm` | Same triage logic as `@pm`, but invoked manually. Use when you want explicit orchestration on a list of tasks. |
-
-### Meta (managing the system)
+### Discovery
 
 | Command | What it does |
 |---|---|
-| `/bootstrap` | Scaffolds per-repo Claude OS structure (`CLAUDE.md`, `.claude/skills/`, standards, registries) in a new repo. Run once per project. |
+| `/jtbd` | Jobs-to-be-Done canvas for a feature idea or problem |
+| `/ost` | Opportunity Solution Tree (Teresa Torres, pragmatic variant) |
+| `/moscow` | MoSCoW prioritization of candidate solutions |
+
+### Orchestration and reporting
+
+| Command | What it does |
+|---|---|
+| `/pm` | Same triage as `@pm`, invoked manually — for explicit orchestration on a list of tasks |
+| `/recap` | Monday standup-style recap of last week's merged work |
+
+### Meta
+
+| Command | What it does |
+|---|---|
+| `/bootstrap` | Scaffold per-repo Claude OS structure in a new repo. Run once per project. |
 | `/improve` | Promote durable patterns into `CLAUDE.md` or skills. Shows diff before applying. |
 
 ---
 
 ## House rules (from `CLAUDE.md`)
 
-The global `CLAUDE.md` enforces these defaults across every session. Highlights:
+Highlights — the full `CLAUDE.md` is the source of truth.
 
-**Default behavior**
-Smallest correct change. No unnecessary abstraction. Explicit over clever. Minimal diffs.
-
-**Planning**
-Small changes → implement directly. Multi-layer or architecture → propose a short plan first. Max one clarification question if blocked.
-
-**Quality after changes**
-List what could break. Suggest tests. Suggest monitoring or rollback. Reproduce bugs via test before fixing when feasible.
-
-**Supabase**
-If the CLI is linked, Claude runs migrations directly via `supabase db push --linked`. Always shows the migration plan first. Production data changes get row counts before push. If CLI isn't linked, hands back to user.
-
-**Deep review escalation**
-`/deep-review` is **not** the default. Use it only for: large features (> 5 files or multiple domains), refactors, security-sensitive code, or performance-sensitive paths.
-
-**Output discipline**
-Concise structured headers. No long explanations unless asked. Stop when objective is complete. After code changes: briefly state files changed and why.
-
-The full `CLAUDE.md` is the source of truth. This summary just exists so you don't have to read it every time.
+- **Default behavior:** smallest correct change, no unnecessary abstraction, explicit over clever, minimal diffs.
+- **Planning:** small changes → implement directly; multi-layer or architecture → short plan first; at most one clarification question.
+- **Quality:** after changes, list what could break, suggest tests, suggest monitoring/rollback.
+- **GitHub:** priority + type labels on every PR/issue; repo templates win over default bodies.
+- **Deep review:** not the default — only large features, refactors, security- or performance-sensitive work.
+- **Shipping recap:** plain-language recap after every PR or Vercel deploy.
 
 ---
 
 ## Adding a new skill
 
-1. Create `skills/<skill-name>/SKILL.md`
-2. Use the YAML frontmatter convention from existing skills:
-   ```
-   name: <skill-name>
-   description: <one line — when should Claude use this>
-   disable-model-invocation: <true|false>
-   allowed-tools: <comma-separated list>
-   argument-hint: [<what the skill expects>]
-   ```
-3. Body: short, structured. Process steps, output format, stop condition. Look at `skills/plan/SKILL.md` as the canonical minimal example.
-4. Open a PR. Slack notification will fire on merge.
-5. Either of us runs `./install.sh` to symlink the new skill into our local `~/.claude/skills/`.
-
-**Don't duplicate `CLAUDE.md` rules inside skills.** Skills should focus on their specific output protocol.
-
----
+1. Create `skills/<skill-name>/SKILL.md` with the frontmatter used by existing skills (`name`, `description`, `disable-model-invocation`, `allowed-tools`, `argument-hint`).
+2. Body: short, structured — process steps, output format, stop condition. `skills/plan/SKILL.md` is the canonical minimal example.
+3. Put rules that only matter for this skill inside it, not in `CLAUDE.md`.
+4. Bump `version` in `.claude-plugin/plugin.json`, open a PR. Slack notification fires on merge.
+5. Everyone runs `claude plugin update delivery@builders-camp`.
 
 ## Adding a new agent
 
-1. Create `agents/<agent-name>.md`
-2. Frontmatter:
-   ```
-   name: <agent-name>
-   description: <one line — when @pm or the user should route work here>
-   tools: <comma-separated>
-   model: <sonnet | opus | haiku>
-   maxTurns: <integer>
-   memory: <project | session>
-   ```
-3. Body must include:
-   - **Execution guardrails** — output contract, scope-drift handoff rules, tool budget
-   - **What you own** — the lane
-   - **Core behavior** — numbered steps
-   - **Decision principles** — the bias
-   - **Output contract** — the structured block this agent emits
-   - **Stop conditions**
-4. Update `@pm`'s routing rules if the new agent should be auto-routed to.
-5. PR + install.
-
-Match the structure of existing agents. Consistency across agents is what makes the system predictable.
+1. Create `agents/<agent-name>.md` with frontmatter (`name`, `description`, `tools`, `model`, `maxTurns`, `memory`).
+2. Body: execution guardrails, what you own, core behavior, decision principles, output contract, stop conditions.
+3. Update `@pm`'s routing rules if it should be auto-routed to.
+4. Bump the plugin version, PR, update.
 
 ---
 
@@ -250,21 +195,31 @@ Match the structure of existing agents. Consistency across agents is what makes 
 
 | Change | Where |
 |---|---|
-| New global house rule | `CLAUDE.md` |
+| New always-on house rule | `CLAUDE.md` |
+| Rule that only matters during one workflow | That skill's `SKILL.md` |
 | New reusable workflow | New skill |
 | New specialist role | New agent |
-| Repo-specific tech stack, deploy steps, conventions | That repo's local `CLAUDE.md` (use `/bootstrap`) |
-| One-off project decision | Don't put it here. Notion or a repo ADR. |
+| Repo-specific stack, deploy steps, conventions | That repo's own `CLAUDE.md` / `.claude/` |
+| One-off project decision | Not here — Notion or a repo ADR |
+
+---
+
+## Syncing GitHub workflows across repos (legacy)
+
+`install.sh` also copies `.github/workflows/` to every repo listed in `.repos` (one path per line, `~/` allowed; missing repos are skipped), then prints the commit command for each. The plugin does not do this.
 
 ---
 
 ## Troubleshooting
 
-**A skill or agent isn't being invoked.**
-Run `ls -la ~/.claude/skills/` and `ls -la ~/.claude/agents/` — should show symlinks pointing into `~/team-claude-config/`. If a name you expect isn't there, you probably have a personal version that's blocking it. Delete the personal one and re-run `./install.sh`.
+**Plugin skills or agents don't show up.**
+Run `claude plugin list` and check `delivery@builders-camp` is enabled, then restart Claude Code.
 
-**`CLAUDE.md` changes don't seem to apply.**
-Confirm `~/.claude/CLAUDE.md` is a symlink (`ls -la ~/.claude/CLAUDE.md`). If not, re-run `./install.sh` — it backs up the existing file and replaces with the symlink.
+**Routing gate isn't applied.**
+The SessionStart hook loads `CLAUDE.md`. Check the plugin is enabled in this project (`claude plugin enable delivery@builders-camp`).
+
+**Everything appears twice.**
+You have both `install.sh` symlinks and the plugin. Follow "Moving from `install.sh`".
 
 **Slack notification didn't fire after a push.**
-Check `.github/workflows/slack-notify.yml` — it runs on push to `main`. If your push went to a branch, no notification. If it went to `main`, check the Actions tab in GitHub for failures.
+`.github/workflows/slack-notify.yml` runs on push to `main` only. Check the Actions tab for failures.
