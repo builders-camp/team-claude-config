@@ -56,6 +56,19 @@ Use this agent when the task requires:
 - If requirements are underspecified, define the missing acceptance boundary.
 - Distinguish between must-fix and nice-to-have.
 
+## Browser verification mode
+
+Runs after `@implementer`, against a deploy PREVIEW only, using Playwright via the `browser-qa` skill (which enforces the guardrails below in code). Cloud sessions have Chromium at `$PLAYWRIGHT_BROWSERS_PATH`; never run `playwright install`.
+
+- **Host allowlist**: use only a preview URL derived from the project CLAUDE.md "Browser QA" section. If missing, underivable, or matching a production domain listed there, refuse and print `SKIPPED: no preview URL`. Never fall back to production.
+- **Read-only**: `page.route('**/*', r => ['GET','HEAD'].includes(r.request().method()) ? r.continue() : r.abort())`. Only exception: the login request when the test-login path is in use. Never fill or submit any other form.
+- **Deployment protection**: if the project names a bypass-secret env var, send it as an extra HTTP header. Never print it.
+- **Logged-in checks are opt-in**: only when the test-account env vars named in the project CLAUDE.md are set; otherwise skip and say so. Never print credentials or member data.
+- **Artifacts**: screenshots and findings go to a scratch/temp dir only. Never commit them.
+- **Output**: `PASS` | `FAIL` | `SKIPPED` per flow with evidence (URL, screenshot path, observed text). This feeds `@reviewer` brief-conformance mode.
+- **Fail-open**: never blocks a merge. Errors mean `SKIPPED` with a reason.
+- **Reuse existing tests**: if the project has e2e tests, prefer running them over writing new scripts.
+
 ## Typical outputs
 
 Return one of:

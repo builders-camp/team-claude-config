@@ -1,6 +1,6 @@
 # team-claude-config
 
-<!-- counts: skills=14 agents=9 -->
+<!-- counts: skills=15 agents=9 -->
 
 The shared Claude config for the team.
 
@@ -15,7 +15,7 @@ When you install this repo, these things end up symlinked into your `~/.claude/`
 - **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
 - **`agents/`** — nine specialized subagents (`@pm`, `@visionary`, `@discovery`, `@designer`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
 - **`settings.json`** — routing-gate hooks (a `UserPromptSubmit` reminder and a `PreToolUse` warning), linked by `install.sh`. Skipped if you already have a personal `~/.claude/settings.json`.
-- **`skills/`** — fourteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`skills/`** — fifteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
 - **`loops/`** — the generator -> judge loop kit (see below). Linked to `~/.claude/loops/`.
 - **`stacks/`** — opt-in stack packs. Each `stacks/<name>` is linked to `~/.claude/stacks/<name>`.
 
@@ -156,12 +156,12 @@ All agents enforce **output contracts** — a structured block they must emit be
 |---|---|---|
 | `@pm` | First touch for any non-trivial task. Classifies and routes. Runs a PRD carry-through check so requirements in the PRD reach the handoff brief. | Naming the specialist + handoff brief |
 | `@visionary` | Rare. Product/company direction, strategy-level bets. | Vision doc |
-| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). Has the Skill tool, so it can run `/jtbd`, `/ost`, `/moscow`. | Discovery doc + recommended next specialists |
+| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). Has the Skill tool, so it can run `/jtbd`, `/ost`, `/moscow`. | Discovery doc + recommended next specialists. Optional synthetic ICP interviews via handoff (`NEEDS_INTERVIEWS`), findings labelled `[synthetic]`. |
 | `@designer` | Material UI/flow surface: IA, flows, accessibility. | Design brief (no mockups) |
 | `@engineer` | Architecturally non-trivial features. | Engineering brief (no code) |
 | `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
 | `@implementer` | Bounded code changes, bug fixes, small features with clear scope. Has Bash. | Implementation or implementation brief |
-| `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist |
+| `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist. Also has browser verification mode (uses `/browser-qa` on the preview, fail-open). |
 | `@reviewer` | Architecture audit, large refactors, security/performance review. Also has premise-critic mode (challenges a brief's premises) and brief-conformance mode (checks the work against the brief). | Review + recommended remediation |
 
 All agents have **scope-drift guardrails**: if the work shifts out of their lane, they hand back to `@pm` instead of overreaching. They also have soft tool-call budgets to prevent endless exploration.
@@ -185,6 +185,7 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 | `/deploy` | Safe feature-branch deploy: branch → commit → preflight (TS compile) → push → open draft PR with labels. **Never auto-merges.** |
 | `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → opted-in stack pack post-merge steps. **Manual trigger only.** |
 | `/recap` | Plain-language recap of what shipped or changed |
+| `/browser-qa` | Read-only Playwright check of a deploy preview (never production); PASS/FAIL/SKIPPED with evidence. Fail-open. |
 
 ### Discovery frameworks
 
