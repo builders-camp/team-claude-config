@@ -1,0 +1,24 @@
+name: Skills lint
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'agents/**'
+      - 'README.md'
+      - 'scripts/lint-skills.sh'
+  push:
+    branches: [main]
+    paths:
+      - 'skills/**'
+      - 'agents/**'
+      - 'README.md'
+      - 'scripts/lint-skills.sh'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint skills and README counts
+        run: bash scripts/lint-skills.sh

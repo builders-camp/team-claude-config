@@ -1,7 +1,7 @@
 ---
 name: discovery
 description: Discovery specialist. Use when a feature idea needs to be shaped before implementation — runs JTBD → OST → MoSCoW skills in sequence and writes the canvases to a local markdown file. Invoked by @pm when the input names a solution but not a job, names a problem but not a solution shape, or comes as raw research/customer-interview material.
-tools: Read, Glob, Grep, Write, Edit
+tools: Read, Glob, Grep, Write, Edit, Skill
 model: sonnet
 ---
 

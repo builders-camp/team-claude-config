@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+SYNC_WORKFLOWS=false
+for arg in "$@"; do
+  case "$arg" in
+    --sync-workflows) SYNC_WORKFLOWS=true ;;
+  esac
+done
+
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_DIR="$HOME/.claude"
 mkdir -p "$CLAUDE_DIR"
@@ -79,11 +86,41 @@ if [ -d "$REPO_DIR/stacks" ]; then
   done
 fi
 
-echo ""
-echo "Syncing .github/workflows to team repos..."
+# Hooks: settings.json (hooks only) + hook scripts
+target="$CLAUDE_DIR/settings.json"
+if [ -L "$target" ]; then
+  rm "$target"
+fi
+if [ -e "$target" ]; then
+  echo "  Skipping settings.json — personal version exists (merge the hooks manually)"
+else
+  ln -sf "$REPO_DIR/settings.json" "$target"
+  echo "  settings.json → symlinked"
+fi
 
+if [ -d "$REPO_DIR/hooks" ]; then
+  mkdir -p "$CLAUDE_DIR/hooks"
+  for hook_file in "$REPO_DIR/hooks"/*.sh; do
+    [ -f "$hook_file" ] || continue
+    hook_name="$(basename "$hook_file")"
+    target="$CLAUDE_DIR/hooks/$hook_name"
+    if [ -L "$target" ]; then
+      rm "$target"
+    elif [ -e "$target" ]; then
+      echo "  Skipping $hook_name — personal version exists (remove manually to use shared)"
+      continue
+    fi
+    ln -sf "$hook_file" "$target"
+    echo "  hook/$hook_name → symlinked"
+  done
+fi
+
+echo ""
+if [ "$SYNC_WORKFLOWS" != true ]; then
+  echo "Skipping workflow sync (run ./install.sh --sync-workflows to copy .github/workflows into team repos)"
 # Sync .github/workflows to repos listed in .repos
-if [ -f "$REPO_DIR/.repos" ]; then
+elif [ -f "$REPO_DIR/.repos" ]; then
+  echo "Syncing .github/workflows to team repos..."
   repos_to_sync=()
   while IFS= read -r repo_path || [ -n "$repo_path" ]; do
     # Skip empty lines and comments

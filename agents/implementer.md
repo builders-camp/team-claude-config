@@ -1,7 +1,7 @@
 ---
 name: implementer
 description: Safe implementation specialist. Use for bounded changes, bug fixes, minimal safe patches, small feature work, and concrete implementation steps after requirements are clear.
-tools: Read, Glob, Grep, Edit, Write
+tools: Read, Glob, Grep, Edit, Write, Bash
 model: sonnet
 maxTurns: 20
 memory: project
