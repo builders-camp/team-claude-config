@@ -54,6 +54,46 @@ for agent_file in "$REPO_DIR/agents"/*.md; do
   echo "  agent/$agent_name → symlinked"
 done
 
+# Cleanup: remove dangling team symlinks and retired entries. Non-fatal.
+# Only symlinks pointing into $REPO_DIR/ are ever removed; real files/dirs and
+# symlinks pointing elsewhere are left alone.
+for stale in "$CLAUDE_DIR/skills"/* "$CLAUDE_DIR/agents"/*; do
+  if [ -L "$stale" ] && [ ! -e "$stale" ]; then
+    stale_dest="$(readlink "$stale" 2>/dev/null || true)"
+    case "$stale_dest" in
+      "$REPO_DIR"/*)
+        rm -f "$stale" 2>/dev/null || true
+        echo "  removed dangling ${stale#$CLAUDE_DIR/}"
+        ;;
+    esac
+  fi
+done
+
+if [ -f "$REPO_DIR/retired.txt" ]; then
+  while IFS= read -r entry || [ -n "$entry" ]; do
+    entry="${entry%$'\r'}"
+    # Trim leading/trailing whitespace
+    entry="${entry#"${entry%%[![:space:]]*}"}"
+    entry="${entry%"${entry##*[![:space:]]}"}"
+    case "$entry" in
+      ""|\#*) continue ;;
+      /*|*..*) continue ;;
+    esac
+    target="$CLAUDE_DIR/$entry"
+    if [ -L "$target" ]; then
+      retired_dest="$(readlink "$target" 2>/dev/null || true)"
+      case "$retired_dest" in
+        "$REPO_DIR"/*)
+          rm -f "$target" 2>/dev/null || true
+          echo "  retired $entry — removed"
+          ;;
+      esac
+    elif [ -e "$target" ]; then
+      echo "  Skipping retired $entry — personal version exists (remove manually if unwanted)"
+    fi
+  done < "$REPO_DIR/retired.txt" || true
+fi
+
 # Loops: symlink the whole dir (skipped if a personal non-symlink version exists)
 if [ -d "$REPO_DIR/loops" ]; then
   target="$CLAUDE_DIR/loops"
