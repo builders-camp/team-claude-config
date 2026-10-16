@@ -1,7 +1,7 @@
 ---
 name: qa
 description: Product QA and release-safety specialist. Use for acceptance criteria, user journeys, regression risk, functional and non-functional checks, release readiness, and validating whether work is truly done.
-tools: Read, Glob, Grep
+tools: Read, Glob, Grep, Bash
 model: sonnet
 maxTurns: 12
 memory: project

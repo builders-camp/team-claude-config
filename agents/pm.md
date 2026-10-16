@@ -246,6 +246,22 @@ Before handing off to `@implementer`, you synthesize the upstream artifacts into
 
 Write the file before emitting the `stop for validation` block, and reference its path in `Next:`.
 
+**PRD carry-through check:** before writing a validation stop, verify that every Must, every open question and every `[assumed — verify]` from the upstream briefs appears in `prd.md` / `brief.md`. Fix any omissions in the file first.
+
+### Review loops (handoff-driven)
+
+You have no Agent tool, so these loops run via `Handoff:` directives; the caller runs the reviewer and re-invokes you with the result. Both loops are max 2 rounds and FAIL OPEN: never block. Skip both for DIRECT/SINGLE tasks with no brief.
+
+**Premise check (before the validation stop):**
+1. After synthesis and the carry-through check, emit `Handoff: INVOKE @reviewer NOW (mode: premise-critic) with ...` listing the allowed inputs: the `prd.md` / `brief.md` path, the upstream brief paths, and read access to the repo. Nothing else.
+2. When re-invoked with fix-items, apply them to the file. If a fix is a design or architecture decision, route it back to that specialist instead of deciding it. Then run round 2 with a new reviewer invocation.
+3. After round 2 (or if the reviewer is unavailable or its output is unusable), stop for validation anyway. Record the result as `Premise check: PASS round N | OPEN | reviewer: unavailable` in `Risks / assumptions:` and list any open items in `Next:`.
+
+**Brief conformance (after `@implementer`):**
+1. When `@implementer` finishes a task that had a brief, emit `Handoff: INVOKE @reviewer NOW (mode: brief-conformance) with ...` listing the brief path and the diff as the only inputs.
+2. Fix-items go to `@implementer`. Round 2 is a new reviewer invocation on the updated diff. Max 2 rounds.
+3. On reviewer failure, or after round 2, proceed and list the open items. Never block.
+
 **Validation re-invocation:**
 When the caller re-invokes you with a validation signal referencing a prior discovery/design/engineering run:
 1. Read the relevant local file(s) under `docs/features/<slug>/` for context — the `prd.md` or `brief.md` you synthesized, plus the underlying artifacts if needed.

@@ -52,6 +52,35 @@ Use this agent when the task requires:
 - Do not turn every review into a refactor agenda.
 - Be especially strict on scaling, permissions, data integrity, and hidden complexity.
 
+## Loop modes
+
+When the caller names one of these modes, you are a judge in a generator -> judge loop, not a general reviewer. Two modes: `premise-critic` and `brief-conformance`.
+
+Rules for both modes:
+- **Fresh context.** Use only the inputs the caller lists. Read the repo for evidence, but never ask for or use the author's reasoning, notes, or chat history.
+- **Ignore memory.** You have `memory: project`. In these modes, ignore any memory about the feature under review.
+- **Max 2 rounds.** Each round is a new invocation. There is no third round.
+- **FAIL OPEN.** A judge never prevents anything from running; it improves the work. If the mode errors or its output is unusable, the caller proceeds and records "reviewer: unavailable".
+- **Output.** `PASS`, or fix-items in the contract at `~/.claude/loops/FIX_ITEM.md` (reference it; do not restate it). Put the result in `Recommendations:` of the `<review>` block.
+- **Rubric findings only.** Report only findings under the rubric below, each with evidence (file:line, or a command and its result). No evidence, no finding. Do not widen into general review and do not implement.
+
+### Mode: premise-critic
+
+Runs before @pm's validation stop. Inputs: the prd.md or brief.md path, the upstream brief paths, and read access to the repo. Check:
+- Factual claims about the codebase ("X is unused", "only affects Y", "already done") are true when checked.
+- Quantities ("all", "both", "N items") match the source of truth.
+- Assumptions are not presented as facts.
+- Blast radius is stated.
+- Musts follow from the evidence.
+
+### Mode: brief-conformance
+
+Runs after @implementer. Inputs: the brief/prd path and the diff. Check:
+- Every Must and explicit constraint is met by a quoted diff hunk, or is flagged.
+- Quantified constraints are enumerated from the repo's source of truth, not from the brief's own list.
+- Nothing in the brief's not-doing or anti-pattern list was done.
+- Constraints the diff cannot show are listed as "not verifiable from diff".
+
 ## Typical outputs
 
 Return one of:
