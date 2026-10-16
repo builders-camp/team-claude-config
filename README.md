@@ -1,6 +1,6 @@
 # team-claude-config
 
-The shared Claude config for the Builders Camp team.
+The shared Claude config for the team.
 
 This repo holds the global rules, agents, and skills we both want Claude to use across every project, on every machine. Install it once per laptop, pull updates as we improve them.
 
@@ -8,11 +8,13 @@ This repo holds the global rules, agents, and skills we both want Claude to use 
 
 ## What this is
 
-When you install this repo, three things end up symlinked into your `~/.claude/` directory:
+When you install this repo, these things end up symlinked into your `~/.claude/` directory:
 
 - **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
-- **`agents/`** — five specialized subagents (`@pm`, `@implementer`, `@reviewer`, `@qa`, `@researcher`). Claude routes work to them based on task shape.
-- **`skills/`** — eleven slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, etc.) for specific lifecycle moments.
+- **`agents/`** — nine specialized subagents (`@pm`, `@visionary`, `@discovery`, `@designer`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
+- **`skills/`** — fifteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`loops/`** — the generator -> judge loop kit (see below). Linked to `~/.claude/loops/`.
+- **`stacks/`** — opt-in stack packs. Each `stacks/<name>` is linked to `~/.claude/stacks/<name>`.
 
 Because these live globally in `~/.claude/`, they apply to every project you open with Claude Code — not just one repo. Per-repo `CLAUDE.md` files (when they exist) layer *on top* of this global config.
 
@@ -21,12 +23,12 @@ Because these live globally in `~/.claude/`, they apply to every project you ope
 ## Install
 
 ```bash
-git clone git@github.com:builders-camp/team-claude-config.git ~/team-claude-config
+git clone git@github.com:<org>/team-claude-config.git ~/team-claude-config
 cd ~/team-claude-config
 ./install.sh
 ```
 
-That's it. The installer symlinks files into `~/.claude/`, so future updates flow live — usually no need to re-run `install.sh` after a `git pull`. Re-run it only when new skill or agent files are added (so they get linked).
+That's it. The installer symlinks files into `~/.claude/`, so future updates flow live — usually no need to re-run `install.sh` after a `git pull`. Re-run it only when new skill, agent or stack files are added (so they get linked).
 
 To update:
 
@@ -56,8 +58,8 @@ Beyond global Claude rules, we also share GitHub workflows (like auto-assign rev
 **List your repos** in `.repos`:
 
 ```
-~/repos/github/builderscamp/builderscamp-homepage-refresh
-~/repos/github/builderscamp/producthon
+~/repos/github/<org>/<repo-one>
+~/repos/github/<org>/<repo-two>
 ~/team-claude-config
 ```
 
@@ -70,12 +72,12 @@ cd ~/team-claude-config && git pull && ./install.sh
 It will:
 1. Update global config in `~/.claude/`
 2. Copy `.github/workflows/` to each repo listed in `.repos`
-3. Skip any repo not found locally (e.g., `producthon` if you haven't cloned it yet)
+3. Skip any repo not found locally (e.g., one you haven't cloned yet)
 
 Tell you which repos were synced and which to commit to:
 
 ```bash
-cd ~/repos/github/builderscamp/builderscamp-homepage-refresh
+cd ~/repos/github/<org>/<repo-one>
 git add .github/workflows/
 git commit -m 'ci: sync workflows from team-claude-config'
 git push
@@ -87,15 +89,30 @@ git push
 
 ## The mental model
 
-Two layers of config:
+Three layers of config:
 
-**Global (this repo, lives at `~/.claude/`)**
-House rules, agents, and skills that apply to every project we touch.
+**1. Team process (this repo, lives at `~/.claude/`)**
+House rules, agents, skills and the loops kit that apply to every project we touch. No project specifics.
 
-**Per-repo (lives at `<repo>/.claude/` and `<repo>/CLAUDE.md`)**
-Project-specific context: tech stack, deploy process, repo-specific rules. Use `/bootstrap` (described below) to scaffold this in a fresh repo.
+**2. Stack packs (`stacks/`, linked to `~/.claude/stacks/`)**
+Opt-in rules for a specific stack. A project opts in by adding an import line to its own CLAUDE.md, for example:
 
-When Claude is working in a repo, it sees both — global first, then repo-local on top. Repo-local wins on conflicts.
+```
+@~/.claude/stacks/supabase-vercel/STACK.md
+```
+
+Projects without the line do not get the pack. A project that wants the Supabase rules (migrations, edge-function deploys) and the Supabase/Vercel `/merge` post-merge steps must add that line.
+
+**3. Project-specific (lives at `<repo>/.claude/` and `<repo>/CLAUDE.md`)**
+Project context: tech stack, deploy process, design-system location, past incidents, repo-specific rules. Use `/bootstrap` (described below) to scaffold this in a fresh repo.
+
+When Claude is working in a repo, it sees all three — team process first, then any imported stack packs, then repo-local on top. Repo-local wins on conflicts.
+
+---
+
+## Loops (generator -> judge)
+
+`loops/` is a small kit for skills that produce text, content or review verdicts and want an independent check: `README.md` (the rules), `JUDGE_TEMPLATE.md` (fresh-subagent judge prompt), `FIX_ITEM.md` (fix-item contract) and `CHANGELOG.md` (a template). The kit lives at `~/.claude/loops/`. Each project keeps its own promoted-checks log at `.claude/loops/CHANGELOG.md` in the project repo; copy the template there to start it.
 
 ---
 
@@ -111,6 +128,7 @@ Claude routes to @pm (auto, per CLAUDE.md)
 @pm classifies: SINGLE / BATCH / EPIC / DIRECT
         ↓
 @pm hands off to a specialist with a self-contained brief:
+        ├── @visionary / @discovery / @designer / @engineer — upstream shaping, when load-bearing
         ├── @researcher   — discovery, options, framing
         ├── @implementer  — bounded code changes
         ├── @qa           — acceptance criteria, release safety
@@ -134,6 +152,10 @@ All agents enforce **output contracts** — a structured block they must emit be
 | Agent | When to use | Stops at |
 |---|---|---|
 | `@pm` | First touch for any non-trivial task. Classifies and routes. | Naming the specialist + handoff brief |
+| `@visionary` | Rare. Product/company direction, strategy-level bets. | Vision doc |
+| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). | Discovery doc + recommended next specialists |
+| `@designer` | Material UI/flow surface: IA, flows, accessibility. | Design brief (no mockups) |
+| `@engineer` | Architecturally non-trivial features. | Engineering brief (no code) |
 | `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
 | `@implementer` | Bounded code changes, bug fixes, small features with clear scope | Implementation or implementation brief |
 | `@qa` | Acceptance criteria, user journey validation, release readiness | Validation boundary + checklist |
@@ -158,7 +180,16 @@ Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and m
 | `/qa` | Product QA checklist: user journeys, functional + non-functional checks, release safety |
 | `/deep-review` | Full audit (architecture, code quality, tests, performance). **Use only for** large features, refactors, or security/performance work |
 | `/deploy` | Safe feature-branch deploy: commit → branch → preflight (TS compile) → push → open PR. **Never auto-merges.** |
-| `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → migration check (Supabase). **Manual trigger only.** |
+| `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → opted-in stack pack post-merge steps. **Manual trigger only.** |
+| `/recap` | Plain-language recap of what shipped or changed |
+
+### Discovery frameworks
+
+| Command | What it does |
+|---|---|
+| `/jtbd` | Jobs-to-be-done framing for a feature idea |
+| `/ost` | Opportunity solution tree |
+| `/moscow` | MoSCoW prioritization |
 
 ### Orchestration
 
@@ -188,8 +219,8 @@ Small changes → implement directly. Multi-layer or architecture → propose a 
 **Quality after changes**
 List what could break. Suggest tests. Suggest monitoring or rollback. Reproduce bugs via test before fixing when feasible.
 
-**Supabase**
-If the CLI is linked, Claude runs migrations directly via `supabase db push --linked`. Always shows the migration plan first. Production data changes get row counts before push. If CLI isn't linked, hands back to user.
+**Stack packs**
+Stack-specific rules (e.g. Supabase migrations and edge-function deploys) live in `stacks/<name>/STACK.md` and apply only to projects that import them.
 
 **Deep review escalation**
 `/deep-review` is **not** the default. Use it only for: large features (> 5 files or multiple domains), refactors, security-sensitive code, or performance-sensitive paths.
@@ -253,8 +284,9 @@ Match the structure of existing agents. Consistency across agents is what makes 
 | New global house rule | `CLAUDE.md` |
 | New reusable workflow | New skill |
 | New specialist role | New agent |
+| Stack-specific rules shared across projects | New or existing `stacks/<name>/STACK.md` |
 | Repo-specific tech stack, deploy steps, conventions | That repo's local `CLAUDE.md` (use `/bootstrap`) |
-| One-off project decision | Don't put it here. Notion or a repo ADR. |
+| One-off project decision | Don't put it here. Your tracker or a repo ADR. |
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: merge
-description: Safe PR merge with check verification, post-merge cleanup, migration reminder, and edge-function deploy reminder.
+description: Safe PR merge with check verification, post-merge cleanup, and opted-in stack pack post-merge steps.
 disable-model-invocation: true
 allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(git worktree *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *)
 argument-hint: "[PR number — defaults to current branch's PR]"
@@ -39,30 +39,16 @@ Use only when the user explicitly asks to merge a PR. Never auto-trigger.
        - If the worktree has uncommitted changes, `git worktree remove` will refuse — stop and tell the user rather than forcing it.
      - Otherwise (branch is checked out in the current folder, or not checked out anywhere): switch to `main` (or the PR's base branch) with `git checkout <base>`, `git pull --ff-only`, then delete the local feature branch with `git branch -d <branch>`. Skip the delete if it has unmerged work locally.
 
-6. Migration reminder — if the merged diff includes any file under `supabase/migrations/`:
-   - Run `supabase migration list --linked` and check whether each new file is already applied on remote.
-   - If any are local-only, run `supabase db push --linked`. Confirm one-by-one in the printed plan.
-   - If the CLI is not linked, tell the user explicitly which migrations need applying and how.
+6. If a stack pack's `STACK.md` is already in your loaded context (the project's CLAUDE.md imports it), follow its "Post-merge steps". Do not apply a pack the project did not import, even if it exists in `~/.claude/stacks/`.
 
-7. Edge-function deploy reminder — if the merged diff includes any file under a `supabase/functions/<name>/` directory (new or modified — check `gh pr diff <num> --name-only` against that path):
-   - Edge functions do **not** auto-deploy on merge/push, unlike the rest of the app (which deploys via Vercel or similar CI on push to main) — this is a common gap projects miss, not specific to one repo. Do not assume it deploys itself.
-   - List each distinct function directory touched by the diff.
-   - Tell the user explicitly, per function: `supabase functions deploy <name> --linked` (or the project's equivalent deploy command). Do not run it yourself unless the user explicitly asks — this changes a live, deployed artifact outside the migration/branch-protection safety net this skill otherwise relies on.
-   - If the diff also touches shared/imported code under `supabase/functions/_shared/` (or an equivalent shared-helpers path), call out that every function importing from it needs redeploying too, not just the ones directly changed — a shared-helper change alone won't surface in a simple directory diff.
-   - Deploy order relative to migrations depends on the change type — don't assume "migrations first" is always correct:
-     - **Additive** (new table/column the function now reads/writes): apply the migration *before* deploying the function, or the function will fail against the old schema.
-     - **Destructive** (dropping/renaming something the *currently live* function still uses): deploy the updated function *before* running the migration, or the live function breaks the instant the column/table disappears.
-     - If the diff is ambiguous or mixes both, flag it explicitly and ask the user for the intended order rather than guessing.
-
-8. Output a merge summary.
+7. Output a merge summary.
 
 Output:
 <merge>
 PR: #<num> — <title>
 Merge commit: <sha>
 Branch deleted: <branch> (remote + local)
-Migrations applied: <list, or "none in diff">
-Edge functions to deploy: <list of function names + deploy command, or "none in diff">
-Watch: <Vercel deploy URL or other monitor target if known, else "production deploy via main">
+Stack pack post-merge items: <the lines the imported stack pack defines, or "none">
+Watch: <deploy URL or other monitor target if known, else "production deploy via main">
 Rollback: revert merge commit on GitHub, or `git revert -m 1 <sha>` then push.
 </merge>

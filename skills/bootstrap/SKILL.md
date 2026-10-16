@@ -1,6 +1,6 @@
 ---
 name: bootstrap
-description: Scaffold this repo with the Builders Camp Claude OS (CLAUDE.md, skills, standards, registries). Use for new projects.
+description: Scaffold this repo with the team Claude OS (CLAUDE.md, skills, standards, registries). Use for new projects.
 disable-model-invocation: true
 user-invocable: true
 allowed-tools: Read, Glob, Write
