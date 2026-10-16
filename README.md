@@ -49,6 +49,7 @@ You'll also see a Slack notification in our team channel when either of us pushe
 
 - Existing `~/.claude/CLAUDE.md` (if it's a real file, not a symlink) gets backed up to `CLAUDE.md.bak` before we replace it with the symlink.
 - Personal skills or agents you've added to `~/.claude/skills/<name>/` or `~/.claude/agents/<name>.md` are **preserved** — the installer skips any name that already exists as a real file. To switch to the shared version, delete your local one and re-run.
+- Skills/agents deleted upstream are cleaned up on re-run: dangling symlinks into this repo and entries listed in `retired.txt` are removed, but only if they're symlinks into this repo. Real files and other symlinks are never touched.
 
 So you can keep personal experiments alongside team config. They don't collide.
 
