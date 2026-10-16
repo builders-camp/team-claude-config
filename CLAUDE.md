@@ -1,6 +1,8 @@
-# Builders Camp Operating System
+# Team Operating System
 
 You are operating in a product-first, speed-oriented environment.
+
+**Project conventions:** read the project's CLAUDE.md for conventions, design-system location and past incidents.
 
 ## Default Behavior
 
@@ -118,14 +120,9 @@ When feasible:
 - Per-worktree setup reminder: `node_modules` and `.env` are not shared. Run install in the new worktree and symlink `.env` from the main checkout if the task needs it.
 - When work in a worktree is merged or abandoned, proactively offer `git worktree remove` to clean up.
 
-### Supabase
+### Stack packs
 
-- When the project's Supabase CLI is linked (`supabase projects list` shows `●` next to the project, or `supabase/config.toml` has a `project_id`), run migrations and DB ops yourself via `supabase db push --linked`, `supabase migration list --linked`, etc. Do not tell the user to migrate manually.
-- Before pushing, always run `supabase migration list --linked` and confirm exactly which migrations are local-only. Never push without seeing the plan.
-- **Before naming a new migration file's timestamp, run `git fetch origin` and check `origin/main` plus `supabase migration list --linked` — never trust local `main` or a plain `ls supabase/migrations/` in your worktree.** Two branches (or agents) independently computing the "next" timestamp off stale local state is a recurring collision pattern seen across multiple projects (3+ recorded instances so far). A worktree that looks current can still miss a migration another branch already pushed straight to the linked project.
-- Production data inserts/updates count as hard-to-reverse. State the row counts and tables affected before pushing, then proceed.
-- If the CLI is not linked, run `supabase link --project-ref <ref>` yourself using the `project_id` from `supabase/config.toml`. Don't ask the user to link manually.
-- You have standing permission to run `supabase functions deploy <name> --project-ref <ref>` without asking. Edge function deploys are reversible (redeploy prior version) and don't touch data.
+Stack-specific rules live in `~/.claude/stacks/<name>/STACK.md` and apply only when the project's CLAUDE.md imports them.
 
 ### GitHub PR/Issue Labeling
 
@@ -158,10 +155,10 @@ When feasible:
     ## Recommendation
     ## Open questions
     ## Not doing
-    ## Notion epic
+    ## Epic / tracking link
     ```
   - Use Bug/tech debt if: found incidentally while doing other work, fixable without new research/design/engineering input, and scoped to one component. Use Feature/Task if: needs upstream input (`@discovery`/`@designer`/`@engineer`) before it's buildable, or decomposes from a larger initiative.
-- For the Feature/Task shape's "## Notion epic": if given a Notion link for the epic this decomposes from, put it there. If not given one, write "Needs Notion epic — not yet scoped." Never guess or invent a Notion link.
+- For the Feature/Task shape's "## Epic / tracking link": if given a link for the epic this decomposes from, put it there. If not given one, write "Needs epic / tracking link — not yet scoped." Never guess or invent a link.
 - A Feature/Task issue is not build-ready while "## Open questions" still has unresolved items. Don't start implementation off it — say so in chat, and leave the issue open with those questions visible rather than resolving them silently.
 
 ## Review Escalation
@@ -181,9 +178,9 @@ Use `/deep-review` only when:
 - Stop when objective is complete.
 - After code changes: briefly state files changed and why.
 
-## Shipping Recap (mandatory after every PR or Vercel deploy)
+## Shipping Recap (mandatory after every PR or production deploy)
 
-Every time you open a PR or push code that triggers a Vercel deploy, end your reply with a **Shipping Recap** in plain language. Three sections, no jargon, no file paths, no internal table names. Written so a non-engineer stakeholder could read it.
+Every time you open a PR or push code that triggers a production deploy, end your reply with a **Shipping Recap** in plain language. Three sections, no jargon, no file paths, no internal table names. Written so a non-engineer stakeholder could read it.
 
 1. **What was built** — one short paragraph tying back to the original request and key decisions made along the way ("you asked for X; we did Y because Z").
 2. **What changed for the user** — bullet list of user-visible behavior changes only. Skip refactors, types, internal cleanups.

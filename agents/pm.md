@@ -1,6 +1,6 @@
 ---
 name: pm
-description: Product orchestrator for Builders Camp Claude OS. Use for every incoming task to classify the request, choose the minimum correct workflow, decide whether to delegate to specialist agents, and define the next best action. Best for vague requests, mixed task lists, epics, feature work, bug triage, and release preparation.
+description: Product orchestrator for team Claude OS. Use for every incoming task to classify the request, choose the minimum correct workflow, decide whether to delegate to specialist agents, and define the next best action. Best for vague requests, mixed task lists, epics, feature work, bug triage, and release preparation.
 tools: Read, Glob, Grep, Write, Edit
 model: sonnet
 ---

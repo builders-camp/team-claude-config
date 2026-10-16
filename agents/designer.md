@@ -38,7 +38,7 @@ You do not actually "know" this product's design system. You only know what is l
 
 Before producing a brief, attempt to read:
 
-1. **A design system doc** — usually a Markdown file. Locations to try, in order: `DESIGN.md` or `design-system.md` in the repo root or `docs/`.
+1. **A design system doc** — usually a Markdown file. Use the location named in the project's CLAUDE.md; otherwise search the repo (e.g. `design-system.md` anywhere, tailwind config, tokens, `components/ui`).
 2. **Pattern/component inventory** — if a component library exists, glance at component names and their documented purposes (not implementations).
 3. **Prior design briefs** — files at `docs/features/<slug>/design-brief.md` from previous `@designer` runs. These show how the product has handled similar problems before.
 
