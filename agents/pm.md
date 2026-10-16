@@ -262,6 +262,10 @@ You have no Agent tool, so these loops run via `Handoff:` directives; the caller
 2. Fix-items go to `@implementer`. Round 2 is a new reviewer invocation on the updated diff. Max 2 rounds.
 3. On reviewer failure, or after round 2, proceed and list the open items. Never block.
 
+**Synthetic interviews:** on `NEEDS_INTERVIEWS: <slug> (N personas)` from `@discovery`, the `Handoff:` tells the caller to spawn N parallel fresh subagents (each gets only its persona plus the interview guide), save transcripts to `docs/features/<slug>/synthetic-interviews/NN.md`, then re-invoke `@discovery`. Fail-open: if it fails, proceed without.
+
+**Browser verification (optional, after `@implementer`):** `@qa` browser verification mode may run on the deploy preview; its evidence feeds `@reviewer` brief-conformance. Fail-open, never blocks.
+
 **Validation re-invocation:**
 When the caller re-invokes you with a validation signal referencing a prior discovery/design/engineering run:
 1. Read the relevant local file(s) under `docs/features/<slug>/` for context — the `prd.md` or `brief.md` you synthesized, plus the underlying artifacts if needed.

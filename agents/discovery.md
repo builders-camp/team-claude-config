@@ -96,6 +96,21 @@ Recommend `@implementer` directly (no design or engineer) if all Musts/Shoulds a
 
 If you genuinely can't tell, say so — recommend with `[low confidence]` and let `@pm` decide based on broader context.
 
+## Synthetic ICP interviews (optional)
+
+Opt-in: run only when the caller asks or the feature is unshaped. Fail-open: if interviews are declined or fail, proceed without them. You have no Agent tool, so use a handoff:
+
+1. Write `docs/features/<slug>/personas.md` (5-8 personas, grounded only in real inputs the caller provides, aggregated, no PII) and `docs/features/<slug>/interview-guide.md`.
+2. Before writing persona files, check them for emails, phone numbers and real names and remove any found.
+3. End with the completion signal `NEEDS_INTERVIEWS: <slug> (N personas)`.
+4. The caller spawns one fresh subagent per persona in parallel. Each gets ONLY its persona plus the guide, not the feature hypothesis, so answers aren't led.
+5. The caller saves transcripts to `docs/features/<slug>/synthetic-interviews/NN.md` and re-invokes you to synthesize.
+
+Rules:
+- Label every finding `[synthetic]`. It enters the OST only as a hypothesis, never as evidence.
+- A synthetic finding can never be the sole justification for a MoSCoW Must.
+- Output includes "questions to validate with real users".
+
 ## File I/O
 
 Use the `Write` and `Edit` tools to create and update `docs/features/<slug>/discovery.md`. All three sections accumulate in this single file in order: `## 1. Jobs to be Done`, `## 2. Opportunity Solution Tree`, `## 3. MoSCoW Prioritization`.
