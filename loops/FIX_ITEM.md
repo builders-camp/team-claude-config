@@ -10,7 +10,7 @@ One fix-item is a JSON-style block:
  "verify": "how the next judge or a tool checks it (e.g. 'source page states 62,000 EUR')"}
 ```
 
-- blocker = cannot ship (false or unsupported claim, wrong answer key, broken rule); major = clearly weaker;
+- blocker = most severe, must be fixed before shipping if possible (false or unsupported claim, wrong answer key, broken rule); major = clearly weaker;
   polish = optional.
 - At most 3 blockers + 3 majors + 3 polish per reply. Prioritise. Quote the words. Name the second option.
 - A fix that changes a fact is labelled `claim change` at the start of `fix`, so the author re-runs the skill's

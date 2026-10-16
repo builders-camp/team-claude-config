@@ -17,17 +17,20 @@ This kit lives at `~/.claude/loops/`. Each project keeps its own promoted-checks
    or who wrote it. Do not resume or message an earlier judge. Each extra round is a NEW subagent that never saw an
    earlier draft.
 3. **Output is PASS or fix-items.** Fix-items follow `FIX_ITEM.md`. A judge that returns anything else is re-run
-   once with the same inputs; a second malformed reply counts as a failed round. One exception: a blind-answer judge returns an
+   once with the same inputs; a second malformed reply counts as `judge: unavailable` and the generator's version
+   proceeds (rule 5). One exception: a blind-answer judge returns an
    answer sheet, and the orchestrator converts mismatches into fix-items.
-4. **Round caps are hard.** The skill names its cap (2 for judges, 3 for deterministic fix loops). The cap is
-   never raised mid-run.
-5. **Fail closed.** If the last round does not PASS, stop and report the open fix-items. Do not ship, merge or
-   present a weaker result, do not relax a check, and do not run an extra round to "get it over the line". Each
-   skill says what "stop" means for it (drop the page, withhold the merge offer, flag in the preview).
+4. **Round caps are per skill.** The skill names its cap (2 for judges, 3 for deterministic fix loops). The cap is
+   never raised mid-run. Hitting a cap means: ship the best version so far and record the open items.
+5. **Fail open.** A judge never prevents anything from running. It exists to make the work better; if it breaks, we
+   run nonetheless. If a judge cannot be spawned, errors, or returns garbage, proceed with the generator's version
+   and record `judge: unavailable`. If it returns fix-items, apply them and ship the improved version. Never drop,
+   block or withhold output because of a judge, and do not run an extra round to "get it over the line". Open
+   fix-items left after the last round are recorded, not used to stop the work.
 6. **Record the pass.** Every judged item gets one line in the place the skill already logs results (PR body,
    preview, or PR comment), in this format:
 
-   `loop: <skill> | item: <page / PR# / quiz slug> | judge: <name> | rounds: <1 or 2> | result: PASS | DROPPED | OPEN | open items: <ids or none>`
+   `loop: <skill> | item: <page / PR# / quiz slug> | judge: <name> | rounds: <1 or 2> | result: PASS | FIXED | UNAVAILABLE | OPEN | open items: <ids or none>`
 
    No separate pass files are created in the repo. If a skill has no existing log, it uses its final report.
 7. **Authors apply fix-items literally.** A fix-item that changes a fact is labelled `claim change`. A claim
