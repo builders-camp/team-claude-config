@@ -1,5 +1,7 @@
 # team-claude-config
 
+<!-- counts: skills=14 agents=9 -->
+
 The shared Claude config for the team.
 
 This repo holds the global rules, agents, and skills we both want Claude to use across every project, on every machine. Install it once per laptop, pull updates as we improve them.
@@ -12,7 +14,8 @@ When you install this repo, these things end up symlinked into your `~/.claude/`
 
 - **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
 - **`agents/`** — nine specialized subagents (`@pm`, `@visionary`, `@discovery`, `@designer`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
-- **`skills/`** — fifteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`settings.json`** — routing-gate hooks (a `UserPromptSubmit` reminder and a `PreToolUse` warning), linked by `install.sh`. Skipped if you already have a personal `~/.claude/settings.json`.
+- **`skills/`** — fourteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
 - **`loops/`** — the generator -> judge loop kit (see below). Linked to `~/.claude/loops/`.
 - **`stacks/`** — opt-in stack packs. Each `stacks/<name>` is linked to `~/.claude/stacks/<name>`.
 
@@ -53,7 +56,7 @@ So you can keep personal experiments alongside team config. They don't collide.
 
 ## Syncing GitHub workflows across repos
 
-Beyond global Claude rules, we also share GitHub workflows (like auto-assign reviewers). `install.sh` automatically syncs `.github/workflows/` to your team repos.
+Beyond global Claude rules, we also share GitHub workflows (like auto-assign reviewers). Workflow sync is **opt-in**: it only runs when you pass `./install.sh --sync-workflows`. A plain `./install.sh` does not touch your other repos.
 
 **List your repos** in `.repos`:
 
@@ -66,7 +69,7 @@ Beyond global Claude rules, we also share GitHub workflows (like auto-assign rev
 One repo per line. Paths use `~/` (expands to `$HOME`). Now when you run:
 
 ```bash
-cd ~/team-claude-config && git pull && ./install.sh
+cd ~/team-claude-config && git pull && ./install.sh --sync-workflows
 ```
 
 It will:
@@ -83,7 +86,7 @@ git commit -m 'ci: sync workflows from team-claude-config'
 git push
 ```
 
-**Adding new repos later:** Just edit `.repos` and re-run `./install.sh`.
+**Adding new repos later:** Just edit `.repos` and re-run `./install.sh --sync-workflows`.
 
 ---
 
@@ -151,15 +154,15 @@ All agents enforce **output contracts** — a structured block they must emit be
 
 | Agent | When to use | Stops at |
 |---|---|---|
-| `@pm` | First touch for any non-trivial task. Classifies and routes. | Naming the specialist + handoff brief |
+| `@pm` | First touch for any non-trivial task. Classifies and routes. Runs a PRD carry-through check so requirements in the PRD reach the handoff brief. | Naming the specialist + handoff brief |
 | `@visionary` | Rare. Product/company direction, strategy-level bets. | Vision doc |
-| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). | Discovery doc + recommended next specialists |
+| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). Has the Skill tool, so it can run `/jtbd`, `/ost`, `/moscow`. | Discovery doc + recommended next specialists |
 | `@designer` | Material UI/flow surface: IA, flows, accessibility. | Design brief (no mockups) |
 | `@engineer` | Architecturally non-trivial features. | Engineering brief (no code) |
 | `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
-| `@implementer` | Bounded code changes, bug fixes, small features with clear scope | Implementation or implementation brief |
-| `@qa` | Acceptance criteria, user journey validation, release readiness | Validation boundary + checklist |
-| `@reviewer` | Architecture audit, large refactors, security/performance review | Review + recommended remediation |
+| `@implementer` | Bounded code changes, bug fixes, small features with clear scope. Has Bash. | Implementation or implementation brief |
+| `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist |
+| `@reviewer` | Architecture audit, large refactors, security/performance review. Also has premise-critic mode (challenges a brief's premises) and brief-conformance mode (checks the work against the brief). | Review + recommended remediation |
 
 All agents have **scope-drift guardrails**: if the work shifts out of their lane, they hand back to `@pm` instead of overreaching. They also have soft tool-call budgets to prevent endless exploration.
 
@@ -167,7 +170,7 @@ All agents have **scope-drift guardrails**: if the work shifts out of their lane
 
 ## Skills (slash commands)
 
-Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and meta (managing the system itself).
+Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (managing the system itself). Orchestration is handled by the `@pm` agent, not a slash command.
 
 ### Lifecycle
 
@@ -179,7 +182,7 @@ Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and m
 | `/test` | Regression-preventing tests: happy path + 2 edge cases + 1 failure case |
 | `/qa` | Product QA checklist: user journeys, functional + non-functional checks, release safety |
 | `/deep-review` | Full audit (architecture, code quality, tests, performance). **Use only for** large features, refactors, or security/performance work |
-| `/deploy` | Safe feature-branch deploy: commit → branch → preflight (TS compile) → push → open PR. **Never auto-merges.** |
+| `/deploy` | Safe feature-branch deploy: branch → commit → preflight (TS compile) → push → open draft PR with labels. **Never auto-merges.** |
 | `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → opted-in stack pack post-merge steps. **Manual trigger only.** |
 | `/recap` | Plain-language recap of what shipped or changed |
 
@@ -190,12 +193,6 @@ Three groups: lifecycle (day-to-day work), orchestration (`@pm`'s mirror), and m
 | `/jtbd` | Jobs-to-be-done framing for a feature idea |
 | `/ost` | Opportunity solution tree |
 | `/moscow` | MoSCoW prioritization |
-
-### Orchestration
-
-| Command | What it does |
-|---|---|
-| `/pm` | Same triage logic as `@pm`, but invoked manually. Use when you want explicit orchestration on a list of tasks. |
 
 ### Meta (managing the system)
 
