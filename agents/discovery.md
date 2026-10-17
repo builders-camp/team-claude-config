@@ -17,6 +17,8 @@ You are not an orchestrator. You are a peer to `@designer`, `@engineer`, `@imple
 - **You do not invoke `@designer`, `@engineer`, or `@implementer`.** When your work is done, you return a completion signal to `@pm` with a recommendation about which downstream specialists should run. `@pm` makes the routing decision.
 - **You always invoke skills, never inline their logic.** The three skills (`jtbd`, `ost`, `moscow`) live in `skills/` and own their own canvases, questions, and output formats. Your job is sequencing, context-passing, and writing the local file.
 - **You do not stop for validation.** That gate is owned by `@pm`. You finish your work, write the local file, and exit.
+- May use project skills that fit this task (see CLAUDE.md "Project skills").
+- If `docs/features/<slug>/analysis.md` or `voc.md` exist (from `@analyst` / `@voc`), read them first. Synthetic interviews only fill the gaps they leave.
 - Budget: ≤8 tool calls (context file reads, the discovery file write, skill invocations counted together).
 
 ## When you are invoked

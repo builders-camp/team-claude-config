@@ -1,6 +1,6 @@
 # team-claude-config
 
-<!-- counts: skills=15 agents=9 -->
+<!-- counts: skills=18 agents=12 -->
 
 The shared Claude config for the team.
 
@@ -13,9 +13,9 @@ This repo holds the global rules, agents, and skills we both want Claude to use 
 When you install this repo, these things end up symlinked into your `~/.claude/` directory:
 
 - **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
-- **`agents/`** — nine specialized subagents (`@pm`, `@visionary`, `@discovery`, `@designer`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
+- **`agents/`** — twelve specialized subagents (`@pm`, `@visionary`, `@analyst`, `@voc`, `@discovery`, `@designer`, `@pmm`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
 - **`settings.json`** — routing-gate hooks (a `UserPromptSubmit` reminder and a `PreToolUse` warning), linked by `install.sh`. Skipped if you already have a personal `~/.claude/settings.json`.
-- **`skills/`** — fifteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`skills/`** — eighteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
 - **`loops/`** — the generator -> judge loop kit (see below). Linked to `~/.claude/loops/`.
 - **`stacks/`** — opt-in stack packs. Each `stacks/<name>` is linked to `~/.claude/stacks/<name>`.
 
@@ -132,7 +132,7 @@ Claude routes to @pm (auto, per CLAUDE.md)
 @pm classifies: SINGLE / BATCH / EPIC / DIRECT
         ↓
 @pm hands off to a specialist with a self-contained brief:
-        ├── @visionary / @discovery / @designer / @engineer — upstream shaping, when load-bearing
+        ├── @visionary / @analyst ∥ @voc / @discovery / @designer ∥ @pmm / @engineer — upstream shaping, when load-bearing
         ├── @researcher   — discovery, options, framing
         ├── @implementer  — bounded code changes
         ├── @qa           — acceptance criteria, release safety
@@ -157,13 +157,18 @@ All agents enforce **output contracts** — a structured block they must emit be
 |---|---|---|
 | `@pm` | First touch for any non-trivial task. Classifies and routes. Runs a PRD carry-through check so requirements in the PRD reach the handoff brief. | Naming the specialist + handoff brief |
 | `@visionary` | Rare. Product/company direction, strategy-level bets. | Vision doc |
+| `@analyst` | Optional. Decision hinges on usage, funnel, revenue, SEO or sizing numbers. Read-only, aggregates only; inherits the session's MCP tools (no `tools:` line). | `analysis.md`, every number sourced; missing sources listed |
+| `@voc` | Optional. Decision hinges on what customers say or competitor positioning. Read-only; inherits the session's MCP tools. | `voc.md`: ranked themes, sourced quotes, win/lose vs alternatives |
 | `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). Has the Skill tool, so it can run `/jtbd`, `/ost`, `/moscow`. | Discovery doc + recommended next specialists. Optional synthetic ICP interviews via handoff (`NEEDS_INTERVIEWS`), findings labelled `[synthetic]`. |
 | `@designer` | Material UI/flow surface: IA, flows, accessibility. | Design brief (no mockups) |
+| `@pmm` | Optional. Customer-facing surface or launch; runs alongside `@designer`. Never publishes. | `messaging-brief.md` |
 | `@engineer` | Architecturally non-trivial features. | Engineering brief (no code) |
 | `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
 | `@implementer` | Bounded code changes, bug fixes, small features with clear scope. Has Bash. | Implementation or implementation brief |
 | `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist. Also has browser verification mode (uses `/browser-qa` on the preview, fail-open). |
 | `@reviewer` | Architecture audit, large refactors, security/performance review. Also has premise-critic mode (challenges a brief's premises) and brief-conformance mode (checks the work against the brief). | Review + recommended remediation |
+
+Every agent can use project skills (see "Project skills" in `CLAUDE.md`).
 
 All agents have **scope-drift guardrails**: if the work shifts out of their lane, they hand back to `@pm` instead of overreaching. They also have soft tool-call budgets to prevent endless exploration.
 
@@ -195,6 +200,9 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 | `/jtbd` | Jobs-to-be-done framing for a feature idea |
 | `/ost` | Opportunity solution tree |
 | `/moscow` | MoSCoW prioritization |
+| `/data-analysis` | Read-only quantitative analysis; every number sourced |
+| `/voice-of-customer` | Themes, sourced quotes, win/lose vs alternatives |
+| `/messaging-brief` | ICP, positioning, key messages with proof, copy and assets per surface |
 
 ### Meta (managing the system)
 
