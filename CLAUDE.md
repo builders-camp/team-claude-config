@@ -48,9 +48,16 @@ This repository has a single product orchestrator and a set of specialists.
 **Upstream specialists** (run before implementation when load-bearing)
 
 - **`@visionary`** — rare, optional pre-step even further upstream than `@discovery`. Only for product/company direction itself, explicit strategy vocabulary (vision, north star, 10x, why now, moonshot), or new product line/business model/platform-level bets. Writes `docs/vision.md` or `docs/features/<slug>/vision.md`. Bias toward skipping — routine feature requests go straight to `@discovery`.
+- **`@analyst`** — optional quantitative evidence (usage, funnel, revenue, SEO, sizing). Read-only, aggregates only, no personal data. Writes `docs/features/<slug>/analysis.md`. Runs in parallel with `@voc`, before `@discovery`, only when the decision hinges on numbers.
+- **`@voc`** — optional voice-of-customer evidence (themes, sourced quotes, where we win or lose vs alternatives). Read-only. Writes `docs/features/<slug>/voc.md`. Runs before `@discovery`, only when the decision hinges on what customers say or on competitor positioning.
 - **`@discovery`** — runs JTBD → OST → MoSCoW for unshaped feature ideas. Writes artifacts to `docs/features/<slug>/discovery.md`. Recommends which downstream specialists should run next.
 - **`@designer`** — produces strategic design briefs (IA, flows, interaction patterns, accessibility) for features with material UI/flow surface. No mockups.
+- **`@pmm`** — optional product marketing. Runs alongside `@designer` for customer-facing features (landing pages, onboarding, emails, pricing, launches). Writes `docs/features/<slug>/messaging-brief.md`. Never publishes or posts.
 - **`@engineer`** — produces strategic engineering briefs (architecture, anti-patterns, dependency calls) for architecturally non-trivial features. No code. Anti-overengineering rules baked in.
+
+Chain: `@visionary (optional) → [evidence: @analyst ∥ @voc] (optional) → @discovery → @designer ∥ @pmm (if customer-facing) → @engineer → [validation] → @implementer`. `@analyst`, `@voc` and `@pmm` are skipped for well-defined work.
+
+**Project skills.** Every agent may invoke a skill from the current project's `.claude/skills/` (or any installed skill) when it directly serves its task. Read the skill's description first. The agent's own rules still win: read-only agents stay read-only; in @reviewer loop modes, don't use skills that change files; and no agent publishes, posts, deploys or merges through a skill unless the user asked for that.
 
 **Downstream specialists**
 
@@ -74,7 +81,7 @@ When `@pm` invokes upstream specialists (`@discovery` / `@designer` / `@engineer
 
 `@pm` chooses the strategy and states it in `Validation strategy:` of its contract block.
 
-Each specialist writes its artifact to a local file under `docs/features/<slug>/` (`discovery.md`, `design-brief.md`, `engineering-brief.md`). `@pm` owns final synthesis at the validation gate: it assembles the upstream artifacts into `docs/features/<slug>/prd.md` (full PRD, if `@discovery` ran) or `docs/features/<slug>/brief.md` (lighter synthesis, if only `@designer`/`@engineer` ran) before stopping for validation.
+Each specialist writes its artifact to a local file under `docs/features/<slug>/` (`analysis.md`, `voc.md`, `discovery.md`, `design-brief.md`, `messaging-brief.md`, `engineering-brief.md`). `@pm` owns final synthesis at the validation gate: it assembles the upstream artifacts into `docs/features/<slug>/prd.md` (full PRD, if `@discovery` ran) or `docs/features/<slug>/brief.md` (lighter synthesis, if only `@designer`/`@engineer` ran) before stopping for validation.
 
 **What goes to which agent**
 
@@ -89,6 +96,9 @@ Each specialist writes its artifact to a local file under `docs/features/<slug>/
 | "Add a new section to the dashboard" (UI surface, flow change) | `@designer` → `@implementer` |
 | "Build a real-time sync system" (architecturally non-trivial) | `@engineer` → `@implementer` |
 | "Build a new onboarding flow" (UI + architecture) | `@discovery` → `@designer` → `@engineer` → `@implementer` |
+| "Should we build X? How big is it / what do the numbers say?" | `@analyst` → `@discovery` → ... |
+| "What do customers say about X / how do we compare to competitor Y?" | `@voc` → `@discovery` → ... |
+| "Launch a new landing page / pricing / announcement" | `@pmm` ∥ `@designer` → `@implementer` |
 | "Audit our auth code" | `@reviewer` |
 | "Define acceptance for the export feature" | `@qa` |
 
