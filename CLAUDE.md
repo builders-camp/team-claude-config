@@ -130,6 +130,12 @@ When feasible:
 - Per-worktree setup reminder: `node_modules` and `.env` are not shared. Run install in the new worktree and symlink `.env` from the main checkout if the task needs it.
 - When work in a worktree is merged or abandoned, proactively offer `git worktree remove` to clean up.
 
+### GitHub Actions workflows
+
+- A workflow that holds a write token while handling a PR (`pull_request_target`, `issue_comment`, `workflow_run`) runs its logic from the base branch: check out the base SHA only, read PR files through the API as data, and never check out or execute PR-head code.
+- Never interpolate PR-derived strings (filenames, titles, branch names, comment bodies) into a shell, `run:` or `script:` block. Pass them through `env:` and use `execFileSync`-style argument arrays, not `execSync` strings.
+- A same-repo check (`head.repo.full_name == github.repository`) is required before any merge step, since fork PRs get a write token under `pull_request_target`.
+
 ### Stack packs
 
 Stack-specific rules live in `~/.claude/stacks/<name>/STACK.md` and apply only when the project's CLAUDE.md imports them.

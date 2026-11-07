@@ -38,6 +38,8 @@ This kit lives at `~/.claude/loops/`. Each project keeps its own promoted-checks
 8. **Changelog promotion.** When the same failure appears in 2 or more runs, add a row to `CHANGELOG.md` and move
    the check earlier: into a script if it can be scripted, otherwise into the generator's instructions. The
    promoted check is the one that runs next time; the judge rubric keeps its line for 3 more runs, then drops it.
+   If the project has a regression set (`.claude/loops/regression/`), also add a case for the failure, so a later
+   rule or agent edit cannot bring it back unnoticed.
 
 ## When NOT to add a judge
 
