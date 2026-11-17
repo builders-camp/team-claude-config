@@ -57,6 +57,7 @@ module.exports = {
           "coral": "#FF7A59",
           "green-strong": "#1F843D",
           "blue": "#5271FF",
+          "paper": "#FAFAF7",
           "mint": "#E9F6ED",
           "green-deep": "#1D7F41",
           "lime": "#C2FF33",
