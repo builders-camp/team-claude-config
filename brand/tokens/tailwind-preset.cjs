@@ -49,7 +49,6 @@ module.exports = {
         "border": "hsl(var(--border) / <alpha-value>)",
         "input": "hsl(var(--input) / <alpha-value>)",
         "ring": "hsl(var(--ring) / <alpha-value>)",
-        "accent-hover": "var(--bc-accent-hover)",
         "accent-tint": "var(--bc-accent-tint)",
         "brand": {
           "ink": "#141414",
@@ -58,6 +57,8 @@ module.exports = {
           "coral": "#FF7A59",
           "green-strong": "#1F843D",
           "blue": "#5271FF",
+          "mint": "#E9F6ED",
+          "green-deep": "#1D7F41",
           "lime": "#C2FF33",
           "navy": "#1F242E"
         },
@@ -94,10 +95,10 @@ module.exports = {
         }
       },
       "backgroundImage": {
-        "track-vibe-coding": "linear-gradient(to right, #C2410C, #EA580C)",
-        "track-ai-product": "linear-gradient(to right, #2563EB, #3B82F6)",
-        "track-leadership": "linear-gradient(to right, #374151, #4B5563)",
-        "track-discovery": "linear-gradient(to right, #16A34A, #22C55E)"
+        "gradient-track-vibe-coding": "linear-gradient(to right, #C2410C, #EA580C)",
+        "gradient-track-ai-product": "linear-gradient(to right, #2563EB, #3B82F6)",
+        "gradient-track-leadership": "linear-gradient(to right, #374151, #4B5563)",
+        "gradient-track-discovery": "linear-gradient(to right, #16A34A, #22C55E)"
       },
       "fontFamily": {
         "sans": [
@@ -241,12 +242,16 @@ module.exports = {
         "bc-fast": "150ms",
         "bc-base": "200ms",
         "bc-slow": "500ms",
-        "bc-reveal": "600ms"
+        "bc-reveal": "600ms",
+        "bc-slide": "350ms",
+        "bc-build": "500ms",
+        "bc-draw": "900ms"
       },
       "transitionTimingFunction": {
         "bc-standard": "cubic-bezier(0.4, 0, 0.2, 1)",
         "bc-out": "cubic-bezier(0, 0, 0.2, 1)",
-        "bc-emphasis": "cubic-bezier(0.16, 1, 0.3, 1)"
+        "bc-emphasis": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "bc-spring": "cubic-bezier(0.3, 1.6, 0.5, 1)"
       },
       "keyframes": {
         "bc-fade-up": {

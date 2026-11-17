@@ -53,6 +53,8 @@
   --bc-brand-coral: #FF7A59;
   --bc-brand-green-strong: #1F843D;
   --bc-brand-blue: #5271FF;
+  --bc-brand-mint: #E9F6ED;
+  --bc-brand-green-deep: #1D7F41;
   --bc-brand-lime: #C2FF33;
   --bc-brand-navy: #1F242E;
 
@@ -181,9 +183,13 @@
   --bc-duration-base: 200ms;
   --bc-duration-slow: 500ms;
   --bc-duration-reveal: 600ms;
+  --bc-duration-slide: 350ms;
+  --bc-duration-build: 500ms;
+  --bc-duration-draw: 900ms;
   --bc-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --bc-ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --bc-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --bc-ease-emphasis: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --bc-ease-spring: cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 
 .dark, [data-theme="dark"] {

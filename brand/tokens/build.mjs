@@ -116,7 +116,6 @@ const preset = {
     extend: {
       colors: {
         ...nest(semantic),
-        "accent-hover": "var(--bc-accent-hover)",
         "accent-tint": "var(--bc-accent-tint)",
         brand: Object.fromEntries(entries(t.color.brand).map(([k, tok]) => [k, v(tok)])),
         neutral: Object.fromEntries(entries(t.color.neutral).map(([k, tok]) => [k, v(tok)])),
@@ -124,7 +123,7 @@ const preset = {
         track: Object.fromEntries(entries(t.color.category).map(([k, tok]) => [k, tok.solid || v(tok)])),
       },
       backgroundImage: Object.fromEntries(
-        entries(t.color.category).filter(([, tok]) => v(tok).includes("gradient")).map(([k, tok]) => [`track-${k}`, v(tok)])
+        entries(t.color.category).filter(([, tok]) => v(tok).includes("gradient")).map(([k, tok]) => [`gradient-track-${k}`, v(tok)])
       ),
       fontFamily: {
         sans: ["Montserrat", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
