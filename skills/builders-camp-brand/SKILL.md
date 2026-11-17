@@ -19,8 +19,10 @@ The brand lives in `brand/` of the team config repo. Installed path: **`~/.claud
 |---|---|
 | Website / landing page / microsite | `playbooks/web.md` + `DESIGN-SYSTEM.md` |
 | Platform, app screen, component, admin | `playbooks/platform-app.md` + `DESIGN-SYSTEM.md` |
-| Deck, slides, presentation (any tool) | `playbooks/slides.md` |
-| Claude artifact (workbook, explainer, interactive page) | `playbooks/artifacts.md` |
+| Deck, slides, presentation (any tool) | `playbooks/slides.md` (+ `interactions.md` for hand-built HTML decks) |
+| Claude artifact (workbook, explainer, interactive page) | `playbooks/artifacts.md` + `playbooks/interactions.md` |
+| Anything interactive (deck controls, builds, copy buttons, tabs, saving, grading) | `playbooks/interactions.md` |
+| Diagram, flow, chart, timeline, explainer graphic | `playbooks/diagrams.md` |
 | PDF guide, lead magnet, printable | `playbooks/pdf-guides.md` |
 | LinkedIn / social static post or carousel | `playbooks/social-linkedin.md` |
 | Motion graphic, LinkedIn video, Short, reel | `playbooks/motion.md` |
@@ -37,7 +39,7 @@ The brand lives in `brand/` of the team config repo. Installed path: **`~/.claud
 
 - Montserrat only (Nanum Brush Script only as an IRL accent). Heavy, tightly tracked headings.
 - Black / white / grey + **one** green `#27A54D`. No lime, navy, neon, purple-dominant or gradient-heavy looks.
-- White text on `#27A54D` only at ≥ 18.66px bold; otherwise `#1F843D` fill or ink text.
+- White text on `#27A54D` only at ≥ 18.66px bold; otherwise `#1D7F41` fill or ink text.
 - "Builders Camp" (two words). "AI-Native" in titles, "AI-native" mid-sentence.
 - Values marked `[inferred]` or `[human call]` are provisional — don't present them as official; check `DECISIONS.md`.
 - Do not use the supermodular.ai brand (Notion "Brand" page) for Builders Camp work (DECISIONS D-01).

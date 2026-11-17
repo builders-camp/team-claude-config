@@ -1,4 +1,4 @@
-/* Builders Camp design tokens — GENERATED from tokens.json by build.mjs. Do not edit. v1.0.0 */
+/* Builders Camp design tokens — GENERATED from tokens.json by build.mjs. Do not edit. v1.1.0 */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Nanum+Brush+Script&display=swap');
 
 :root {
@@ -31,8 +31,8 @@
   --bc-accent: #27A54D;
   --accent-foreground: 0 0% 100%;
   --bc-accent-foreground: #FFFFFF;
-  --accent-hover: 137.8 62% 32%;
-  --bc-accent-hover: #1F843D;
+  --accent-hover: 142 62.8% 30.6%;
+  --bc-accent-hover: #1D7F41;
   --bc-accent-tint: rgba(39, 165, 77, 0.10);
   --destructive: 0 84.3% 60%;
   --bc-destructive: #EF4343;
@@ -51,11 +51,10 @@
   --bc-brand-white: #FFFFFF;
   --bc-brand-green: #27A54D;
   --bc-brand-coral: #FF7A59;
-  --bc-brand-green-strong: #1F843D;
+  --bc-brand-green-strong: #1D7F41;
   --bc-brand-blue: #5271FF;
   --bc-brand-paper: #FAFAF7;
   --bc-brand-mint: #E9F6ED;
-  --bc-brand-green-deep: #1D7F41;
   --bc-brand-lime: #C2FF33;
   --bc-brand-navy: #1F242E;
 
@@ -93,6 +92,21 @@
   --bc-cat-discovery-solid: #22C55E;
   --bc-cat-purple: #8B5CF6;
   --bc-cat-emerald: #10B981;
+
+  /* deck & workbook neutrals (slides, workbooks, artifacts) */
+  --bc-deck-ink: #000000;
+  --bc-deck-body: #0D0D0D;
+  --bc-deck-muted: #6B6B6B;
+  --bc-deck-muted-on-dark: #8A8A8A;
+  --bc-deck-line: #D9D9D9;
+  --bc-deck-card: #F4F4F4;
+  --bc-deck-line-dark: #333333;
+  --bc-deck-card-dark: #1A1A1A;
+  --bc-deck-surface-green-dark: #0E1A12;
+  --bc-deck-pass-border: #BEE4CA;
+  --bc-deck-green-soft: #7DC994;
+  --bc-deck-label-on-dark: #D8D8D8;
+  --bc-deck-featured-tint: #F3FAF5;
 
   /* type */
   --bc-font-sans: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -169,11 +183,18 @@
   --bc-radius-2xl: 16px;
   --bc-radius-3xl: 24px;
   --bc-radius-full: 9999px;
+  --bc-radius-brutal: 4px;
+  --bc-radius-deck-card: 20px;
   --bc-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --bc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --bc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --bc-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --bc-shadow-sticky-bar: 0 -4px 20px 0 rgb(0 0 0 / 0.08);
+  --bc-shadow-brutal: 8px 8px 0 #000000;
+  --bc-shadow-brutal-sm: 4px 4px 0 #000000;
+  --bc-shadow-focus-ring: 0 0 0 6px rgba(39, 165, 77, 0.18);
+  --bc-shadow-halo: 0 0 0 14px #E9F6ED;
+  --bc-shadow-float: 0 24px 48px rgba(20, 20, 20, 0.06);
   --bc-container-max: 1200px;
   --bc-content-max: 1024px;
   --bc-reading-max: 768px;
@@ -187,10 +208,29 @@
   --bc-duration-slide: 350ms;
   --bc-duration-build: 500ms;
   --bc-duration-draw: 900ms;
+  --bc-duration-lift: 150ms;
+  --bc-duration-hover: 200ms;
+  --bc-duration-progress: 300ms;
+  --bc-duration-build-out: 450ms;
+  --bc-duration-stagger-first: 350ms;
+  --bc-duration-stagger: 420ms;
+  --bc-duration-draw-short: 500ms;
+  --bc-duration-draw-hero: 1600ms;
+  --bc-duration-camera: 1100ms;
+  --bc-duration-ambient-min: 1300ms;
+  --bc-duration-copy-feedback: 2000ms;
   --bc-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --bc-ease-out: cubic-bezier(0, 0, 0.2, 1);
   --bc-ease-emphasis: cubic-bezier(0.2, 0.8, 0.2, 1);
   --bc-ease-spring: cubic-bezier(0.3, 1.6, 0.5, 1);
+  --bc-ease-camera: cubic-bezier(0.65, 0, 0.35, 1);
+  --bc-distance-reveal-y: 20px;
+  --bc-distance-nudge-x: 2px;
+  --bc-distance-rise: 28px;
+  --bc-distance-side: 48px;
+  --bc-distance-pop-scale: 0.85;
+  --bc-distance-lift: -2px;
+  --bc-distance-node-rise: 24px;
 }
 
 .dark, [data-theme="dark"] {

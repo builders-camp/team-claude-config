@@ -9,7 +9,14 @@ WCAG 2.x contrast ratios for the brand's real pairings.
 | muted #737373 on neutral-100 #F5F5F5 | 4.35:1 | AA large only (≥24px, or ≥18.66px bold) |
 | ink on neutral-100 | 16.90:1 | AAA |
 | white on green #27A54D | 3.19:1 | AA large only (≥24px, or ≥18.66px bold) |
-| white on green-strong #1F843D | 4.74:1 | AA |
+| white on green-strong #1D7F41 | 5.04:1 | AA |
+| green-strong #1D7F41 on white (small text/links) | 5.04:1 | AA |
+| deck muted #6B6B6B on white | 5.33:1 | AA |
+| deck muted #6B6B6B on deck card #F4F4F4 | 4.85:1 | AA |
+| deck muted-on-dark #8A8A8A on black | 6.08:1 | AA |
+| deck body #0D0D0D on mint #E9F6ED | 17.46:1 | AAA |
+| green #27A54D on black (slide eyebrows) | 6.58:1 | AA |
+| diagram edge #8A8A8A on white (non-text, needs 3:1) | 3.45:1 | AA large only (≥24px, or ≥18.66px bold) |
 | green #27A54D on white (text/link) | 3.19:1 | AA large only (≥24px, or ≥18.66px bold) |
 | ink on green | 5.77:1 | AA |
 | white on coral #FF7A59 | 2.57:1 | FAIL — decorative only |

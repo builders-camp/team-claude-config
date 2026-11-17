@@ -85,6 +85,23 @@
   table.scale td:first-child { width: 160px; font-size: 12px; color: hsl(var(--muted-foreground)); }
   .two { color: hsl(var(--muted-foreground)); }
   code { font-family: var(--bc-font-mono); font-size: 12px; }
+  .deckzone { background:#fff; border:1px solid var(--bc-deck-line); border-radius:16px; padding:24px; }
+  .copycard { background:#000; color:#fff; border-radius:20px; padding:20px 24px; font-size:15px; line-height:1.5; }
+  .copycard .lbl { color:var(--bc-brand-green); font-weight:700; letter-spacing:.15em; font-size:12px; margin-bottom:8px; }
+  .copycard .blank { background:rgba(39,165,77,.25); border-radius:4px; padding:0 4px; }
+  .copybtn { margin-top:14px; background:var(--bc-brand-green); color:#000; border:0; border-radius:999px; padding:8px 18px; font:700 14px var(--bc-font-sans); cursor:pointer; transition:background var(--bc-duration-hover); }
+  .copybtn.done { background:#fff; color:#000; }
+  .copybtn:focus-visible, .goto:focus-visible { outline:3px solid var(--bc-brand-green); outline-offset:2px; }
+  .goto { border:2px solid var(--bc-deck-line); border-radius:20px; padding:16px 20px; background:#fff; transition:box-shadow var(--bc-duration-hover), border-color var(--bc-duration-hover); cursor:pointer; text-align:left; font:inherit; color:inherit; width:100%; }
+  .goto:hover { border-color:var(--bc-brand-green); box-shadow:var(--bc-shadow-focus-ring); }
+  .brutal { border:3px solid #000; border-radius:4px; box-shadow:var(--bc-shadow-brutal); padding:16px 20px; background:#fff; }
+  .halo { border:4px solid #000; border-radius:28px; box-shadow:var(--bc-shadow-halo); padding:16px 20px; background:#fff; }
+  .build { opacity:0; transform:translateY(28px); transition:opacity var(--bc-duration-build) ease, transform var(--bc-duration-build) var(--bc-ease-emphasis); }
+  .build.in { opacity:1; transform:none; }
+  .diagram svg { width:100%; height:auto; display:block; }
+  .diagram .draw { stroke-dasharray:1; stroke-dashoffset:1; transition:stroke-dashoffset var(--bc-duration-draw-short) ease; }
+  .diagram.on .draw { stroke-dashoffset:0; }
+  @media (prefers-reduced-motion: reduce) { .build { opacity:1; transform:none; transition:none; } .diagram .draw { stroke-dashoffset:0; transition:none; } }
   @media (max-width: 767px) { .frames { grid-template-columns: 1fr; } table.scale td:first-child { width: 90px; } .hide-sm { display: none; } }
 </style>
 </head>
@@ -112,7 +129,7 @@
       <div class="sw"><div style="background:#E6E6E6"></div><p><b>Neutral 200</b>#E6E6E6 · border</p></div>
       <div class="sw"><div style="background:#737373"></div><p><b>Neutral 500</b>#737373 · muted text</p></div>
       <div class="sw"><div style="background:#27A54D"></div><p><b>Builders Green</b>#27A54D · accent</p></div>
-      <div class="sw"><div style="background:#1F843D"></div><p><b>Green Strong</b>#1F843D · AA buttons [inferred]</p></div>
+      <div class="sw"><div style="background:#1D7F41"></div><p><b>Green Strong</b>#1D7F41 · AA buttons [inferred]</p></div>
       <div class="sw"><div style="background:#E9F6ED"></div><p><b>Mint</b>#E9F6ED · tint</p></div>
       <div class="sw"><div style="background:#FAFAF7"></div><p><b>Paper</b>#FAFAF7 · motion/social</p></div>
       <div class="sw"><div style="background:#FF7A59"></div><p><b>Coral</b>#FF7A59 · promo only</p></div>
@@ -185,9 +202,59 @@
     </div>
   </div></section>
 
+  <section><div class="wrap">
+    <p class="eyebrow">Decks &amp; workbooks · interactions</p>
+    <h2 class="h2" style="margin-bottom:24px">Same controls, <span class="two">every deck</span></h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px">
+      <div class="copycard"><div class="lbl">PROMPT TO PASTE</div>You are my product coach. Review this <span class="blank">[PRD]</span> for <span class="blank">[audience]</span> and list the three biggest gaps.<br><button class="copybtn" id="copybtn" type="button">Copy prompt</button></div>
+      <div class="grid" style="gap:16px">
+        <button class="goto" type="button"><b>Stage 1 · Vision</b><br><span style="color:var(--bc-deck-muted);font-size:14px">Drill-down card · hover/focus ring</span></button>
+        <div class="brutal"><b>Neo-brutalist box</b><br><span style="font-size:14px">3px ink border · 8px offset shadow</span></div>
+      </div>
+      <div class="grid" style="gap:16px">
+        <div class="halo"><b>Halo card</b><br><span style="font-size:14px">The one key concept</span></div>
+        <div class="deckzone" id="builds"><div class="build" style="font-weight:700">Build 1 · rise 28px</div><div class="build" style="font-weight:700;color:var(--bc-brand-green)">Build 2 · +420ms</div><div class="build" style="font-size:14px;color:var(--bc-deck-muted)">500ms cubic-bezier(.2,.8,.2,1)</div></div>
+      </div>
+    </div>
+    <p class="eyebrow" style="margin-top:32px">Diagram grammar</p>
+    <div class="deckzone diagram" id="diagram">
+      <svg viewBox="0 0 900 230" role="img" aria-label="Example flow: Start, Draft, Judge loop, Human decision, Ship">
+        <defs><marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8A8A8A"/></marker>
+        <marker id="agg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#27A54D"/></marker></defs>
+        <rect x="10" y="90" width="120" height="50" rx="25" fill="#000"/><text x="70" y="121" text-anchor="middle" fill="#fff" font-weight="700" font-size="17" font-family="Montserrat">Start</text>
+        <rect x="190" y="85" width="150" height="60" rx="16" fill="#fff" stroke="#000" stroke-width="2.5"/><text x="265" y="121" text-anchor="middle" font-weight="700" font-size="17" font-family="Montserrat" fill="#000">Draft</text>
+        <rect x="400" y="85" width="150" height="60" rx="16" fill="#fff" stroke="#27A54D" stroke-width="2.5" style="filter:drop-shadow(0 0 6px rgba(39,165,77,.35))"/><text x="475" y="121" text-anchor="middle" font-weight="700" font-size="17" font-family="Montserrat" fill="#000">Build · now</text>
+        <rect x="400" y="10" width="150" height="46" rx="16" fill="#E9F6ED" stroke="#27A54D" stroke-width="2.5" stroke-dasharray="8 6"/><text x="475" y="39" text-anchor="middle" font-weight="700" font-size="15" font-family="Montserrat" fill="#000">Judge</text>
+        <path d="M620 80 L660 115 L620 150 L580 115 Z" fill="#000"/><text x="620" y="175" text-anchor="middle" font-weight="700" font-size="14" font-family="Montserrat" fill="#6B6B6B">Human decides</text>
+        <rect x="720" y="90" width="120" height="50" rx="25" fill="#000"/><text x="780" y="121" text-anchor="middle" fill="#fff" font-weight="700" font-size="17" font-family="Montserrat">Ship</text>
+        <path class="draw" pathLength="1" d="M130 115 H186" stroke="#8A8A8A" stroke-width="2.5" fill="none" marker-end="url(#ag)"/>
+        <path class="draw" pathLength="1" d="M340 115 H396" stroke="#8A8A8A" stroke-width="2.5" fill="none" marker-end="url(#ag)"/>
+        <path class="draw" pathLength="1" d="M550 115 H576" stroke="#8A8A8A" stroke-width="2.5" fill="none" marker-end="url(#ag)"/>
+        <path class="draw" pathLength="1" d="M660 115 H716" stroke="#8A8A8A" stroke-width="2.5" fill="none" marker-end="url(#ag)"/>
+        <path class="draw" pathLength="1" d="M440 85 V60" stroke="#27A54D" stroke-width="2.5" stroke-dasharray="7 6" fill="none" marker-end="url(#agg)"/>
+        <path class="draw" pathLength="1" d="M510 56 V81" stroke="#27A54D" stroke-width="2.5" stroke-dasharray="7 6" fill="none" marker-end="url(#agg)"/>
+        <text x="560" y="72" font-weight="700" font-size="13" font-family="Montserrat" fill="#1D7F41">fix · max 2 rounds</text>
+        <g font-family="Montserrat" font-size="13" font-weight="600" fill="#6B6B6B"><rect x="10" y="196" width="34" height="22" rx="5" fill="#000"/><text x="52" y="212">Start / end</text><rect x="150" y="196" width="34" height="22" rx="5" fill="#fff" stroke="#27A54D" stroke-width="2.5"/><text x="192" y="212">Active</text><rect x="260" y="196" width="34" height="22" rx="5" fill="#E9F6ED" stroke="#27A54D" stroke-dasharray="4 3" stroke-width="2"/><text x="302" y="212">Judge loop</text></g>
+      </svg>
+    </div>
+  </div></section>
+
   <footer><div class="wrap" style="padding:32px 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:14px" >
     <span><img src="./assets/logo/builders-camp-wordmark-black.svg" alt="Builders Camp" style="height:18px;vertical-align:middle"> &nbsp;<span class="muted">We bring 🍀 to product builders</span></span>
     <span class="muted">© 2026 Builders Camp. All rights reserved.</span>
   </div></footer>
+<script>
+(function(){
+  var b=document.getElementById('copybtn');
+  b.addEventListener('click',function(){
+    var t=b.parentNode.firstChild.nextSibling ? b.parentNode.textContent.replace('Copy prompt','').replace('Copied ✓','').replace('PROMPT TO PASTE','').trim() : '';
+    var done=function(){ b.textContent='Copied ✓'; b.classList.add('done'); setTimeout(function(){ b.textContent='Copy prompt'; b.classList.remove('done'); },2000); };
+    try { navigator.clipboard.writeText(t).then(done,function(){ b.textContent='Select the text and copy'; }); } catch(e){ b.textContent='Select the text and copy'; }
+  });
+  var builds=[].slice.call(document.querySelectorAll('#builds .build'));
+  builds.forEach(function(el,i){ setTimeout(function(){ el.classList.add('in'); },350+i*420); });
+  setTimeout(function(){ document.getElementById('diagram').classList.add('on'); },600);
+})();
+</script>
 </body>
 </html>

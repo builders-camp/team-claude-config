@@ -26,7 +26,7 @@
 - 600px wide single column, white body on `#F5F5F5` page background, 32px padding (20px on mobile).
 - Header: wordmark black PNG (`assets/logo/builders-camp-stacked-black-transparent-945x451.png` scaled, or a 2x PNG export of the horizontal wordmark — G-01) 24px tall, left.
 - Headline 28px/800 ink, tracking −0.5px; body 16px/24px `#141414`; secondary 14px `#737373`.
-- **Button:** bulletproof (table-based) `#1F843D` fill (accessible green — D-07), white 16px/700, radius 8, padding 14×24, full-width on mobile. One primary button per email.
+- **Button:** bulletproof (table-based) `#1D7F41` fill (accessible green — D-07), white 16px/700, radius 8, padding 14×24, full-width on mobile. One primary button per email.
 - Info card (session details): `#F5F5F5`, radius 12, 16px padding, rows "📅 Thu, 12 Nov · 17:00 Lisbon time", "📍 Venue / Zoom link".
 - Footer: 12px muted — "Builders Camp · We bring 🍀 to product builders", unsubscribe/preferences, address as legally required.
 - Fonts: Montserrat via `<link>` with fallback `Arial, Helvetica, sans-serif` (Outlook will fall back).

@@ -70,6 +70,8 @@ for (const [k, tok] of entries(t.color.category)) {
   css += `  --bc-cat-${k}: ${v(tok)};\n`;
   if (tok.solid) css += `  --bc-cat-${k}-solid: ${tok.solid};\n`;
 }
+css += `\n  /* deck & workbook neutrals (slides, workbooks, artifacts) */\n`;
+for (const [k, tok] of entries(t.color.deck)) css += `  --bc-deck-${k}: ${v(tok)};\n`;
 css += `\n  /* type */\n`;
 for (const [k, tok] of entries(t.font.family)) css += `  --bc-font-${k}: ${v(tok)};\n`;
 for (const [k, s] of entries(t.type)) {
@@ -82,6 +84,7 @@ for (const [k, tok] of entries(t.shadow)) css += `  --bc-shadow-${k}: ${v(tok)};
 for (const [k, tok] of entries(t.layout)) if (k !== "breakpoints") css += `  --bc-${k}: ${v(tok)};\n`;
 for (const [k, tok] of entries(t.motion.duration)) css += `  --bc-duration-${k}: ${v(tok)};\n`;
 for (const [k, tok] of entries(t.motion.easing)) css += `  --bc-ease-${k}: ${v(tok)};\n`;
+for (const [k, tok] of entries(t.motion.distance)) css += `  --bc-distance-${k}: ${v(tok)};\n`;
 css += `}\n\n`;
 const dark = themeBlock("dark");
 css += `.dark, [data-theme="dark"] {\n${dark}\n}\n\n`;
@@ -120,6 +123,7 @@ const preset = {
         brand: Object.fromEntries(entries(t.color.brand).map(([k, tok]) => [k, v(tok)])),
         neutral: Object.fromEntries(entries(t.color.neutral).map(([k, tok]) => [k, v(tok)])),
         feedback: Object.fromEntries(entries(t.color.feedback).map(([k, tok]) => [k, v(tok)])),
+        deck: Object.fromEntries(entries(t.color.deck).map(([k, tok]) => [k, v(tok)])),
         track: Object.fromEntries(entries(t.color.category).map(([k, tok]) => [k, tok.solid || v(tok)])),
       },
       backgroundImage: Object.fromEntries(
@@ -139,7 +143,7 @@ const preset = {
       ),
       borderRadius: {
         sm: v(t.radius.sm), md: v(t.radius.md), lg: "var(--radius)",
-        xl: v(t.radius.xl), "2xl": v(t.radius["2xl"]), "3xl": v(t.radius["3xl"]),
+        xl: v(t.radius.xl), "2xl": v(t.radius["2xl"]), "3xl": v(t.radius["3xl"]), brutal: v(t.radius.brutal), deck: v(t.radius["deck-card"]),
       },
       boxShadow: Object.fromEntries(entries(t.shadow).map(([k, tok]) => [`bc-${k}`, v(tok)])),
       maxWidth: { container: v(t.layout["container-max"]), content: v(t.layout["content-max"]), reading: v(t.layout["reading-max"]), copy: v(t.layout["copy-max"]) },
@@ -173,7 +177,14 @@ const pairs = [
   ["muted #737373 on neutral-100 #F5F5F5", "#737373", "#F5F5F5"],
   ["ink on neutral-100", "#141414", "#F5F5F5"],
   ["white on green #27A54D", "#FFFFFF", "#27A54D"],
-  ["white on green-strong #1F843D", "#FFFFFF", "#1F843D"],
+  ["white on green-strong #1D7F41", "#FFFFFF", "#1D7F41"],
+  ["green-strong #1D7F41 on white (small text/links)", "#1D7F41", "#FFFFFF"],
+  ["deck muted #6B6B6B on white", "#6B6B6B", "#FFFFFF"],
+  ["deck muted #6B6B6B on deck card #F4F4F4", "#6B6B6B", "#F4F4F4"],
+  ["deck muted-on-dark #8A8A8A on black", "#8A8A8A", "#000000"],
+  ["deck body #0D0D0D on mint #E9F6ED", "#0D0D0D", "#E9F6ED"],
+  ["green #27A54D on black (slide eyebrows)", "#27A54D", "#000000"],
+  ["diagram edge #8A8A8A on white (non-text, needs 3:1)", "#8A8A8A", "#FFFFFF"],
   ["green #27A54D on white (text/link)", "#27A54D", "#FFFFFF"],
   ["ink on green", "#141414", "#27A54D"],
   ["white on coral #FF7A59", "#FFFFFF", "#FF7A59"],

@@ -1,6 +1,6 @@
 # Playbook — Claude artifacts (workbooks, explainers, session pages, interactive tools)
 
-> Derived from the AI-Native Product Management workbook and session artifacts. Applies to any HTML page Claude publishes with the Artifact tool for Builders Camp (and to typed artifacts: Slides → `slides.md`, Docs → `pdf-guides.md` voice rules).
+> Derived from the AI-Native Product Management workbook and session artifacts, the Sessions' Workbook and the client-training workbooks. Behaviour (tabs, step rail, saving, copy, grading, room view) is specified in `interactions.md`; diagrams in `diagrams.md`. Applies to any HTML page Claude publishes with the Artifact tool for Builders Camp (and to typed artifacts: Slides → `slides.md`, Docs → `pdf-guides.md` voice rules).
 
 ## 1. Page contract
 
@@ -12,8 +12,8 @@
 ### Minimal token block for artifacts
 ```css
 :root{
-  --bg:#FFFFFF; --surface:#F4F4F4; --ink:#141414; --body:#141414; --muted:#737373; --line:#E6E6E6;
-  --green:#27A54D; --green-strong:#1F843D; --mint:#E9F6ED; --on-green:#FFFFFF;
+  --bg:#FFFFFF; --surface:#F4F4F4; --ink:#000000; --body:#0D0D0D; --muted:#6B6B6B; --line:#D9D9D9; /* deck neutrals, D-19 */
+  --green:#27A54D; --green-strong:#1D7F41; --mint:#E9F6ED; --on-green:#FFFFFF; /* never name it --lime (legacy) */
   --radius:12px; --font:'Montserrat',system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -44,7 +44,7 @@ body{ background:var(--bg); color:var(--body); font:16px/1.5 var(--font); }
 
 ## 4. Interaction and motion
 
-Fade-up 20px / 500ms `cubic-bezier(.2,.8,.2,1)` on first view; hover ring `0 0 0 6px rgba(39,165,77,.18)`; disable under reduced motion. Persist per-viewer conveniences (current tab) in `localStorage` with try/catch; shared state via artifact capabilities, not localStorage.
+Fade-up 20px / 500ms `cubic-bezier(.2,.8,.2,1)` on first view; hover ring `0 0 0 6px rgba(39,165,77,.18)`; disable under reduced motion. Workbooks persist answers in `localStorage` key `bc-<course>-v<n>` (300ms debounce, try/catch). Shared or facilitator state goes through artifact capabilities (`room`, `user`, `sample`, `downloads`), each with a fallback when unavailable — see `interactions.md` §3.
 
 ## 5. Content rules
 

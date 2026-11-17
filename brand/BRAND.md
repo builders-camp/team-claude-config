@@ -1,6 +1,6 @@
 # Builders Camp — Brand Guidelines
 
-> Version 1.0 · 2026-11-17 · Owner: Builders Camp team · Source of truth for anything visual or written.
+> Version 1.1 · 2026-11-17 · Owner: Builders Camp team · Source of truth for anything visual or written.
 > Values come from what we have shipped (builderscamp.com, the IRL site, challenges, quizzes, registration, members portal, our decks, workbooks and Shorts Engine spec). Anything marked **[inferred]** had no source and is a rule we derived; anything marked **[human call]** is open. Every conflict and decision is logged in `DECISIONS.md`.
 > Tokens: `tokens/tokens.json`. Components and layout: `DESIGN-SYSTEM.md`. Per-medium specs: `playbooks/`.
 
@@ -129,6 +129,9 @@ Full tokens (light, dark, feedback, track colours): `tokens/tokens.json`. Contra
 | Lines | Neutral 200 | `#E6E6E6` | 1px borders, dividers |
 | **Accent** | **Builders Green** | **`#27A54D`** | ≤ 5% — CTAs, eyebrows, highlights, active states |
 | Accent tint | Mint | `#E9F6ED` | chips, live-demo slides, icon medallions |
+| Accessible green | Green Strong | `#1D7F41` | small green text, links, small-label green buttons (5.04:1 on white) |
+
+**Two neutral families, one brand (D-19).** The website and platform use the neutrals above (`#141414`, `#737373`, `#E6E6E6`, `#F5F5F5`). Teaching decks, workbooks and artifacts use the deck set: ink `#000`, body `#0D0D0D`, muted `#6B6B6B` / `#8A8A8A` on black, line `#D9D9D9`, card `#F4F4F4` (`tokens.json → color.deck`). Don't mix the two in one piece.
 
 ### Supporting colours (use sparingly, with purpose)
 | Name | Hex | Use only for |
@@ -144,8 +147,8 @@ Full tokens (light, dark, feedback, track colours): `tokens/tokens.json`. Contra
 ### Rules
 1. **One accent per view.** Green is the only saturated colour in a normal screen/slide. Blues/purples never dominate a frame.
 2. **Green highlights meaning**: the key word in a headline, the primary CTA, the active state, the "IRL" pill. Never body text.
-3. **Accessibility:** white on `#27A54D` is 3.19:1 — fine for ≥ 24px or ≥ 18.66px bold text and for icons, **not** for small text. For buttons with 14–16px labels use **Green Strong `#1F843D`** (4.74:1) or ink text on green (5.77:1). See D-07 — the live site currently fails this; human call whether to update it.
-4. Muted grey `#737373` passes on white (4.74:1) but not on `#F5F5F5` (4.35:1) for small text — use ink or `#404040` for small text on grey.
+3. **Accessibility:** white on `#27A54D` is 3.19:1 — fine for ≥ 24px or ≥ 18.66px bold text and for icons, **not** for small text. For buttons with 14–16px labels use **Green Strong `#1D7F41`** (5.04:1) or ink text on green (5.77:1). See D-07 — the live site currently fails this; human call whether to update it.
+4. Muted grey `#737373` passes on white (5.04:1) but not on `#F5F5F5` (4.35:1) for small text — use ink or `#404040` for small text on grey.
 5. No gradients in UI except track bars and the radial green glow used on dark slides/motion.
 
 ## 7. Typography
@@ -176,7 +179,7 @@ Type scale and tokens: `DESIGN-SYSTEM.md §2`.
 - **Bootcamp covers:** flat colour (black `#141414` or cover blue `#5271FF`), bootcamp name centred in bold white type, an "created by <instructor>" pill with avatar top-left. No photos, no gradients.
 - **Illustration style (motion/social): "Paper & Ink"** — warm off-white paper, ink-black line drawing, green highlighter strokes, simple objects with minimal ink faces. Dark variant: near-black with dot grid, film grain and one green glow. No mascots, no 3D renders, no clip-art.
 - **Signature motif:** "rays" — thin black lines fanning from the top-right corner at 7% opacity (every fifth at 11%) on white slides. Use on covers and statement slides only.
-- **Diagrams/charts:** black bars, the highlighted series in green, grey for the rest. Ramp: `#EBEDF0 → #BFE6CB → #6CC58A → #27A54D → #146B34`.
+- **Diagrams/charts:** see `playbooks/diagrams.md` — ink structure, green meaning, legend always; black bars, the highlighted series in green, grey for the rest. Ramp: `#EBEDF0 → #BFE6CB → #6CC58A → #27A54D → #146B34`.
 - **Emoji:** allowed as small accents in UI copy (📞, 💡, 🍀, 🍪) — at most one per block. Never in headlines on slides.
 
 ## 9. Iconography
@@ -187,9 +190,12 @@ Type scale and tokens: `DESIGN-SYSTEM.md §2`.
 - Arrows: `→` / `ArrowRight` after CTA labels; nudge 2px right on hover. External links: `↗`.
 - Checkmarks in green for feature lists; ✓ / ⚠ / ✗ for results states.
 
-## 10. Motion principles
+## 10. Interaction and motion principles
 
-1. **Purposeful and quick.** UI transitions 150–200ms; section reveals 500–600ms fade-up 20px, ease-out. Nothing loops in product UI.
+Behaviour is part of the brand: every Builders Camp deck drives the same way (→/Space/click next, ← back, N notes, F fullscreen, deep links), every prompt has the same "Copy prompt → Copied ✓" button, every workbook saves locally and grades the same way. Full spec: `playbooks/interactions.md`. Diagrams have a fixed node and edge grammar: `playbooks/diagrams.md`.
+
+
+1. **Purposeful and quick.** UI transitions 150–200ms; section reveals 500–600ms fade-up 20px, ease-out. Nothing loops in product UI. Decks: slide fade 350ms, builds 500ms `cubic-bezier(.2,.8,.2,1)` (rise 28px, sideways 48px, pop .85), auto builds every 420ms.
 2. **One thing moves at a time.** Stagger builds 60–100ms.
 3. **Green is light.** On dark frames, emphasis arrives as a green glow or a green word, not a new colour.
 4. **Respect `prefers-reduced-motion`**: disable transforms, keep opacity fades ≤ 150ms.
@@ -199,7 +205,7 @@ Detailed specs: `playbooks/motion.md`.
 ## 11. Accessibility (non-negotiable)
 
 - WCAG 2.2 AA. Body text ≥ 4.5:1; large text and icons ≥ 3:1 (see `tokens/contrast.md`).
-- Never white text below 18.66px bold on `#27A54D`; use `#1F843D` or ink text.
+- Never white text below 18.66px bold on `#27A54D`; use `#1D7F41` or ink text.
 - Visible focus ring: 2px `#27A54D` with 2px offset.
 - Touch targets ≥ 44×44px (buttons are 40–48px tall).
 - Never rely on colour alone (results use icons ✓ ⚠ ✗ + text).

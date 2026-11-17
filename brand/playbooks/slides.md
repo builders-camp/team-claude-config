@@ -1,6 +1,7 @@
 # Playbook — Slides and decks
 
 > Derived from our shipped decks: AI-Native Product Management (Session 1), the IRL Porto deck, the AI Native deck and the IRL Porto Kickoff (Slides type). Conflicts between them resolved in `../DECISIONS.md` (D-04, D-10, D-12).
+> Behaviour (keys, builds, branching, notes, copy) for hand-built decks: `interactions.md`. Diagrams and charts: `diagrams.md`.
 > When making a deck with the Artifact **Slides** type, use the Builders Camp design system (`../README.md` → Design System artifact) if published; otherwise apply this file.
 
 ## 1. Canvas
@@ -9,6 +10,9 @@
 - Background options: **white** (content), **black `#000` / ink `#141414`** (cover, section dividers, statements, closing, "PAUSE / Questions?"), **mint `#E9F6ED`** (live demo / exercise slides), **full green `#27A54D`** (rare statement slide, white type).
 - Signature motif: **rays** — 46 thin black lines fanning down-left from the top-right corner, 7% opacity (every fifth 11%). Covers and statement slides only.
 - Dark-slide glow: radial `#27A54D` at ~22% alpha from one corner.
+
+### Deck neutrals (`color.deck` in tokens)
+Teaching decks use their own neutral set, not the website's (D-19): ink `#000`, body `#0D0D0D`, muted `#6B6B6B` (light) / `#8A8A8A` (on black), line `#D9D9D9`, card `#F4F4F4`, line on black `#333333`, card on black `#1A1A1A`, green-dark surface `#0E1A12`, labels on black `#D8D8D8`. Accent green is always `#27A54D` (not `#26A355`/`#26A653` — D-03); small green text on white uses `#1D7F41`.
 
 ## 2. Type scale (Montserrat only)
 
@@ -28,8 +32,9 @@ Emphasis = green colour, never italics. ≤ 40 words per content slide; one idea
 
 ## 3. Logo
 
-- Content slides: wordmark **top-left**, ~217×26px, at x 128, y 55.
-- Cover: wordmark under the title (420×50) or top-right (420×60) — pick one per deck.
+Two deck families (D-22):
+- **Teaching decks** (sessions, trainings, talks): wordmark **top-left at x 128, y 55, 217×26, on every slide** (black on light, white on dark) + running title top-right 24px `#6B6B6B`. Client trainings name the client in text only — cover eyebrow "CLIENT · AI-NATIVE CLAUDE · SESSION 1" and title — never a client logo.
+- **Event decks** (IRL kickoffs, community events): wordmark **top-right, 420×60, `object-fit: contain`, top 96px**, on every slide; partners only in the sponsor strip.
 - Dark slides: white wordmark. Never the logo in the closing slide's title.
 - Co-branded deck covers: "Builders Camp × Partner" — partner logo right of ours, same height.
 
@@ -51,11 +56,45 @@ Emphasis = green colour, never italics. ≤ 40 words per content slide; one idea
 
 ## 5. Components
 
-Pills radius 999 · chips mint radius 8 · grey cards `#F4F4F4` radius 20 · icon medallion 76px (mint fill, 4px black border, Lucide 2px stroke) · numbered circle 48px black/green numerals · progress bar 4px green at top · hover ring `0 0 0 6px rgba(39,165,77,.18)` in HTML decks.
+**Radius at slide scale:** 20px is the standard slide card (D-26); 4px for brutalist boxes; 999 pills; 50% circles. Avoid 6/10/14/18/22/26.
+
+Teaching-deck components (from the shared deck runtime):
+- **Agenda timeline:** 4px black rail; 76px circle nodes (mint fill, 4px black border, numeral); 316×350 cards `#F4F4F4` r20 below; last card `#0D0D0D`; green "HANDS-ON · IN SESSION · 20 MIN" pills above.
+- **Session pills (cover):** 26px/700, padding 8/24; current = green fill, others transparent with 2px `#333` border and `#8A8A8A` text.
+- **Goto card** (drill-down): 541×222, r20, 2px `#D9D9D9` or mint fill; hover ring — see `interactions.md`.
+- **Copy-prompt card:** black r20, padding 24/30, green 24px label (3px tracking), white 24px prompt, green "Copy prompt" pill.
+- **Neo-brutalist box:** 3px `#000` border, r4, shadow `8px 8px 0 #000`.
+- **Halo card:** 4px black border, r28, shadow `0 0 0 14px #E9F6ED` (one per deck, the key concept).
+- **Focus veil:** white 80% overlay, r22, dims finished content.
+- **Chat bubble:** r `20 20 4 20`, `#F4F4F4` (user) / mint (assistant).
+- **Tool-logo tiles:** 52–64px, r12, white with 1px line.
+- **Timeline row:** time · source chip · status tag (READ / CHECK / YOU, 14px/700 uppercase pill).
+- **Dark spec card:** `#0D0D0D`, rows separated by `border-top: 2px #2C2D27`.
+- **Featured card:** `#F3FAF5` fill, 2px green border, green "best value" pill.
+- **Footer (co-branded talks):** pinned 24px `#737373` "BUILDERS CAMP × PARTNER" + page number.
+- **Background patterns:** rays (46 lines, opacity .07/.11) or green dot grid (36px cell) with a radial mint glow top-right.
+
+Event-deck components (IRL kickoffs):
+- **Sponsor/host strip:** 1px `#333` rule, label "SPONSORED BY" / "HOSTED AT" 28px/600, letter-spacing 6px, `#D8D8D8`, partner logos 190–300px wide.
+- **Speaker card:** photo 512×400, 3px green border, r16; 64×6 green bar (r3) + name 44px/800; role 28px/500 `#B8B8B8`; tagline 34px/800 with one green keyword.
+- **Checklist grid:** Lucide CheckCircle 60px green + 56px/700 labels.
+- **Giveaway pill:** 28px/800, letter-spacing 5px, ink on green, r999, padding 14/32 (one emoji allowed: 🎁).
+- **Cohort QR card:** `#0E1A12`, 3px green border, r24, padding 28; QR on white with 3px green border, r20.
+- **Promo-code pill:** 2px dashed green border r999 padding 18/40 + code chip (ink on green, r12, padding 6/20). **Voucher box:** 4px dashed green, r32, padding 64/48, glow `0 0 80px rgba(39,165,77,.35)`.
+- **Radial green glow** on black: `rgba(39,165,77,.18–.28)` → transparent at 62–65%.
+
+General: pills radius 999 · chips mint radius 8 · grey cards `#F4F4F4` radius 20 · icon medallion 76px (mint fill, 4px black border, Lucide 2px stroke) · numbered circle 48px black/green numerals · progress bar 4px green at top · hover ring `0 0 0 6px rgba(39,165,77,.18)` in HTML decks.
 
 ## 6. Motion (HTML/interactive decks)
 
-Slide change: fade 350–450 ms (+ translateY 14px). Dividers: push. Build-ins: rise 28px / left-right 48px / pop scale 0.85, 500 ms `cubic-bezier(.2,.8,.2,1)`, 60–100 ms stagger. Pop with spring `cubic-bezier(.3,1.6,.5,1)` 700 ms for numbers. Strokes draw in 0.5–1.2 s. All disabled under `prefers-reduced-motion`.
+Canonical values from the shared deck runtime (full spec in `interactions.md`):
+- Slide change: **fade only, `opacity 350ms ease`** for every slide, dividers included. The IRL decks' 450ms + 14px rise and the declared-but-unplayed `push` are retired (D-20, D-21).
+- Build-ins: rise 28px / left-right 48px / pop scale .85 / wipe scaleX, **500ms** `cubic-bezier(.2,.8,.2,1)`; build-outs 450ms ease; auto groups at +350ms then every **420ms**.
+- Statement slides: underline draw 900ms after a 600ms delay; word-by-word rise 500ms.
+- Part covers: elements in at 600–700ms with delays .1/.25/.55s; giant numeral fades to opacity .12.
+- Numbers: spring pop `cubic-bezier(.3,1.6,.5,1)` 700ms. Strokes draw 500ms–1.6s (`diagrams.md`).
+- Hover ring 200ms, progress bar 300ms. Everything off under `prefers-reduced-motion`.
+- Slides-type decks: the platform's fade; no script, so prompts get QR panels instead of copy buttons.
 
 ## 7. Exports
 

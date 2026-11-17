@@ -16,6 +16,7 @@ Every place the sources disagreed, what we chose, and why. Rule of precedence fr
 | S8 | repo `producthon` | May 2025 | 2025 event microsite (VT323 pixel font, neon palette) — event-specific, not core brand |
 | S9 | Claude artifacts: AI-Native PM Session 1 deck, AI-Native PM Workbook, IRL Porto deck, AI Native deck, IRL Porto Kickoff (Slides), Shorts Engine scope doc, Notifications map | Oct–Nov 2026 | Slide system, workbook components, motion grammar, Shorts spec, email naming |
 | S10 | Notion "Brand" page (Design / Key Resources) + attached `brand_guidelines.pdf` | May 2025 PDF | **Turned out to be the supermodular.ai brand, not Builders Camp** — see D-01 |
+| S12 | Second artifact pass (v1.1): ~40 artifacts in 4 batches — AI-Native PM S1–S2 + workbook, client training sessions + workbooks, Workshop Prompts; AI-Native Product Teams S1–S3 + Leading Agentically + Sessions' Workbook + hub; AI-Native Delivery S1–S3, Getting Started (Claude Code ×2, Lovable), kickoffs, IRL Porto Materials, PMM doc; explainers (Agent Loops, Lifecycle, routing/toolchain flows, Product MBA S10, Product Mindset, Builders Camp × client deck…) | Oct–Nov 2026 | Deck runtime (shared code across 9 decks), workbook runtime (3), diagram grammar, event-deck components |
 | S11 | Canva brand kit `kAFq47BVsjw` | — | The API returned the kit id only (no name, colours, fonts or logos) and no brand templates. Nothing usable. See G-04 |
 
 Not reachable: `builders-camp/builderscamp-homepage-refresh` and `builders-camp/builderscampdm` (repo attach was denied in this session). S1 (the live build of the homepage) stands in for the homepage repo. `builderscampdm` not analysed — see G-05.
@@ -34,7 +35,7 @@ Not reachable: `builders-camp/builderscamp-homepage-refresh` and `builders-camp/
 
 **D-06 · Lime `#C2FF33` and navy `#1F242E`.** Declared in S1/S6 CSS, not visibly used; Shorts spec says green is "never fluorescent or lime". **Chosen:** keep in tokens as `declared`, excluded from the visible palette. **[human call]** delete from code or give them a role.
 
-**D-07 · Green CTA contrast.** White 14px/600 on `#27A54D` = 3.19:1, failing WCAG AA (S1 ships this). **Chosen:** keep `#27A54D` as the brand green; add `green-strong #1F843D` (4.74:1) [inferred] as `accent-hover` and as the recommended resting fill for small-label buttons in *new* work. **[human call]** whether to switch the live site's CTAs.
+**D-07 · Green CTA contrast.** White 14px/600 on `#27A54D` = 3.19:1, failing WCAG AA (S1 ships this). **Chosen:** keep `#27A54D` as the brand green; add `green-strong` as `accent-hover` (originally an inferred `#1F843D`; **superseded by D-24b**: now the shipped `#1D7F41`, 5.04:1) and as the recommended resting fill for small-label buttons in *new* work. **[human call]** whether to switch the live site's CTAs.
 
 **D-08 · Dark mode.** S5 has neutral dark (`#141414` bg); S6 (same lineage as live homepage tokens) has navy-tinted dark (`#101318`); decks/workbook use `#000/#0D0D0D/#1A1A1A`. Marketing site ships no dark mode. **Chosen:** S6 values for UI dark mode (newest lineage); decks/motion may keep pure black backgrounds. Dark `destructive` raised to the light value [inferred] because S6's `hsl(0 62.8% 30.6%)` fails contrast.
 
@@ -58,6 +59,26 @@ Not reachable: `builders-camp/builderscamp-homepage-refresh` and `builders-camp/
 
 **D-18 · Shorts length.** Spec evolved 25–35s → 35–42s; pilots 30.6–53.8s. **Chosen:** target 35–42s, hard limits 20–58s (latest binding values).
 
+**Brand lineage found in the artifact pass (v1.1).** On-brand Builders Camp: the AI-Native PM decks/workbook, client-training decks/workbooks (Builders Camp-branded, client in text only), AI-Native Product Teams S1–S3 + hub + Sessions' Workbook, IRL kickoffs, IRL Porto Materials, Product MBA S10, Product Mindset, Builders Camp × client deck. **Not used for rules:** supermodular.ai-styled material (Leading Agentically deck + workbook, older Session 1 source, Lifecycle, Brooks's Law, Six Conversations, Principle, Contributing a Skill, Security Reviewer, 6 Lessons); client-owned systems (AI-Native Delivery S1–S3, Becoming AI-Native Kickoff); unbranded "independent training material" (Getting Started with Claude Code ×2 / Lovable, Workshop Prompts); Builders Camp-named but off-brand explainers (Agent Loops, Claude OS Routing Flow, Toolchain Flow).
+
+**D-19 · Two neutral families.** Website/app ship `#141414/#737373/#E6E6E6/#F5F5F5`; all teaching decks and workbooks ship `#000/#0D0D0D/#6B6B6B/#8A8A8A/#D9D9D9/#F4F4F4/#333/#1A1A1A`, consistently, in shared code. **Chosen:** keep both as scoped families (`color.light` for web/app, `color.deck` for slides/workbooks/artifacts) rather than force a migration. **[human call]** whether to converge them long-term.
+
+**D-20 · `data-transition="push"`.** Declared on divider slides in every deck but no runtime plays it. **Chosen:** fade-only; remove the attribute in new decks.
+
+**D-21 · Slide fade.** Deck runtime `opacity .35s ease` (9 decks, MBA) vs IRL/Product Mindset `.45s` + 14px rise. **Chosen:** 350ms fade, no rise.
+
+**D-22 · Logo placement in decks.** Teaching decks: top-left 128/55, 217×26, every slide (9+ decks). Event decks (IRL kickoffs): top-right 420×60. **Chosen:** keep both, by deck family. Client trainings: client named in text only.
+
+**D-23 · Copy feedback.** Shipped: decks "Copied ✓" 2200ms; workbooks toast "Copied" 1800ms; Workshop Prompts "Copied!" 1800ms. **Chosen:** "Copy prompt" → "Copied ✓", 2000ms, fallback selects text ("Select the text and copy" / "Press Ctrl+C or ⌘C to copy") [inferred unification].
+
+**D-24 · Deep links.** Runtimes read `#slide` (and `#slide.step` in Product Mindset) but don't write the hash. **Chosen:** read and write with `history.replaceState` [inferred improvement]. **D-24b · Green Strong** = shipped `#1D7F41` (IRL Porto diagrams; client deck eyebrow `#1E7E3A` rounds to it), replacing the inferred `#1F843D`. Also Porto Materials' `#166534` focus green folds into this.
+
+**D-25 · Off-brand Builders Camp-named explainers** (Agent Loops: Public Sans/teal; Routing Flow: Charter/navy/Mermaid default; Toolchain Flow: system fonts/amber) and the unbranded handouts (Workshop Prompts, Getting Started decks). **Chosen:** not sources; migrate to `diagrams.md` / `slides.md` when next edited. **[human call]** whether "independent training material" should carry Builders Camp branding.
+
+**D-26 · Radius at slide scale.** Decks use 20px for cards (dominant: 111–175 uses per deck) plus 4/6/10/14/18/22/24/26/28/42. **Chosen:** add `deck-card` 20 and `brutal` 4 to the scale; keep 999/50%; event decks may use 24/32 for QR and voucher cards; retire the rest. Workbook panel r6 and step r14 kept as-is inside workbooks.
+
+**D-27 · Lime in the Sessions' Workbook.** It uses `#C2FF33` as the main highlight (and names the green token `--lime`), plus accent `#26A355`. **Chosen:** not brand (D-06); migrate highlights to mint/green and rename the token. Also: embeds that fall back to Helvetica Neue must load Montserrat; decks have no red token (bad = ink), IRL/Porto use `#E03131` for loss — allowed only for loss/failure.
+
 ## Gaps that need a human call
 
 - **G-01 Logo masters.** No vector master (AI/Figma), no record of the wordmark's typeface, no clear-space/min-size spec. Clear space and min sizes in BRAND.md are [inferred].
@@ -68,4 +89,6 @@ Not reachable: `builders-camp/builderscamp-homepage-refresh` and `builders-camp/
 - **G-06 Photography.** No photo library or art-direction source found; §8 of BRAND.md is derived from the IRL site and decks.
 - **G-07 Email templates.** No HTML email template found; `playbooks/email.md` is [inferred] from the web system and the notifications map.
 - **G-08 Brush script.** Nanum Brush Script is used only on the IRL site. Confirm it stays an IRL-only accent or becomes brand-wide.
+- **G-10 Neutral families** (D-19) and **lime in the Sessions' Workbook** (D-27).
+- **G-11 Broken links found:** decks link to a workbook other than the current Sessions' Workbook; the Leading Agentically workbook has a "Next: Prompting challenges" button to a missing tab. Fix in the artifacts.
 - **G-09 Bootcamp cover blue `#5271FF`** is pixel-sampled from cover images; confirm the source file value.

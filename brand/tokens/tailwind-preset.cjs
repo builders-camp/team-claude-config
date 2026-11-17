@@ -1,4 +1,4 @@
-/* Builders Camp Tailwind preset — GENERATED from tokens.json by build.mjs. Do not edit. v1.0.0
+/* Builders Camp Tailwind preset — GENERATED from tokens.json by build.mjs. Do not edit. v1.1.0
  * Usage (tailwind.config): presets: [require("<path>/brand/tokens/tailwind-preset.cjs")]
  * Requires tokens.css to be imported once (it defines the CSS variables). */
 module.exports = {
@@ -55,11 +55,10 @@ module.exports = {
           "white": "#FFFFFF",
           "green": "#27A54D",
           "coral": "#FF7A59",
-          "green-strong": "#1F843D",
+          "green-strong": "#1D7F41",
           "blue": "#5271FF",
           "paper": "#FAFAF7",
           "mint": "#E9F6ED",
-          "green-deep": "#1D7F41",
           "lime": "#C2FF33",
           "navy": "#1F242E"
         },
@@ -85,6 +84,21 @@ module.exports = {
           "error-text": "#DC2626",
           "error-bg": "#FEF2F2",
           "star": "#FBBF24"
+        },
+        "deck": {
+          "ink": "#000000",
+          "body": "#0D0D0D",
+          "muted": "#6B6B6B",
+          "muted-on-dark": "#8A8A8A",
+          "line": "#D9D9D9",
+          "card": "#F4F4F4",
+          "line-dark": "#333333",
+          "card-dark": "#1A1A1A",
+          "surface-green-dark": "#0E1A12",
+          "pass-border": "#BEE4CA",
+          "green-soft": "#7DC994",
+          "label-on-dark": "#D8D8D8",
+          "featured-tint": "#F3FAF5"
         },
         "track": {
           "vibe-coding": "#EA580C",
@@ -223,14 +237,21 @@ module.exports = {
         "lg": "var(--radius)",
         "xl": "12px",
         "2xl": "16px",
-        "3xl": "24px"
+        "3xl": "24px",
+        "brutal": "4px",
+        "deck": "20px"
       },
       "boxShadow": {
         "bc-sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         "bc-md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         "bc-lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
         "bc-xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-        "bc-sticky-bar": "0 -4px 20px 0 rgb(0 0 0 / 0.08)"
+        "bc-sticky-bar": "0 -4px 20px 0 rgb(0 0 0 / 0.08)",
+        "bc-brutal": "8px 8px 0 #000000",
+        "bc-brutal-sm": "4px 4px 0 #000000",
+        "bc-focus-ring": "0 0 0 6px rgba(39, 165, 77, 0.18)",
+        "bc-halo": "0 0 0 14px #E9F6ED",
+        "bc-float": "0 24px 48px rgba(20, 20, 20, 0.06)"
       },
       "maxWidth": {
         "container": "1200px",
@@ -246,13 +267,25 @@ module.exports = {
         "bc-reveal": "600ms",
         "bc-slide": "350ms",
         "bc-build": "500ms",
-        "bc-draw": "900ms"
+        "bc-draw": "900ms",
+        "bc-lift": "150ms",
+        "bc-hover": "200ms",
+        "bc-progress": "300ms",
+        "bc-build-out": "450ms",
+        "bc-stagger-first": "350ms",
+        "bc-stagger": "420ms",
+        "bc-draw-short": "500ms",
+        "bc-draw-hero": "1600ms",
+        "bc-camera": "1100ms",
+        "bc-ambient-min": "1300ms",
+        "bc-copy-feedback": "2000ms"
       },
       "transitionTimingFunction": {
         "bc-standard": "cubic-bezier(0.4, 0, 0.2, 1)",
         "bc-out": "cubic-bezier(0, 0, 0.2, 1)",
         "bc-emphasis": "cubic-bezier(0.2, 0.8, 0.2, 1)",
-        "bc-spring": "cubic-bezier(0.3, 1.6, 0.5, 1)"
+        "bc-spring": "cubic-bezier(0.3, 1.6, 0.5, 1)",
+        "bc-camera": "cubic-bezier(0.65, 0, 0.35, 1)"
       },
       "keyframes": {
         "bc-fade-up": {

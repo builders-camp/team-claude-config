@@ -20,7 +20,7 @@
 | `muted-foreground` | `#737373` | `#A6A6A6` | Body copy on white, captions, second headline line |
 | `accent` | `#27A54D` | `#27A54D` | **Brand green.** Primary CTA, links-in-UI, eyebrows on slides |
 | `accent-foreground` | `#FFFFFF` | `#FFFFFF` | Text on green (only ≥18.66px bold, else use `accent-hover`) |
-| `accent-hover` | `#1F843D` | `#2EBF5A` | Hover/pressed green; accessible CTA fill |
+| `accent-hover` | `#1D7F41` | `#2EBF5A` | Hover/pressed green; accessible CTA fill |
 | `accent-tint` | green @10% | green @18% | Icon chips, selected rows, highlights |
 | `border` / `input` | `#E6E6E6` | `#272C35` | All 1px lines, input borders |
 | `ring` | `#27A54D` | `#27A54D` | Focus ring |
@@ -77,8 +77,10 @@ Slides and social use their own scale — see `playbooks/slides.md` and `playboo
 | `rounded-2xl` | 16px | Large cards, quiz/challenge cards, video frame |
 | `rounded-3xl` | 24px | Hero panels on grey |
 | `rounded-full` | 9999px | Pills, badges, chips, avatars, small CTAs in bars, tabs/filters |
+| `rounded-deck` | 20px | **Slide-scale cards only** (decks at 1920×1080) |
+| `rounded-brutal` | 4px | Neo-brutalist deck boxes |
 
-Borders: always 1px `border` colour. Elevation is subtle: `shadow-bc-sm` (inputs), `shadow-bc-md` (cards on hover, carousel cards — most used), `shadow-bc-lg` (popovers), `shadow-bc-xl` (hero media, featured pricing). **Hard "brutalist" shadows** (`8px 8px 0 #000`, 2–3px black border) are a **deck/workbook-only** treatment — never in the website or app.
+Borders: always 1px `border` colour. Elevation is subtle: `shadow-bc-sm` (inputs), `shadow-bc-md` (cards on hover, carousel cards — most used), `shadow-bc-lg` (popovers), `shadow-bc-xl` (hero media, featured pricing). **Hard "brutalist" shadows** (`shadow-bc-brutal` `8px 8px 0 #000`, `shadow-bc-brutal-sm` `4px 4px 0 #000`, with a 2–3px black border) are a **deck/workbook/artifact-only** treatment — never in the website or app. Also deck-only: `shadow-bc-halo` (`0 0 0 14px #E9F6ED`) and the focus ring `shadow-bc-focus-ring` (`0 0 0 6px rgba(39,165,77,.18)`).
 
 ## 5. Components
 
@@ -95,7 +97,7 @@ Spec format: anatomy → tokens → states. All interactive elements: `transitio
 | Disabled | `bg-muted text-muted-foreground`, no shadow | — | Incomplete forms |
 Trailing `ArrowRight` 16px on forward actions; leading emoji allowed only on soft CTAs ("📞 Book a 15 min call").
 
-> Accessibility note: shipped green buttons use white 14px text on `#27A54D` (3.19:1). New work: use `bg-accent-hover` (`#1F843D`) as the resting fill for small-label buttons, or 18.66px+ bold labels. See DECISIONS D-07.
+> Accessibility note: shipped green buttons use white 14px text on `#27A54D` (3.19:1). New work: use `bg-accent-hover` (`#1D7F41`) as the resting fill for small-label buttons, or 18.66px+ bold labels. See DECISIONS D-07.
 
 ### Inputs
 h-12 (hero) or h-10, radius 8, 1px `input` border, px-3, 14–16px, placeholder `muted-foreground`. Label 14px/500 above. Inline hero form: name + email + green button in one row (stack on mobile). Errors: border `destructive` + 12px message below.
@@ -134,6 +136,9 @@ h-12 (hero) or h-10, radius 8, 1px `input` border, px-3, 14–16px, placeholder 
 - **Statement band:** eyebrow "IMAGINE YOU COULD" (12px tracking 0.2em muted) → display "build anything" → eyebrow "YOU CAN. HERE'S HOW."
 - **Section header:** eyebrow pill → H2 two-tone → 16–18px muted paragraph (max 640px) → content → centred CTA + "Not sure? Talk to us. Book a 15 min call" (12px muted, underlined link).
 - **Empty states:** one-line explanation + one action. Friendly, not cute.
+
+### Interactive patterns
+Deck controller, build steps, branching, copy-to-clipboard, workbook tabs/step rail/saving/grading: `playbooks/interactions.md`. Diagrams and charts: `playbooks/diagrams.md`. Tailwind exposes the deck neutrals as `bg-deck-card`, `text-deck-muted`, `border-deck-line` etc.
 
 ## 6. Do / Don't (UI)
 - Do keep one green CTA per viewport. Don't make every button green.
