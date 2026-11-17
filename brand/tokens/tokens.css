@@ -1,0 +1,294 @@
+/* Builders Camp design tokens — GENERATED from tokens.json by build.mjs. Do not edit. v1.0.0 */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Nanum+Brush+Script&display=swap');
+
+:root {
+  /* semantic (light) */
+  --background: 0 0% 100%;
+  --bc-background: #FFFFFF;
+  --foreground: 0 0% 7.8%;
+  --bc-foreground: #141414;
+  --card: 0 0% 100%;
+  --bc-card: #FFFFFF;
+  --card-foreground: 0 0% 7.8%;
+  --bc-card-foreground: #141414;
+  --popover: 0 0% 100%;
+  --bc-popover: #FFFFFF;
+  --popover-foreground: 0 0% 7.8%;
+  --bc-popover-foreground: #141414;
+  --primary: 0 0% 7.8%;
+  --bc-primary: #141414;
+  --primary-foreground: 0 0% 100%;
+  --bc-primary-foreground: #FFFFFF;
+  --secondary: 0 0% 96.1%;
+  --bc-secondary: #F5F5F5;
+  --secondary-foreground: 0 0% 7.8%;
+  --bc-secondary-foreground: #141414;
+  --muted: 0 0% 96.1%;
+  --bc-muted: #F5F5F5;
+  --muted-foreground: 0 0% 45.1%;
+  --bc-muted-foreground: #737373;
+  --accent: 138.1 61.8% 40%;
+  --bc-accent: #27A54D;
+  --accent-foreground: 0 0% 100%;
+  --bc-accent-foreground: #FFFFFF;
+  --accent-hover: 137.8 62% 32%;
+  --bc-accent-hover: #1F843D;
+  --bc-accent-tint: rgba(39, 165, 77, 0.10);
+  --destructive: 0 84.3% 60%;
+  --bc-destructive: #EF4343;
+  --destructive-foreground: 0 0% 100%;
+  --bc-destructive-foreground: #FFFFFF;
+  --border: 0 0% 90.2%;
+  --bc-border: #E6E6E6;
+  --input: 0 0% 90.2%;
+  --bc-input: #E6E6E6;
+  --ring: 138.1 61.8% 40%;
+  --bc-ring: #27A54D;
+  --radius: 10px;
+
+  /* brand */
+  --bc-brand-ink: #141414;
+  --bc-brand-white: #FFFFFF;
+  --bc-brand-green: #27A54D;
+  --bc-brand-coral: #FF7A59;
+  --bc-brand-green-strong: #1F843D;
+  --bc-brand-blue: #5271FF;
+  --bc-brand-lime: #C2FF33;
+  --bc-brand-navy: #1F242E;
+
+  /* neutral */
+  --bc-neutral-0: #FFFFFF;
+  --bc-neutral-50: #FAFAFA;
+  --bc-neutral-100: #F5F5F5;
+  --bc-neutral-200: #E6E6E6;
+  --bc-neutral-400: #A6A6A6;
+  --bc-neutral-500: #737373;
+  --bc-neutral-700: #404040;
+  --bc-neutral-900: #141414;
+
+  /* feedback */
+  --bc-success: #16A34A;
+  --bc-success-bg: #F0FDF4;
+  --bc-success-badge: #DCFCE7;
+  --bc-warning: #F59E0B;
+  --bc-warning-text: #D97706;
+  --bc-warning-bg: #FEF3C7;
+  --bc-warning-ink: #78350F;
+  --bc-error: #EF4444;
+  --bc-error-text: #DC2626;
+  --bc-error-bg: #FEF2F2;
+  --bc-star: #FBBF24;
+
+  /* category (tracks/programmes) */
+  --bc-cat-vibe-coding: linear-gradient(to right, #C2410C, #EA580C);
+  --bc-cat-vibe-coding-solid: #EA580C;
+  --bc-cat-ai-product: linear-gradient(to right, #2563EB, #3B82F6);
+  --bc-cat-ai-product-solid: #3B82F6;
+  --bc-cat-leadership: linear-gradient(to right, #374151, #4B5563);
+  --bc-cat-leadership-solid: #4B5563;
+  --bc-cat-discovery: linear-gradient(to right, #16A34A, #22C55E);
+  --bc-cat-discovery-solid: #22C55E;
+  --bc-cat-purple: #8B5CF6;
+  --bc-cat-emerald: #10B981;
+
+  /* type */
+  --bc-font-sans: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --bc-font-accent: 'Nanum Brush Script', cursive;
+  --bc-font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --bc-text-display: 128px;
+  --bc-leading-display: 1;
+  --bc-weight-display: 800;
+  --bc-tracking-display: -0.05em;
+  --bc-text-h1: 60px;
+  --bc-leading-h1: 1;
+  --bc-weight-h1: 800;
+  --bc-tracking-h1: -0.025em;
+  --bc-text-h2: 36px;
+  --bc-leading-h2: 1.111;
+  --bc-weight-h2: 700;
+  --bc-tracking-h2: -0.025em;
+  --bc-text-h3: 20px;
+  --bc-leading-h3: 1.4;
+  --bc-weight-h3: 700;
+  --bc-tracking-h3: -0.025em;
+  --bc-text-h4: 18px;
+  --bc-leading-h4: 1.556;
+  --bc-weight-h4: 700;
+  --bc-tracking-h4: -0.025em;
+  --bc-text-lead: 20px;
+  --bc-leading-lead: 1.4;
+  --bc-weight-lead: 300;
+  --bc-tracking-lead: 0;
+  --bc-text-body: 16px;
+  --bc-leading-body: 1.5;
+  --bc-weight-body: 400;
+  --bc-tracking-body: 0;
+  --bc-text-small: 14px;
+  --bc-leading-small: 1.429;
+  --bc-weight-small: 400;
+  --bc-tracking-small: 0;
+  --bc-text-caption: 12px;
+  --bc-leading-caption: 1.333;
+  --bc-weight-caption: 400;
+  --bc-tracking-caption: 0;
+  --bc-text-eyebrow: 12px;
+  --bc-leading-eyebrow: 1.333;
+  --bc-weight-eyebrow: 600;
+  --bc-tracking-eyebrow: 0.05em;
+  --bc-text-button: 14px;
+  --bc-leading-button: 1.429;
+  --bc-weight-button: 600;
+  --bc-tracking-button: 0;
+
+  /* space / radius / shadow / layout / motion */
+  --bc-space-0: 0px;
+  --bc-space-1: 4px;
+  --bc-space-2: 8px;
+  --bc-space-3: 12px;
+  --bc-space-4: 16px;
+  --bc-space-5: 20px;
+  --bc-space-6: 24px;
+  --bc-space-8: 32px;
+  --bc-space-10: 40px;
+  --bc-space-12: 48px;
+  --bc-space-16: 64px;
+  --bc-space-20: 80px;
+  --bc-space-24: 96px;
+  --bc-space-32: 128px;
+  --bc-space-section-y: 96px;
+  --bc-space-section-y-tight: 64px;
+  --bc-space-card-padding: 24px;
+  --bc-space-gutter: 24px;
+  --bc-radius-sm: 6px;
+  --bc-radius-md: 8px;
+  --bc-radius-lg: 10px;
+  --bc-radius-xl: 12px;
+  --bc-radius-2xl: 16px;
+  --bc-radius-3xl: 24px;
+  --bc-radius-full: 9999px;
+  --bc-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --bc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --bc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --bc-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --bc-shadow-sticky-bar: 0 -4px 20px 0 rgb(0 0 0 / 0.08);
+  --bc-container-max: 1200px;
+  --bc-content-max: 1024px;
+  --bc-reading-max: 768px;
+  --bc-copy-max: 512px;
+  --bc-nav-height: 64px;
+  --bc-duration-instant: 100ms;
+  --bc-duration-fast: 150ms;
+  --bc-duration-base: 200ms;
+  --bc-duration-slow: 500ms;
+  --bc-duration-reveal: 600ms;
+  --bc-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --bc-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --bc-ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark, [data-theme="dark"] {
+  --background: 217.5 20% 7.8%;
+  --bc-background: #101318;
+  --foreground: 0 0% 98%;
+  --bc-foreground: #FAFAFA;
+  --card: 218.2 21.6% 10%;
+  --bc-card: #14181F;
+  --card-foreground: 0 0% 98%;
+  --bc-card-foreground: #FAFAFA;
+  --popover: 218.2 21.6% 10%;
+  --bc-popover: #14181F;
+  --popover-foreground: 0 0% 98%;
+  --bc-popover-foreground: #FAFAFA;
+  --primary: 0 0% 98%;
+  --bc-primary: #FAFAFA;
+  --primary-foreground: 217.5 20% 7.8%;
+  --bc-primary-foreground: #101318;
+  --secondary: 223.6 14.3% 15.1%;
+  --bc-secondary: #21242C;
+  --secondary-foreground: 0 0% 98%;
+  --bc-secondary-foreground: #FAFAFA;
+  --muted: 223.6 14.3% 15.1%;
+  --bc-muted: #21242C;
+  --muted-foreground: 0 0% 65.1%;
+  --bc-muted-foreground: #A6A6A6;
+  --accent: 138.1 61.8% 40%;
+  --bc-accent: #27A54D;
+  --accent-foreground: 0 0% 100%;
+  --bc-accent-foreground: #FFFFFF;
+  --accent-hover: 138.2 61.2% 46.5%;
+  --bc-accent-hover: #2EBF5A;
+  --bc-accent-tint: rgba(39, 165, 77, 0.18);
+  --destructive: 0 84.3% 60%;
+  --bc-destructive: #EF4343;
+  --destructive-foreground: 0 0% 100%;
+  --bc-destructive-foreground: #FFFFFF;
+  --border: 218.6 15.2% 18%;
+  --bc-border: #272C35;
+  --input: 218.6 15.2% 18%;
+  --bc-input: #272C35;
+  --ring: 138.1 61.8% 40%;
+  --bc-ring: #27A54D;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(.light)[data-bc-auto-dark] {
+    --background: 217.5 20% 7.8%;
+    --bc-background: #101318;
+    --foreground: 0 0% 98%;
+    --bc-foreground: #FAFAFA;
+    --card: 218.2 21.6% 10%;
+    --bc-card: #14181F;
+    --card-foreground: 0 0% 98%;
+    --bc-card-foreground: #FAFAFA;
+    --popover: 218.2 21.6% 10%;
+    --bc-popover: #14181F;
+    --popover-foreground: 0 0% 98%;
+    --bc-popover-foreground: #FAFAFA;
+    --primary: 0 0% 98%;
+    --bc-primary: #FAFAFA;
+    --primary-foreground: 217.5 20% 7.8%;
+    --bc-primary-foreground: #101318;
+    --secondary: 223.6 14.3% 15.1%;
+    --bc-secondary: #21242C;
+    --secondary-foreground: 0 0% 98%;
+    --bc-secondary-foreground: #FAFAFA;
+    --muted: 223.6 14.3% 15.1%;
+    --bc-muted: #21242C;
+    --muted-foreground: 0 0% 65.1%;
+    --bc-muted-foreground: #A6A6A6;
+    --accent: 138.1 61.8% 40%;
+    --bc-accent: #27A54D;
+    --accent-foreground: 0 0% 100%;
+    --bc-accent-foreground: #FFFFFF;
+    --accent-hover: 138.2 61.2% 46.5%;
+    --bc-accent-hover: #2EBF5A;
+    --bc-accent-tint: rgba(39, 165, 77, 0.18);
+    --destructive: 0 84.3% 60%;
+    --bc-destructive: #EF4343;
+    --destructive-foreground: 0 0% 100%;
+    --bc-destructive-foreground: #FFFFFF;
+    --border: 218.6 15.2% 18%;
+    --bc-border: #272C35;
+    --input: 218.6 15.2% 18%;
+    --bc-input: #272C35;
+    --ring: 138.1 61.8% 40%;
+    --bc-ring: #27A54D;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --bc-text-display: 64px;
+    --bc-text-h1: 36px;
+    --bc-text-h2: 30px;
+    --bc-text-h3: 18px;
+    --bc-text-h4: 16px;
+    --bc-text-lead: 18px;
+    --bc-leading-h1: 1.25;
+    --bc-leading-h2: 1.2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --bc-duration-fast: 0ms; --bc-duration-base: 0ms; --bc-duration-slow: 0ms; --bc-duration-reveal: 0ms; }
+}
