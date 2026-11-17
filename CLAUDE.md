@@ -104,6 +104,10 @@ Each specialist writes its artifact to a local file under `docs/features/<slug>/
 
 When in doubt, `@pm` errs toward more discovery, not less. Cheap to discover that something is well-shaped already; expensive to discover late that an unshaped idea was routed straight to implementation.
 
+## Brand
+
+- For anything visual or brand-facing for Builders Camp (UI, website, slides, artifacts, PDFs, social posts, motion graphics, emails, marketing copy), load the `builders-camp-brand` skill / read `~/.claude/brand/BRAND.md` first, then the playbook for the medium. Use the tokens and logo files in `~/.claude/brand/`; never re-derive the brand.
+
 ## Quality & Risk
 
 After meaningful code changes:

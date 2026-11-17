@@ -1,6 +1,6 @@
 # team-claude-config
 
-<!-- counts: skills=18 agents=12 -->
+<!-- counts: skills=19 agents=12 -->
 
 The shared Claude config for the team.
 
@@ -15,9 +15,10 @@ When you install this repo, these things end up symlinked into your `~/.claude/`
 - **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
 - **`agents/`** — twelve specialized subagents (`@pm`, `@visionary`, `@analyst`, `@voc`, `@discovery`, `@designer`, `@pmm`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
 - **`settings.json`** — routing-gate hooks (a `UserPromptSubmit` reminder and a `PreToolUse` warning), linked by `install.sh`. Skipped if you already have a personal `~/.claude/settings.json`.
-- **`skills/`** — eighteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`skills/`** — nineteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
 - **`loops/`** — the generator -> judge loop kit (see below). Linked to `~/.claude/loops/`.
 - **`stacks/`** — opt-in stack packs. Each `stacks/<name>` is linked to `~/.claude/stacks/<name>`.
+- **`brand/`** — the Builders Camp brand guidelines, design system, tokens (CSS + Tailwind preset), logos and per-medium playbooks. Linked to `~/.claude/brand/`; loaded through the `builders-camp-brand` skill. See `brand/README.md`.
 
 Because these live globally in `~/.claude/`, they apply to every project you open with Claude Code — not just one repo. Per-repo `CLAUDE.md` files (when they exist) layer *on top* of this global config.
 
@@ -211,6 +212,12 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 | `/bootstrap` | Scaffolds per-repo Claude OS structure (`CLAUDE.md`, `.claude/skills/`, standards, registries) in a new repo. Run once per project. |
 | `/improve` | Promote durable patterns into `CLAUDE.md` or skills. Shows diff before applying. |
 
+### Brand
+
+| Command | What it does |
+|---|---|
+| `/builders-camp-brand` | Loads the Builders Camp brand: always `brand/BRAND.md`, then the playbook for the medium (web, app, slides, artifacts, PDF, LinkedIn, motion, email). Auto-triggers on any visual or brand-facing work. |
+
 ---
 
 ## House rules (from `CLAUDE.md`)
@@ -289,6 +296,7 @@ Match the structure of existing agents. Consistency across agents is what makes 
 | Change | Where |
 |---|---|
 | New global house rule | `CLAUDE.md` |
+| Brand rule, token, logo or medium spec | `brand/` (then `node brand/tokens/build.mjs` if tokens changed; log the decision in `brand/DECISIONS.md`) |
 | New reusable workflow | New skill |
 | New specialist role | New agent |
 | Stack-specific rules shared across projects | New or existing `stacks/<name>/STACK.md` |

@@ -108,6 +108,20 @@ if [ -d "$REPO_DIR/loops" ]; then
   fi
 fi
 
+# Brand: symlink the whole dir (skipped if a personal non-symlink version exists)
+if [ -d "$REPO_DIR/brand" ]; then
+  target="$CLAUDE_DIR/brand"
+  if [ -L "$target" ]; then
+    rm "$target"
+  fi
+  if [ -e "$target" ]; then
+    echo "  Skipping brand — personal version exists (remove manually to use shared)"
+  else
+    ln -sf "$REPO_DIR/brand" "$target"
+    echo "  brand → symlinked"
+  fi
+fi
+
 # Stacks: symlink each stack pack individually (preserves personal stacks)
 if [ -d "$REPO_DIR/stacks" ]; then
   mkdir -p "$CLAUDE_DIR/stacks"
