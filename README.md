@@ -145,7 +145,7 @@ Specialist returns its output contract
 
 `@pm` is auto-invoked. The specialists run on its handoff. You don't usually call them by name unless you want to skip triage.
 
-`@pm` is **not** invoked for: pure conversation, clarifying questions about Claude's own prior output, follow-ups inside an already-active workflow.
+`@pm` is **not** invoked for: pure conversation, clarifying questions about Claude's own prior output, follow-ups inside an already-active workflow, read-only checks that change nothing.
 
 ---
 

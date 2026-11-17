@@ -23,6 +23,6 @@
   fi
 
   touch "$marker"
-  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"ROUTING GATE: route this task via @pm first, or state Routing: skip — reason: <one of the 3 valid reasons>."}}'
+  echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","additionalContext":"ROUTING GATE: route this task via @pm first, or state Routing: skip — reason: <one of the 4 valid reasons>."}}'
 } 2>/dev/null
 exit 0
