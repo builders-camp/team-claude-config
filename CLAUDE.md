@@ -137,12 +137,6 @@ When feasible:
 - Never interpolate PR-derived strings (filenames, titles, branch names, comment bodies) into a shell, `run:` or `script:` block. Pass them through `env:` and use `execFileSync`-style argument arrays, not `execSync` strings.
 - A same-repo check (`head.repo.full_name == github.repository`) is required before any merge step, since fork PRs get a write token under `pull_request_target`.
 
-### Email provider: Mailjet
-
-- Mailjet is the email provider for everything: transactional email, newsletters, lead-magnet and sign-up capture lists. Mailchimp is no longer used.
-- Never propose, integrate with or write to Mailchimp, even if a Mailchimp connector or credential shows up in the session. Treat it as legacy.
-- If existing code still references Mailchimp, flag it as migration debt rather than extending it.
-
 ### Stack packs
 
 Stack-specific rules live in `~/.claude/stacks/<name>/STACK.md` and apply only when the project's CLAUDE.md imports them.
