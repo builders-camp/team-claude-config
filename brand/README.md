@@ -51,6 +51,8 @@ Then delete the repo's own `:root { --background … }` block (the shadcn variab
 
 **Option B — monorepo.** When the Builders Camp monorepo lands, move `tokens/` into `packages/brand` and import `@builderscamp/brand/tokens.css`; this folder stays the documentation and the source JSON.
 
+**Claude artifacts (Slides, Design).** A **Builders Camp** Design System artifact mirrors this folder: https://claude.ai/artifact/CFqmfSpmckB5d4wJyEtXq1 (private until shared from its Share menu). Pick it as the design system for decks and designs made as artifacts. When tokens change here, update it too.
+
 **Non-code tools (Canva, Figma, Gamma, Google Slides).** Set fonts to Montserrat; colours #141414, #FFFFFF, #F5F5F5, #737373, #E6E6E6, #27A54D, #1F843D, #E9F6ED; upload logos from `assets/logo/`.
 
 ## Changing the brand
@@ -65,4 +67,4 @@ Then delete the repo's own `:root { --background … }` block (the shadcn variab
 
 | Version | Date | Change |
 |---|---|---|
-| 1.0.0 | 2026-11-17 | First version. Inventory of builderscamp.com (live), IRL, members portal, challenges, quizzes, registration, producthon repos and Builders Camp artifacts/decks/Shorts spec. Tokens, guidelines, design system, 8 playbooks, logos, skill, specimen. Open gaps G-01…G-09 in DECISIONS.md. |
+| 1.0.0 | 2026-11-17 | First version. Inventory of builderscamp.com (live), IRL, members portal, challenges, quizzes, registration, producthon repos and Builders Camp artifacts/decks/Shorts spec. Tokens, guidelines, design system, 8 playbooks, logos, skill, specimen. Open gaps G-01…G-09 in DECISIONS.md. Design System artifact published (README, tokens, logos, Button, Badge, FeatureCard, BootcampCard, cover). |

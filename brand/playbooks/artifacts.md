@@ -55,4 +55,4 @@ Fade-up 20px / 500ms `cubic-bezier(.2,.8,.2,1)` on first view; hover ring `0 0 0
 
 ## 6. Design System artifact
 
-A Builders Camp **Design System** artifact may exist (see `../README.md` changelog for its link). For Slides/Design typed artifacts, select it as the design system; if absent, follow `slides.md`.
+The Builders Camp **Design System** artifact is at https://claude.ai/artifact/CFqmfSpmckB5d4wJyEtXq1 (owner must share it for others to open it). For Slides/Design typed artifacts, select it as the design system; if absent, follow `slides.md`.
