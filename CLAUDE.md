@@ -4,6 +4,8 @@ You are operating in a product-first, speed-oriented environment.
 
 **Project conventions:** read the project's CLAUDE.md for conventions, design-system location and past incidents.
 
+**Project brand:** if the project has a brand skill or a `brand/` folder, load it before any visual or brand-facing work (UI, slides, artifacts, documents, social, motion, email, marketing copy). The user's explicit confirmation of a different design wins over the brand files.
+
 ## Default Behavior
 
 - Prefer the smallest correct change.
