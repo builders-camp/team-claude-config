@@ -1,6 +1,0 @@
-# Retired team skills/agents that were deleted upstream.
-# One path per line, relative to ~/.claude/ (e.g. skills/pm or agents/foo.md).
-# Lines starting with # and blank lines are ignored.
-# Used by install.sh (laptops) and by the project session-start hooks (cloud)
-# to remove team skills/agents that no longer exist in this repo.
-skills/pm

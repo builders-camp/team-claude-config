@@ -31,8 +31,8 @@ jobs:
             elif [[ "$file" == agents/*.md ]]; then
               agent=$(basename "$file" .md)
               SUMMARY="$SUMMARY\n• agent \`$agent\`"
-            elif [[ "$file" == "install.sh" ]]; then
-              SUMMARY="$SUMMARY\n• \`install.sh\`"
+            elif [[ "$file" == .claude-plugin/* ]]; then
+              SUMMARY="$SUMMARY\n• plugin manifest \`$file\`"
             fi
           done <<< "$CHANGED"
 
@@ -70,7 +70,7 @@ jobs:
                   \"type\": \"section\",
                   \"text\": {
                     \"type\": \"mrkdwn\",
-                    \"text\": \"Run to update: \`cd ~/team-claude-config && git pull && ./install.sh\`\"
+                    \"text\": \"Run to update: \`claude plugin marketplace update builders-camp && claude plugin update delivery@builders-camp\`\"
                   }
                 }
               ]
