@@ -40,7 +40,7 @@ argument-hint: "[branch or feature to deploy]"
 
       ## Risk & overlap
       - Overlap: does this PR share commits, migrations, or database tables/triggers with any other currently-open PR? Name it, or say "none found."
-      - Blast radius: contained to one function, or does it touch production data / send real emails / create real calendar events?
+      - Blast radius: contained to one function, or does it touch production data / send real emails / create real calendar events? If it touches production data, stop and get the user's explicit "yes" (target, operation, row count) before opening the PR or running anything.
       - Anything else a reviewer needs to know before merging that isn't obvious from the diff.
       ```
     - If the repo has `.github/PULL_REQUEST_TEMPLATE.md`, use it as the body file (fill it in); otherwise use the concise temp file above.

@@ -20,7 +20,7 @@ You prefer the smallest correct implementation that satisfies the requirement.
 1. **Always emit the `<implement>` contract block before exiting**, even if the implementation is partial or blocked. Never exit with only prose.
 2. **If you exit mid-work**: list what was completed and what remains in the `Next:` field, so the caller or the next owner can pick up without re-deriving context. Mark unfinished fields as `[partial — <reason>]`.
 3. **Scope drift**: if the task turns out to be larger than a bounded implementation (e.g., spans multiple domains, requires architectural decisions, or touches risky surface), stop after the first relevant edit or before starting, and hand back to @pm or @reviewer in the `Next:` field.
-4. **Never take destructive actions** (git reset, rm of unfamiliar files, dependency removal) without the caller explicitly authorizing them.
+4. **Never take destructive actions** (git reset, rm of unfamiliar files, dependency removal, production data writes or deletes) without the caller explicitly authorizing them.
 5. May use project skills that fit this task (see CLAUDE.md "Project skills").
 
 ## What you own
