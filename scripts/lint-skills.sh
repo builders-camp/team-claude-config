@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Lints skills/*/SKILL.md frontmatter and README skill/agent counts.
+# Lints skills/*/SKILL.md frontmatter, plugin JSON, hook scripts and README skill/agent counts
+# (the delivery plugin at the repo root, plus plugins/*/ for any skills they ship).
 # Usage: scripts/lint-skills.sh   (run from anywhere)
 set -u
 
@@ -17,7 +18,9 @@ fm_value() {
   ' "$1"
 }
 
-for dir in skills/*/; do
+lint_skill_dirs() {
+for dir in "$@"; do
+  [ -d "$dir" ] || continue
   name_dir="$(basename "$dir")"
   file="${dir}SKILL.md"
   if [ ! -f "$file" ]; then
@@ -28,8 +31,8 @@ for dir in skills/*/; do
     errors+=("$file: missing frontmatter (first line must be ---)")
     continue
   fi
-  fm_name="$(fm_value "$file" name | tr -d '\r' | sed 's/[ \t]*$//')"
-  fm_desc="$(fm_value "$file" description | tr -d '\r' | sed 's/[ \t]*$//')"
+  fm_name="$(fm_value "$file" name | tr -d '\r' | sed 's/[[:space:]]*$//')"
+  fm_desc="$(fm_value "$file" description | tr -d '\r' | sed 's/[[:space:]]*$//')"
   if [ "$fm_name" != "$name_dir" ]; then
     errors+=("$file: name '$fm_name' does not match directory '$name_dir'")
   fi
@@ -37,9 +40,24 @@ for dir in skills/*/; do
     errors+=("$file: description is empty or missing")
   fi
 done
+}
+
+lint_skill_dirs skills/*/
+lint_skill_dirs plugins/*/skills/*/
+
+# Plugin and marketplace JSON must parse; hooks.json too.
+for j in .claude-plugin/marketplace.json .claude-plugin/plugin.json hooks/hooks.json plugins/*/.claude-plugin/plugin.json; do
+  [ -f "$j" ] || { errors+=("$j: missing"); continue; }
+  python3 -m json.tool "$j" >/dev/null 2>&1 || errors+=("$j: invalid JSON")
+done
+
+# Hook scripts must be executable.
+for h in hooks/*.sh; do
+  [ -x "$h" ] || errors+=("$h: not executable (chmod 755)")
+done
 
 # README counts, from a marker line like: <!-- counts: skills=14 agents=9 -->
-actual_skills="$(ls skills | wc -l | tr -d ' ')"
+actual_skills="$(ls -d skills/*/ | wc -l | tr -d ' ')"
 actual_agents="$(ls agents/*.md | wc -l | tr -d ' ')"
 marker="$(grep -E '<!-- counts: skills=[0-9]+ agents=[0-9]+ -->' README.md | head -n 1)"
 if [ -z "$marker" ]; then
@@ -49,6 +67,12 @@ else
   readme_agents="$(echo "$marker" | sed -E 's/.*agents=([0-9]+).*/\1/')"
   [ "$readme_skills" = "$actual_skills" ] || errors+=("README.md: skills=$readme_skills but skills/ has $actual_skills")
   [ "$readme_agents" = "$actual_agents" ] || errors+=("README.md: agents=$readme_agents but agents/ has $actual_agents")
+fi
+
+# CLAUDE.md is printed by the SessionStart hook; output over 10,000 chars is cut to a 2,000-char preview.
+claude_md_chars="$(wc -c < CLAUDE.md | tr -d ' ')"
+if [ "$claude_md_chars" -gt 9000 ]; then
+  errors+=("CLAUDE.md: $claude_md_chars characters exceeds the 9,000 cap (hook output limit is 10,000)")
 fi
 
 if [ "${#errors[@]}" -gt 0 ]; then

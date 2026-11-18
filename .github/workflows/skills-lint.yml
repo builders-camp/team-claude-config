@@ -7,6 +7,9 @@ on:
       - 'agents/**'
       - 'README.md'
       - 'scripts/lint-skills.sh'
+      - 'hooks/**'
+      - '.claude-plugin/**'
+      - 'plugins/**'
   push:
     branches: [main]
     paths:
@@ -14,6 +17,9 @@ on:
       - 'agents/**'
       - 'README.md'
       - 'scripts/lint-skills.sh'
+      - 'hooks/**'
+      - '.claude-plugin/**'
+      - 'plugins/**'
 
 jobs:
   lint:
