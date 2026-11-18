@@ -3,7 +3,7 @@
 A minimal generator -> judge pattern for skills that produce text, content or review verdicts. Any skill that
 generates work and wants an independent check can use it.
 
-This kit lives at `~/.claude/loops/`. Each project keeps its own promoted-checks log at
+This kit ships in the delivery plugin under `loops/`. Each project keeps its own promoted-checks log at
 `.claude/loops/CHANGELOG.md` in the project repo (copy `CHANGELOG.md` from this kit to start it).
 
 ## Rules

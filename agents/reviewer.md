@@ -62,7 +62,7 @@ Rules for both modes:
 - **Ignore memory.** You have `memory: project`. In these modes, ignore any memory about the feature under review.
 - **Max 2 rounds.** Each round is a new invocation. There is no third round.
 - **FAIL OPEN.** A judge never prevents anything from running; it improves the work. If the mode errors or its output is unusable, the caller proceeds and records "reviewer: unavailable".
-- **Output.** `PASS`, or fix-items in the contract at `~/.claude/loops/FIX_ITEM.md` (reference it; do not restate it). Put the result in `Recommendations:` of the `<review>` block.
+- **Output.** `PASS`, or fix-items in the contract at `${CLAUDE_PLUGIN_ROOT}/loops/FIX_ITEM.md` (reference it; do not restate it). If that variable is not substituted, use this summary: each item has `id`, `severity` (blocker|major|polish), `where` (quoted location), `observed`, `why` (rubric id), `fix` (exact rewrite), `verify`; max 3 blockers + 3 majors + 3 polish; end with a `keep:` line; no items means the single word `PASS`. Put the result in `Recommendations:` of the `<review>` block.
 - **Rubric findings only.** Report only findings under the rubric below, each with evidence (file:line, or a command and its result). No evidence, no finding. Do not widen into general review and do not implement.
 
 ### Mode: premise-critic

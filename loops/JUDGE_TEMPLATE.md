@@ -26,7 +26,7 @@ RUBRIC (each rule has an id; cite it in "why"):
 OUTPUT: exactly one of
 (a) the single word PASS, if no rule is broken; or
 (b) fix-items in this contract, followed by one "keep:" line:
-<paste ~/.claude/loops/FIX_ITEM.md contents here>
+<paste the contents of loops/FIX_ITEM.md from the delivery plugin here>
 Do not edit any file. Do not give general advice. Do not add praise.
 ```
 

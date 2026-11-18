@@ -1,6 +1,6 @@
 ---
 name: merge
-description: Safe PR merge with check verification, post-merge cleanup, and opted-in stack pack post-merge steps.
+description: Safe PR merge with check verification, post-merge cleanup, and opted-in stack skill post-merge steps.
 disable-model-invocation: true
 allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge *), Bash(gh pr diff *), Bash(git fetch *), Bash(git checkout *), Bash(git pull *), Bash(git branch *), Bash(git worktree *), Bash(supabase migration list *), Bash(supabase db push *), Bash(supabase functions list *)
 argument-hint: "[PR number — defaults to current branch's PR]"
@@ -39,7 +39,7 @@ Use only when the user explicitly asks to merge a PR. Never auto-trigger.
        - If the worktree has uncommitted changes, `git worktree remove` will refuse — stop and tell the user rather than forcing it.
      - Otherwise (branch is checked out in the current folder, or not checked out anywhere): switch to `main` (or the PR's base branch) with `git checkout <base>`, `git pull --ff-only`, then delete the local feature branch with `git branch -d <branch>`. Skip the delete if it has unmerged work locally.
 
-6. If a stack pack's `STACK.md` is already in your loaded context (the project's CLAUDE.md imports it), follow its "Post-merge steps". Do not apply a pack the project did not import, even if it exists in `~/.claude/stacks/`.
+6. If the project's CLAUDE.md has the line `Stack: supabase-vercel`, load the `stack-supabase-vercel` skill and follow its "Post-merge steps". Do not apply the stack skill to a project without that line. A migration that alters production data (not just schema) waits for the user's explicit "yes" before `supabase db push --linked`: state the target, the operation and the row count first.
 
 7. Output a merge summary.
 
@@ -48,7 +48,7 @@ Output:
 PR: #<num> — <title>
 Merge commit: <sha>
 Branch deleted: <branch> (remote + local)
-Stack pack post-merge items: <the lines the imported stack pack defines, or "none">
+Stack pack post-merge items: <the lines the stack skill defines, or "none">
 Watch: <deploy URL or other monitor target if known, else "production deploy via main">
 Rollback: revert merge commit on GitHub, or `git revert -m 1 <sha>` then push.
 </merge>

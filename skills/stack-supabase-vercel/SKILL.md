@@ -1,21 +1,20 @@
-# Stack pack: Supabase + Vercel
+---
+name: stack-supabase-vercel
+description: Supabase and Vercel rules for migrations, edge functions, supabase db push and post-merge steps. Use only when the project's CLAUDE.md has the line "Stack: supabase-vercel".
+---
+
+# Stack: Supabase + Vercel
 
 Opt-in rules for projects that use Supabase (migrations, edge functions) and Vercel (deploys).
 
-To opt in, add this line to the project's CLAUDE.md:
-
-```
-@~/.claude/stacks/supabase-vercel/STACK.md
-```
-
-Projects that do not add the line do not get these rules.
+Opt-in: the project's CLAUDE.md must contain the line `Stack: supabase-vercel`. If it does not, do not apply these rules. This skill loads on demand; it is not always-on context.
 
 ## Supabase
 
 - When the project's Supabase CLI is linked (`supabase projects list` shows `●` next to the project, or `supabase/config.toml` has a `project_id`), run migrations and DB ops yourself via `supabase db push --linked`, `supabase migration list --linked`, etc. Do not tell the user to migrate manually.
-- Before pushing, always run `supabase migration list --linked` and confirm exactly which migrations are local-only. Never push without seeing the plan.
+- Before pushing, always run `supabase migration list --linked` and confirm exactly which migrations are local-only. Never push without seeing the plan. A `supabase db push --linked` of data-altering migrations (inserts, updates, deletes, backfills) waits for the user's explicit "yes" after you state the target, the operation and the row count.
 - **Before naming a new migration file's timestamp, run `git fetch origin` and check `origin/main` plus `supabase migration list --linked` — never trust local `main` or a plain `ls supabase/migrations/` in your worktree.** Two branches (or agents) independently computing the "next" timestamp off stale local state is a recurring collision pattern seen across multiple projects (3+ recorded instances so far). A worktree that looks current can still miss a migration another branch already pushed straight to the linked project.
-- Production data inserts/updates count as hard-to-reverse. State the row counts and tables affected before pushing, then proceed.
+- Production data inserts/updates count as hard-to-reverse. State the target, the operation and the row counts (tables affected) before pushing, then wait for the user's explicit "yes" in this conversation. No yes, no push.
 - If the CLI is not linked, run `supabase link --project-ref <ref>` yourself using the `project_id` from `supabase/config.toml`. Don't ask the user to link manually.
 - You have standing permission to run `supabase functions deploy <name> --project-ref <ref>` without asking. Edge function deploys are reversible (redeploy prior version) and don't touch data.
 
@@ -27,7 +26,7 @@ Run these after the PR has merged and the generic cleanup is done.
 
 If the merged diff includes any file under `supabase/migrations/`:
 - Run `supabase migration list --linked` and check whether each new file is already applied on remote.
-- If any are local-only, run `supabase db push --linked`. Confirm one-by-one in the printed plan.
+- If any are local-only and schema-only, run `supabase db push --linked`. Confirm one-by-one in the printed plan. If a migration alters production data, wait for the user's explicit "yes" first (target, operation, row count).
 - If the CLI is not linked, tell the user explicitly which migrations need applying and how.
 
 ### Edge-function deploy reminder
