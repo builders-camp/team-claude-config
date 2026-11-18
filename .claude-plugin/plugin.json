@@ -1,0 +1,8 @@
+{
+  "name": "delivery",
+  "description": "Builders Camp delivery harness: @pm routing, discovery, design, engineering, implement, review, QA, deploy, merge.",
+  "author": {
+    "name": "Builders Camp"
+  },
+  "repository": "https://github.com/builders-camp/team-claude-config"
+}
