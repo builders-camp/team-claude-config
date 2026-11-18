@@ -78,6 +78,7 @@ When feasible:
 
 - **Worktree first:** before modifying any file for a new task, fetch and create a worktree/branch from `origin/main`. Detail: `/implement` skill.
 - **Never commit or push to `main` (or `master`)** unless the user explicitly says "commit to main" or "hotfix to main". All non-trivial work goes through a worktree branch + PR. Detail: `/implement` skill.
+- Permission prompts for commits/pushes to `main` and for `supabase db push`/`reset`/`migration repair`/`psql` come from guard hooks. They are expected; wait for the user's answer.
 - Before `gh pr create` or `gh issue create`, follow the `github-hygiene` skill.
 - When editing `.github/workflows/`, follow the `gh-actions-safety` skill.
 - Stack-specific rules ship in the `delivery` plugin as skills named `stack-<name>` (e.g. `stack-supabase-vercel`) and apply only when the project's CLAUDE.md has a line `Stack: <name>`.

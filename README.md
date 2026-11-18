@@ -6,7 +6,7 @@ Builders Camp's Claude Code plugin marketplace (`builders-camp`). Two plugins:
 
 | Plugin | Contains |
 |---|---|
-| `delivery` (repo root) | 12 agents (`@pm` + specialists), 22 skills (18 workflow skills, `/implement`, the `github-hygiene` and `gh-actions-safety` rule skills, and the opt-in `stack-supabase-vercel`), 3 hooks (house rules at session start, routing-gate reminder, routing-gate warning), the loops kit (`loops/`, 4 files), `CLAUDE.md` (house rules) |
+| `delivery` (repo root) | 12 agents (`@pm` + specialists), 22 skills (18 workflow skills, `/implement`, the `github-hygiene` and `gh-actions-safety` rule skills, and the opt-in `stack-supabase-vercel`), 5 hooks (house rules at session start, routing-gate reminder, routing-gate warning, `guard-main`, `guard-prod-db`), the loops kit (`loops/`, 4 files), `CLAUDE.md` (house rules) |
 | `team-os` (`plugins/team-os`) | Placeholder. No skills yet; reserves the name |
 
 ## Install
@@ -183,6 +183,13 @@ Smallest correct change, no unnecessary abstraction, minimal diffs. Small change
 **New agent:** create `agents/<name>.md` with frontmatter (`name`, `description`, `tools`, `model`, `maxTurns`, `memory`) and the sections used by existing agents: execution guardrails, what you own, core behavior, decision principles, output contract, stop conditions. Update `@pm`'s routing rules.
 
 **New stack:** add a skill `skills/stack-<name>/SKILL.md` that applies only when the project's CLAUDE.md has `Stack: <name>`.
+
+**Guard hooks (`PreToolUse` on `Bash`).** Both ask for approval; they never deny, so an explicit "hotfix to main" still works once you approve.
+
+- `guard-main.sh`: asks before `git commit` on `main`/`master`, and before `git push` that targets `main`/`master` (explicit refspec such as `origin main` or `HEAD:main`, or a bare push while on `main`).
+- `guard-prod-db.sh`: asks before `supabase db push`, `supabase db reset`, `supabase migration repair` and `psql`.
+
+Both read the command loosely (split on `&&`, `||`, `;`, `|`), so exotic shell forms can slip past. `scripts/test-hooks.sh` runs the cases.
 
 **New hook:** add it to `hooks/hooks.json`, scripts executable (`chmod 755`), paths via `${CLAUDE_PLUGIN_ROOT}`.
 

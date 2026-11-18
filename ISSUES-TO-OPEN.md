@@ -55,10 +55,12 @@ Moving rules into skills does not enforce them. Each item below is advice Claude
 
 ### 13a. Block pushes to `main`
 - **Why:** "Never commit or push to main" is prompt-only. Add branch protection on `main` plus a `PreToolUse` hook that blocks `git push` to `main`/`master` unless the user said "commit to main" or "hotfix to main".
+- **Status:** hook done in #24; branch protection on `main` still pending (repo admin).
 - **Labels:** P1-high, enhancement
 
 ### 13b. Approval hook for production DB writes
 - **Why:** The explicit-"yes" production-data rule is prompt-only. Add a hook that forces approval on `supabase db push` and `psql` against prod.
+- **Status:** done in #24.
 - **Labels:** P1-high, enhancement
 
 ### 13c. CI linter for PR-derived string interpolation
