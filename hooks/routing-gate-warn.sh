@@ -18,7 +18,7 @@
   marker="/tmp/routing-gate-warned-$session"
   [ -e "$marker" ] && exit 0
 
-  if tail -n 200 "$transcript" | grep -Eq '"subagent_type" *: *"pm"|Routing: skip — reason:'; then
+  if tail -n 200 "$transcript" | grep -Eq '"subagent_type" *: *"(delivery:)?pm"|Routing: skip — reason:'; then
     exit 0
   fi
 
