@@ -207,7 +207,7 @@ Pushes to `main` post a Slack notification with the update command.
 
 ## Syncing workflows
 
-Maintainer tool, not part of the plugin install. `scripts/sync-workflows.sh` copies `.github/workflows/*` into the repos listed in `.repos` (one path per line, `~` expanded, `#` comments allowed; `--repos-file <path>` overrides). It is a dry run by default; `--apply` copies. It skips missing repos and repos with uncommitted changes in `.github/workflows`, and never commits, pushes or switches branches: review and commit in each repo yourself.
+Maintainer tool, not part of the plugin install. `scripts/sync-workflows.sh` copies the workflow files listed in `.github/shared-workflows.txt` into the repos listed in `.repos` (one path per line, `~` expanded, `#` comments allowed; `--repos-file <path>` overrides). It is a dry run by default; `--apply` copies. It skips missing repos and repos with uncommitted changes in `.github/workflows`, and never commits, pushes or switches branches: review and commit in each repo yourself. Only files listed in `.github/shared-workflows.txt` are copied; `slack-notify.yml` and `skills-lint.yml` stay in this repo.
 
 ## Troubleshooting
 

@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Maintainer tool (not part of the plugin install): copy this repo's
-# .github/workflows/* into the repos listed in .repos.
+# .github/workflows/ files listed in .github/shared-workflows.txt into the
+# repos listed in .repos.
 # Dry run by default. Never commits, pushes or switches branches.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 SRC="$ROOT/.github/workflows"
+LIST="$ROOT/.github/shared-workflows.txt"
 REPOS_FILE="$ROOT/.repos"
 APPLY=false
 
@@ -26,9 +28,22 @@ while [ $# -gt 0 ]; do
 done
 
 [ -d "$SRC" ] || { echo "No source workflows at $SRC" >&2; exit 1; }
+[ -f "$LIST" ] || { echo "Allow-list not found: $LIST (nothing is copied without it)" >&2; exit 1; }
 [ -f "$REPOS_FILE" ] || { echo "Repos file not found: $REPOS_FILE" >&2; exit 1; }
 
 if [ "$APPLY" = true ]; then echo "Mode: APPLY"; else echo "Mode: dry run (use --apply to copy)"; fi
+
+shared=()
+while IFS= read -r line || [ -n "$line" ]; do
+  line="${line%%#*}"
+  line="$(echo "$line" | tr -d '[:space:]')"
+  [ -n "$line" ] || continue
+  if [ ! -f "$SRC/$line" ]; then
+    echo "WARN: $line is listed in shared-workflows.txt but missing from .github/workflows/" >&2
+    continue
+  fi
+  shared+=("$line")
+done < "$LIST"
 
 changed_repos=()
 while IFS= read -r line || [ -n "$line" ]; do
@@ -51,9 +66,8 @@ while IFS= read -r line || [ -n "$line" ]; do
 
   dest="$repo/.github/workflows"
   n=0
-  for f in "$SRC"/*; do
-    [ -f "$f" ] || continue
-    base="$(basename "$f")"
+  for base in ${shared[@]+"${shared[@]}"}; do
+    f="$SRC/$base"
     if [ ! -e "$dest/$base" ]; then
       status="add"
     elif ! diff -q "$f" "$dest/$base" >/dev/null; then
