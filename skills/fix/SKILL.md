@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep
 argument-hint: "[bug or broken behavior]"
 ---
 
-# /fix
+# /delivery:fix
 
 1. Define failing behavior.
 2. Root cause (max 3).

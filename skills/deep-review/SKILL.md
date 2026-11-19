@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep
 argument-hint: "[feature, file, or area to review]"
 ---
 
-# /deep-review
+# /delivery:deep-review
 
 Use ONLY for:
 - Large feature

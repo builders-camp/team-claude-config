@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep
 argument-hint: "[decision or topic to research]"
 ---
 
-# /research
+# /delivery:research
 
 ## Process
 

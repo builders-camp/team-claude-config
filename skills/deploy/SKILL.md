@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep, Write, Bash(git status), Bash(git status *), Ba
 argument-hint: "[branch or feature to deploy]"
 ---
 
-# /deploy
+# /delivery:deploy
 
 1. Check for uncommitted changes (`git status`, `git diff`).
 2. Pick the branch FIRST, before any commit:

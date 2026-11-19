@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep
 argument-hint: "[feature or area to QA]"
 ---
 
-# /qa
+# /delivery:qa
 
 1. Identify user journeys.
 2. Functional checks.

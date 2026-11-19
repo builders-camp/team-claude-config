@@ -6,15 +6,18 @@ Not fixed in code. Format: Title / Why / Suggested labels (priority + type). Del
 - **Why:** The `SessionStart` hook prints `CLAUDE.md`; it was 17,398 characters and Claude Code caps hook output at about 10,000. Resolved by the split: `CLAUDE.md` is now a short core, detail moved to `agents/pm.md` and the `implement`, `github-hygiene` and `gh-actions-safety` skills. Guarded by `scripts/lint-skills.sh` (9,000-character cap). Not verified in a live session; hook-injected context is still weaker than native memory (no `@imports`).
 - **Labels:** none needed; delete once the split is merged.
 
-## 2. Routing-gate and slash-command namespacing audit
+## 2. Routing-gate and slash-command namespacing audit (resolved)
+- **Status:** Resolved: slash-command mentions of the plugin's own skills now use `/delivery:<name>` (agents, skills, CLAUDE.md, loops, README). `@pm`-style prose agent names are left as is.
 - **Why:** Plugin components are namespaced (`/delivery:plan`, `delivery:pm`). Agent and skill text still says `/plan`, `/deploy`, `@pm`, `subagent_type=pm` (about 14 slash-command references and 61 `@pm` / `subagent_type` mentions). Only the warn hook, reminder and CLAUDE.md routing line were updated. The `/implement` handoff text and `@pm` handoff directives (`INVOKE @implementer`) should be checked for the plugin form.
 - **Labels:** P2-medium, bug
 
-## 3. `.repos` and workflow sync have no plugin equivalent
+## 3. `.repos` and workflow sync have no plugin equivalent (resolved)
+- **Status:** Resolved: `scripts/sync-workflows.sh`; reusable workflows are the longer-term option. Later, consider GitHub reusable workflows (`workflow_call`) so team repos call one shared workflow instead of holding copies.
 - **Why:** `.repos` fed `install.sh --sync-workflows`, which copied `.github/workflows/` into team repos. The script is retired. `.repos` is left in place. Decide: a small standalone script, a reusable workflow, or drop the sync.
 - **Labels:** P2-medium, enhancement
 
-## 4. Hidden consumers of `retired.txt`
+## 4. Hidden consumers of `retired.txt` (resolved)
+- **Status:** Resolved: no consumers found (org code search + local repos), nothing to do.
 - **Why:** `retired.txt` said it was also read by "project session-start hooks (cloud)" in other repos. Those hooks may now fail or leave retired `skills/pm` in place. Grep the team repos' `.claude/` settings and hooks for `retired.txt`, `install.sh` and `team-claude-config`. Also check the three paths in `.repos` for hardcoded `~/.claude/{skills,agents,stacks,loops}` references.
 - **Labels:** P1-high, bug
 

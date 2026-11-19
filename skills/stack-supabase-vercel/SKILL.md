@@ -18,7 +18,7 @@ Opt-in: the project's CLAUDE.md must contain the line `Stack: supabase-vercel`. 
 - If the CLI is not linked, run `supabase link --project-ref <ref>` yourself using the `project_id` from `supabase/config.toml`. Don't ask the user to link manually.
 - You have standing permission to run `supabase functions deploy <name> --project-ref <ref>` without asking. Edge function deploys are reversible (redeploy prior version) and don't touch data.
 
-## Post-merge steps (used by /merge)
+## Post-merge steps (used by /delivery:merge)
 
 Run these after the PR has merged and the generic cleanup is done.
 

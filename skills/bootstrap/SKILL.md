@@ -7,7 +7,7 @@ allowed-tools: Read, Glob, Write
 argument-hint: "[refresh?]"
 ---
 
-# /bootstrap — initialize repo Claude OS
+# /delivery:bootstrap — initialize repo Claude OS
 
 ## What this does
 Creates (if missing) the standard Claude OS structure in the current repo:

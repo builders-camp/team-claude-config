@@ -6,7 +6,7 @@ Builders Camp's Claude Code plugin marketplace (`builders-camp`). Two plugins:
 
 | Plugin | Contains |
 |---|---|
-| `delivery` (repo root) | 12 agents (`@pm` + specialists), 22 skills (18 workflow skills, `/implement`, the `github-hygiene` and `gh-actions-safety` rule skills, and the opt-in `stack-supabase-vercel`), 5 hooks (house rules at session start, routing-gate reminder, routing-gate warning, `guard-main`, `guard-prod-db`), the loops kit (`loops/`, 4 files), `CLAUDE.md` (house rules) |
+| `delivery` (repo root) | 12 agents (`@pm` + specialists), 22 skills (18 workflow skills, `/delivery:implement`, the `github-hygiene` and `gh-actions-safety` rule skills, and the opt-in `stack-supabase-vercel`), 5 hooks (house rules at session start, routing-gate reminder, routing-gate warning, `guard-main`, `guard-prod-db`), the loops kit (`loops/`, 4 files), `CLAUDE.md` (house rules) |
 | `team-os` (`plugins/team-os`) | Placeholder. No skills yet; reserves the name |
 
 ## Install
@@ -81,7 +81,7 @@ Claude routes to @pm (auto, per CLAUDE.md; `delivery:pm` as the plugin)
         ↓
 Specialist returns its output contract
         ↓
-@pm names the next command (e.g. /test, /deploy)
+@pm names the next command (e.g. /delivery:test, /delivery:deploy)
 ```
 
 `@pm` is auto-invoked. The specialists run on its handoff. You don't usually call them by name unless you want to skip triage.
@@ -100,13 +100,13 @@ All agents enforce **output contracts** — a structured block they must emit be
 | `@visionary` | Rare. Product/company direction, strategy-level bets. | Vision doc |
 | `@analyst` | Optional. Decision hinges on usage, funnel, revenue, SEO or sizing numbers. Read-only, aggregates only; inherits the session's MCP tools (no `tools:` line). | `analysis.md`, every number sourced; missing sources listed |
 | `@voc` | Optional. Decision hinges on what customers say or competitor positioning. Read-only; inherits the session's MCP tools. | `voc.md`: ranked themes, sourced quotes, win/lose vs alternatives |
-| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). Has the Skill tool, so it can run `/jtbd`, `/ost`, `/moscow`. | Discovery doc + recommended next specialists. Optional synthetic ICP interviews via handoff (`NEEDS_INTERVIEWS`), findings labelled `[synthetic]`. |
+| `@discovery` | Unshaped feature ideas (JTBD → OST → MoSCoW). Has the Skill tool, so it can run `/delivery:jtbd`, `/delivery:ost`, `/delivery:moscow`. | Discovery doc + recommended next specialists. Optional synthetic ICP interviews via handoff (`NEEDS_INTERVIEWS`), findings labelled `[synthetic]`. |
 | `@designer` | Material UI/flow surface: IA, flows, accessibility. | Design brief (no mockups) |
 | `@pmm` | Optional. Customer-facing surface or launch; runs alongside `@designer`. Never publishes. | `messaging-brief.md` |
 | `@engineer` | Architecturally non-trivial features. | Engineering brief (no code) |
 | `@researcher` | Unclear problem, options analysis, codebase discovery, decision framing | Recommendation + next owner |
 | `@implementer` | Bounded code changes, bug fixes, small features with clear scope. Has Bash. | Implementation or implementation brief |
-| `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist. Also has browser verification mode (uses `/browser-qa` on the preview, fail-open). |
+| `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist. Also has browser verification mode (uses `/delivery:browser-qa` on the preview, fail-open). |
 | `@reviewer` | Architecture audit, large refactors, security/performance review. Also has premise-critic mode (challenges a brief's premises) and brief-conformance mode (checks the work against the brief). | Review + recommended remediation |
 
 Every agent can use project skills (see "Project skills" in `agents/pm.md`).
@@ -123,28 +123,28 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 
 | Command | What it does |
 |---|---|
-| `/plan` | Execution-ready plan: goal, assumptions, scope, milestones, risks, acceptance criteria |
-| `/research` | High-level concept research: best practices, failure patterns, recommendation |
-| `/fix` | Minimal safe patch: failing behavior → root cause → smallest fix → risks → tests |
-| `/test` | Regression-preventing tests: happy path + 2 edge cases + 1 failure case |
-| `/qa` | Product QA checklist: user journeys, functional + non-functional checks, release safety |
-| `/deep-review` | Full audit (architecture, code quality, tests, performance). **Use only for** large features, refactors, or security/performance work |
-| `/deploy` | Safe feature-branch deploy: branch → commit → preflight (TS compile) → push → open draft PR with labels. **Never auto-merges.** |
-| `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → opted-in stack skill post-merge steps. **Manual trigger only.** |
-| `/implement` | Creates a worktree branch from `origin/main`, then hands off to `@implementer`. Does not bypass `@pm`. |
-| `/recap` | Plain-language recap of what shipped or changed |
-| `/browser-qa` | Read-only Playwright check of a deploy preview (never production); PASS/FAIL/SKIPPED with evidence. Fail-open. |
+| `/delivery:plan` | Execution-ready plan: goal, assumptions, scope, milestones, risks, acceptance criteria |
+| `/delivery:research` | High-level concept research: best practices, failure patterns, recommendation |
+| `/delivery:fix` | Minimal safe patch: failing behavior → root cause → smallest fix → risks → tests |
+| `/delivery:test` | Regression-preventing tests: happy path + 2 edge cases + 1 failure case |
+| `/delivery:qa` | Product QA checklist: user journeys, functional + non-functional checks, release safety |
+| `/delivery:deep-review` | Full audit (architecture, code quality, tests, performance). **Use only for** large features, refactors, or security/performance work |
+| `/delivery:deploy` | Safe feature-branch deploy: branch → commit → preflight (TS compile) → push → open draft PR with labels. **Never auto-merges.** |
+| `/delivery:merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → opted-in stack skill post-merge steps. **Manual trigger only.** |
+| `/delivery:implement` | Creates a worktree branch from `origin/main`, then hands off to `@implementer`. Does not bypass `@pm`. |
+| `/delivery:recap` | Plain-language recap of what shipped or changed |
+| `/delivery:browser-qa` | Read-only Playwright check of a deploy preview (never production); PASS/FAIL/SKIPPED with evidence. Fail-open. |
 
 ### Discovery frameworks
 
 | Command | What it does |
 |---|---|
-| `/jtbd` | Jobs-to-be-done framing for a feature idea |
-| `/ost` | Opportunity solution tree |
-| `/moscow` | MoSCoW prioritization |
-| `/data-analysis` | Read-only quantitative analysis; every number sourced |
-| `/voice-of-customer` | Themes, sourced quotes, win/lose vs alternatives |
-| `/messaging-brief` | ICP, positioning, key messages with proof, copy and assets per surface |
+| `/delivery:jtbd` | Jobs-to-be-done framing for a feature idea |
+| `/delivery:ost` | Opportunity solution tree |
+| `/delivery:moscow` | MoSCoW prioritization |
+| `/delivery:data-analysis` | Read-only quantitative analysis; every number sourced |
+| `/delivery:voice-of-customer` | Themes, sourced quotes, win/lose vs alternatives |
+| `/delivery:messaging-brief` | ICP, positioning, key messages with proof, copy and assets per surface |
 
 ### Rule skills (loaded on demand)
 
@@ -157,14 +157,14 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 
 | Skill | What it does |
 |---|---|
-| `stack-supabase-vercel` | Supabase migration, edge-function and `/merge` post-merge rules. Applies only when the project's CLAUDE.md has the line `Stack: supabase-vercel`. Loads on demand. |
+| `stack-supabase-vercel` | Supabase migration, edge-function and `/delivery:merge` post-merge rules. Applies only when the project's CLAUDE.md has the line `Stack: supabase-vercel`. Loads on demand. |
 
 ### Meta (managing the system)
 
 | Command | What it does |
 |---|---|
-| `/bootstrap` | Scaffolds per-repo Claude OS structure (`CLAUDE.md`, `.claude/skills/`, standards, registries) in a new repo. Run once per project. |
-| `/improve` | Promote durable patterns into `CLAUDE.md` or skills. Shows diff before applying. |
+| `/delivery:bootstrap` | Scaffolds per-repo Claude OS structure (`CLAUDE.md`, `.claude/skills/`, standards, registries) in a new repo. Run once per project. |
+| `/delivery:improve` | Promote durable patterns into `CLAUDE.md` or skills. Shows diff before applying. |
 
 ---
 
@@ -172,7 +172,7 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 
 ## House rules (from `CLAUDE.md`)
 
-Smallest correct change, no unnecessary abstraction, minimal diffs. Small changes go straight to implementation; multi-layer changes get a short plan first. After changes: list what could break, suggest tests and rollback. Never write to or delete production data without an explicit "yes". `/deep-review` only for large, risky or performance-sensitive work. The full `CLAUDE.md` is the source of truth.
+Smallest correct change, no unnecessary abstraction, minimal diffs. Small changes go straight to implementation; multi-layer changes get a short plan first. After changes: list what could break, suggest tests and rollback. Never write to or delete production data without an explicit "yes". `/delivery:deep-review` only for large, risky or performance-sensitive work. The full `CLAUDE.md` is the source of truth.
 
 ---
 
@@ -201,7 +201,7 @@ Run `scripts/lint-skills.sh` and `claude plugin validate .` before opening a PR.
 | Reusable workflow | New skill |
 | New specialist role | New agent |
 | Stack-specific rules | `skills/stack-<name>/` |
-| Repo-specific conventions | That repo's CLAUDE.md (use `/bootstrap`) |
+| Repo-specific conventions | That repo's CLAUDE.md (use `/delivery:bootstrap`) |
 
 Pushes to `main` post a Slack notification with the update command.
 

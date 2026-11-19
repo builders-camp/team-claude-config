@@ -6,7 +6,7 @@ allowed-tools: Read, Bash(gh pr view *), Bash(gh pr checks *), Bash(gh pr merge 
 argument-hint: "[PR number — defaults to current branch's PR]"
 ---
 
-# /merge
+# /delivery:merge
 
 Use only when the user explicitly asks to merge a PR. Never auto-trigger.
 

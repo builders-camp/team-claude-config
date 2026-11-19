@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep, Bash, Write
 argument-hint: "[preview URL or flows to check]"
 ---
 
-# /browser-qa
+# /delivery:browser-qa
 
 Fail-open: any error means `SKIPPED` with a reason. Never blocks a merge.
 

@@ -6,7 +6,7 @@ allowed-tools: Read, Edit, Write
 argument-hint: "[pattern or improvement to apply]"
 ---
 
-# /improve
+# /delivery:improve
 
 Only update:
 - CLAUDE.md durable rules

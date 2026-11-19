@@ -6,7 +6,7 @@ allowed-tools: Read, Glob, Grep
 argument-hint: "[feature or task description]"
 ---
 
-# /plan
+# /delivery:plan
 
 ## Process
 

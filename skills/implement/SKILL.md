@@ -5,7 +5,7 @@ allowed-tools: Read, Glob, Grep, Bash(git fetch *), Bash(git status), Bash(git b
 argument-hint: "[short task name]"
 ---
 
-# /implement
+# /delivery:implement
 
 Use before modifying any file for a new task. Creates the branch in a worktree, then hands off to `@implementer`.
 
