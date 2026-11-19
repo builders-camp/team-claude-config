@@ -3,7 +3,7 @@
 Not fixed in code. Format: Title / Why / Suggested labels (priority + type). Delete this file once the issues exist.
 
 ## 1. CLAUDE.md exceeded the 10k-character hook output cap (resolved)
-- **Why:** The `SessionStart` hook prints `CLAUDE.md`; it was 17,398 characters and Claude Code caps hook output at about 10,000. Resolved by the split: `CLAUDE.md` is now a short core, detail moved to `agents/pm.md` and the `implement`, `github-hygiene` and `gh-actions-safety` skills. Guarded by `scripts/lint-skills.sh` (9,000-character cap). Not verified in a live session; hook-injected context is still weaker than native memory (no `@imports`).
+- **Why:** The `SessionStart` hook prints `CLAUDE.md`; it was 17,398 characters and Claude Code caps hook output at about 10,000. Resolved by the split: `plugins/delivery/CLAUDE.md` is now a short core, detail moved to `plugins/delivery/agents/pm.md` and the `implement`, `github-hygiene` and `gh-actions-safety` skills. Guarded by `scripts/lint-skills.sh` (9,000-character cap). Not verified in a live session; hook-injected context is still weaker than native memory (no `@imports`).
 - **Labels:** none needed; delete once the split is merged.
 
 ## 2. Routing-gate and slash-command namespacing audit (resolved)
@@ -22,11 +22,11 @@ Not fixed in code. Format: Title / Why / Suggested labels (priority + type). Del
 - **Labels:** P1-high, bug
 
 ## 5. Stack skill is on-demand, not always-on
-- **Why:** The old `@~/.claude/stacks/...` import put the Supabase rules in context every session. `stack-supabase-vercel` loads only when Claude decides the description matches (or `/merge` loads it). The migration-timestamp collision rule could be missed. Alternative (Option A): the `SessionStart` hook greps the project's CLAUDE.md for `Stack: <name>` and prints the matching `skills/stack-<name>/SKILL.md` body, giving always-on behaviour with the same opt-in line.
+- **Why:** The old `@~/.claude/stacks/...` import put the Supabase rules in context every session. `stack-supabase-vercel` loads only when Claude decides the description matches (or `/merge` loads it). The migration-timestamp collision rule could be missed. Alternative (Option A): the `SessionStart` hook greps the project's CLAUDE.md for `Stack: <name>` and prints the matching `plugins/delivery/skills/stack-<name>/SKILL.md` body, giving always-on behaviour with the same opt-in line.
 - **Labels:** P2-medium, enhancement
 
 ## 6. `${CLAUDE_PLUGIN_ROOT}` in agent bodies is unverified
-- **Why:** `agents/reviewer.md` references `${CLAUDE_PLUGIN_ROOT}/loops/FIX_ITEM.md`. The docs disagree on whether the variable is substituted in agent bodies. A one-line inline summary of the contract is included as a fallback. Verify in a live session, then drop the fallback or the variable.
+- **Why:** `plugins/delivery/agents/reviewer.md` references `${CLAUDE_PLUGIN_ROOT}/loops/FIX_ITEM.md`. The docs disagree on whether the variable is substituted in agent bodies. A one-line inline summary of the contract is included as a fallback. Verify in a live session, then drop the fallback or the variable.
 - **Labels:** P3-low, question
 
 ## 7. Version pinning and the update flow
@@ -38,7 +38,7 @@ Not fixed in code. Format: Title / Why / Suggested labels (priority + type). Del
 - **Labels:** P2-medium, question
 
 ## 9. slack-notify wording and path coverage
-- **Why:** The workflow's change summary now lists `.claude-plugin/*` instead of `install.sh`, and the update command is `claude plugin marketplace update builders-camp && claude plugin update delivery@builders-camp`. It still does not summarise `hooks/`, `loops/` or `plugins/` changes, and the shell block interpolates `${{ steps.changes.outputs.summary }}` directly (see the `gh-actions-safety` skill: pass through `env:`).
+- **Why:** The workflow's change summary now lists `.claude-plugin/*` instead of `install.sh`, and the update command is `claude plugin marketplace update builders-camp && claude plugin update delivery@builders-camp`. It still does not summarise `plugins/delivery/hooks/` or `plugins/delivery/loops/` changes, and the shell block interpolates `${{ steps.changes.outputs.summary }}` directly (see the `gh-actions-safety` skill: pass through `env:`).
 - **Labels:** P3-low, enhancement
 
 ## 10. team-os is a placeholder

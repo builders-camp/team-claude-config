@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "delivery",
-      "source": "./",
+      "source": "./plugins/delivery",
       "description": "Builders Camp delivery harness: @pm routing, discovery, design, engineering, implement, review, QA, deploy, merge."
     },
     {

@@ -23,15 +23,15 @@ jobs:
           # Build a human-readable summary
           SUMMARY=""
           while IFS= read -r file; do
-            if [[ "$file" == "CLAUDE.md" ]]; then
+            if [[ "$file" == "plugins/delivery/CLAUDE.md" ]]; then
               SUMMARY="$SUMMARY\n• \`CLAUDE.md\`"
-            elif [[ "$file" == skills/*/SKILL.md ]]; then
-              skill=$(echo "$file" | cut -d'/' -f2)
+            elif [[ "$file" == plugins/delivery/skills/*/SKILL.md ]]; then
+              skill=$(echo "$file" | cut -d'/' -f4)
               SUMMARY="$SUMMARY\n• skill \`$skill\`"
-            elif [[ "$file" == agents/*.md ]]; then
+            elif [[ "$file" == plugins/delivery/agents/*.md ]]; then
               agent=$(basename "$file" .md)
               SUMMARY="$SUMMARY\n• agent \`$agent\`"
-            elif [[ "$file" == .claude-plugin/* ]]; then
+            elif [[ "$file" == .claude-plugin/* || "$file" == plugins/delivery/.claude-plugin/* ]]; then
               SUMMARY="$SUMMARY\n• plugin manifest \`$file\`"
             fi
           done <<< "$CHANGED"

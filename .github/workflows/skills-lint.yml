@@ -3,23 +3,17 @@ name: Skills lint
 on:
   pull_request:
     paths:
-      - 'skills/**'
-      - 'agents/**'
       - 'README.md'
       - 'scripts/lint-skills.sh'
       - 'scripts/test-hooks.sh'
-      - 'hooks/**'
       - '.claude-plugin/**'
       - 'plugins/**'
   push:
     branches: [main]
     paths:
-      - 'skills/**'
-      - 'agents/**'
       - 'README.md'
       - 'scripts/lint-skills.sh'
       - 'scripts/test-hooks.sh'
-      - 'hooks/**'
       - '.claude-plugin/**'
       - 'plugins/**'
 

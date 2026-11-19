@@ -1,5 +1,5 @@
 #!/bin/bash
-# Feeds sample PreToolUse JSON to hooks/guard-main.sh and hooks/guard-prod-db.sh.
+# Feeds sample PreToolUse JSON to plugins/delivery/hooks/guard-main.sh and guard-prod-db.sh.
 set -u
 root="$(cd "$(dirname "$0")/.." && pwd)"
 tmp="$(mktemp -d)"
@@ -18,7 +18,7 @@ pass=0; fail=0
 check() { # hook expect(ask|none) cwd command
   local hook="$1" expect="$2" cwd="$3" cmd="$4" json out rc
   json="$(jq -n --arg c "$cmd" --arg d "$cwd" '{tool_name:"Bash",tool_input:{command:$c},cwd:$d}')"
-  out="$(printf '%s' "$json" | "$root/hooks/$hook")"; rc=$?
+  out="$(printf '%s' "$json" | "$root/plugins/delivery/hooks/$hook")"; rc=$?
   local ok=0
   if [ "$expect" = ask ]; then
     [ $rc -eq 0 ] && printf '%s' "$out" | jq -e . >/dev/null 2>&1 && [[ "$out" == *'"permissionDecision":"ask"'* ]] && ok=1
@@ -29,7 +29,7 @@ check() { # hook expect(ask|none) cwd command
 }
 garbage() { # hook input label
   local out rc
-  out="$(printf '%s' "$2" | "$root/hooks/$1")"; rc=$?
+  out="$(printf '%s' "$2" | "$root/plugins/delivery/hooks/$1")"; rc=$?
   if [ $rc -eq 0 ] && [ -z "$out" ]; then pass=$((pass+1)); echo "PASS [$1] garbage: $3"; else fail=$((fail+1)); echo "FAIL [$1] garbage: $3"; fi
 }
 

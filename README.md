@@ -6,7 +6,7 @@ Builders Camp's Claude Code plugin marketplace (`builders-camp`). Two plugins:
 
 | Plugin | Contains |
 |---|---|
-| `delivery` (repo root) | 12 agents (`@pm` + specialists), 22 skills (18 workflow skills, `/delivery:implement`, the `github-hygiene` and `gh-actions-safety` rule skills, and the opt-in `stack-supabase-vercel`), 5 hooks (house rules at session start, routing-gate reminder, routing-gate warning, `guard-main`, `guard-prod-db`), the loops kit (`loops/`, 4 files), `CLAUDE.md` (house rules) |
+| `delivery` (`plugins/delivery`) | 12 agents (`@pm` + specialists), 22 skills (18 workflow skills, `/delivery:implement`, the `github-hygiene` and `gh-actions-safety` rule skills, and the opt-in `stack-supabase-vercel`), 5 hooks (house rules at session start, routing-gate reminder, routing-gate warning, `guard-main`, `guard-prod-db`), the loops kit (`plugins/delivery/loops/`, 4 files), `plugins/delivery/CLAUDE.md` (house rules) |
 | `team-os` (`plugins/team-os`) | Placeholder. No skills yet; reserves the name |
 
 ## Install
@@ -23,7 +23,7 @@ Update: `claude plugin marketplace update builders-camp && claude plugin update 
 
 Plugin components are namespaced: skills are `/delivery:plan`, `/delivery:fix`, and so on; agents are `delivery:pm` (`@agent-delivery:pm`). The rest of this README uses the short names.
 
-The house rules in `CLAUDE.md` reach Claude through a `SessionStart` hook that prints the file, because plugins cannot ship a native CLAUDE.md. Hook output has no `@imports`, so `CLAUDE.md` must stay self-contained and under 9,000 characters (hook output over 10,000 is cut to a preview; `scripts/lint-skills.sh` enforces the cap). Put detail in skills or agents.
+The house rules in `plugins/delivery/CLAUDE.md` reach Claude through a `SessionStart` hook that prints the file, because plugins cannot ship a native CLAUDE.md. Hook output has no `@imports`, so that file must stay self-contained and under 9,000 characters (hook output over 10,000 is cut to a preview; `scripts/lint-skills.sh` enforces the cap). Put detail in skills or agents.
 
 ## Switch it off for one project
 
@@ -45,7 +45,7 @@ Or: `claude plugin disable delivery --scope project`.
 - `install.sh` is gone. Nothing writes to `~/.claude/` any more. Install and update with the commands above.
 - The `@~/.claude/stacks/supabase-vercel/STACK.md` import no longer works. In the project's CLAUDE.md, replace it with the line `Stack: supabase-vercel`. The rules now live in the `stack-supabase-vercel` skill and load on demand.
 - `install.sh --sync-workflows` is replaced by `scripts/sync-workflows.sh` (see Syncing workflows).
-- Old symlinks into this repo must be removed by hand, or you get double hooks and duplicate skills. List them (this only lists):
+- The delivery plugin moved from the repo root into `plugins/delivery/`. Old `install.sh` symlinks in `~/.claude` point at root paths (`skills/`, `agents/`, `hooks/`, `loops/`, `CLAUDE.md`) that no longer exist after this lands, so they stop working. Remove them and install the plugin. Left in place they also give double hooks and duplicate skills. List them (this only lists):
 
   ```bash
   find ~/.claude -maxdepth 2 -type l -lname '*team-claude-config*'
@@ -57,7 +57,7 @@ Or: `claude plugin disable delivery --scope project`.
 
 ## Loops (generator -> judge)
 
-`loops/` ships in the delivery plugin: `README.md` (the rules), `JUDGE_TEMPLATE.md` (fresh-subagent judge prompt), `FIX_ITEM.md` (fix-item contract) and `CHANGELOG.md` (a template). Each project keeps its own promoted-checks log at `.claude/loops/CHANGELOG.md`; copy the template there to start it.
+`plugins/delivery/loops/` ships in the delivery plugin: `README.md` (the rules), `JUDGE_TEMPLATE.md` (fresh-subagent judge prompt), `FIX_ITEM.md` (fix-item contract) and `CHANGELOG.md` (a template). Each project keeps its own promoted-checks log at `.claude/loops/CHANGELOG.md`; copy the template there to start it.
 
 ---
 
@@ -109,7 +109,7 @@ All agents enforce **output contracts** — a structured block they must emit be
 | `@qa` | Acceptance criteria, user journey validation, release readiness. Has Bash. | Validation boundary + checklist. Also has browser verification mode (uses `/delivery:browser-qa` on the preview, fail-open). |
 | `@reviewer` | Architecture audit, large refactors, security/performance review. Also has premise-critic mode (challenges a brief's premises) and brief-conformance mode (checks the work against the brief). | Review + recommended remediation |
 
-Every agent can use project skills (see "Project skills" in `agents/pm.md`).
+Every agent can use project skills (see "Project skills" in `plugins/delivery/agents/pm.md`).
 
 All agents have **scope-drift guardrails**: if the work shifts out of their lane, they hand back to `@pm` instead of overreaching. They also have soft tool-call budgets to prevent endless exploration.
 
@@ -170,19 +170,19 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 
 ---
 
-## House rules (from `CLAUDE.md`)
+## House rules (from `plugins/delivery/CLAUDE.md`)
 
-Smallest correct change, no unnecessary abstraction, minimal diffs. Small changes go straight to implementation; multi-layer changes get a short plan first. After changes: list what could break, suggest tests and rollback. Never write to or delete production data without an explicit "yes". `/delivery:deep-review` only for large, risky or performance-sensitive work. The full `CLAUDE.md` is the source of truth.
+Smallest correct change, no unnecessary abstraction, minimal diffs. Small changes go straight to implementation; multi-layer changes get a short plan first. After changes: list what could break, suggest tests and rollback. Never write to or delete production data without an explicit "yes". `/delivery:deep-review` only for large, risky or performance-sensitive work. The full `plugins/delivery/CLAUDE.md` is the source of truth.
 
 ---
 
 ## Contributing
 
-**New skill:** create `skills/<name>/SKILL.md` (frontmatter: `name` equal to the directory, `description`, optional `disable-model-invocation`, `allowed-tools`, `argument-hint`). Keep the body short: steps, output format, stop condition. Update the counts marker at the top of this file.
+**New skill:** create `plugins/delivery/skills/<name>/SKILL.md` (frontmatter: `name` equal to the directory, `description`, optional `disable-model-invocation`, `allowed-tools`, `argument-hint`). Keep the body short: steps, output format, stop condition. Update the counts marker at the top of this file.
 
-**New agent:** create `agents/<name>.md` with frontmatter (`name`, `description`, `tools`, `model`, `maxTurns`, `memory`) and the sections used by existing agents: execution guardrails, what you own, core behavior, decision principles, output contract, stop conditions. Update `@pm`'s routing rules.
+**New agent:** create `plugins/delivery/agents/<name>.md` with frontmatter (`name`, `description`, `tools`, `model`, `maxTurns`, `memory`) and the sections used by existing agents: execution guardrails, what you own, core behavior, decision principles, output contract, stop conditions. Update `@pm`'s routing rules.
 
-**New stack:** add a skill `skills/stack-<name>/SKILL.md` that applies only when the project's CLAUDE.md has `Stack: <name>`.
+**New stack:** add a skill `plugins/delivery/skills/stack-<name>/SKILL.md` that applies only when the project's CLAUDE.md has `Stack: <name>`.
 
 **Guard hooks (`PreToolUse` on `Bash`).** Both ask for approval; they never deny, so an explicit "hotfix to main" still works once you approve.
 
@@ -191,16 +191,16 @@ Smallest correct change, no unnecessary abstraction, minimal diffs. Small change
 
 Both read the command loosely (split on `&&`, `||`, `;`, `|`), so exotic shell forms can slip past. `scripts/test-hooks.sh` runs the cases.
 
-**New hook:** add it to `hooks/hooks.json`, scripts executable (`chmod 755`), paths via `${CLAUDE_PLUGIN_ROOT}`.
+**New hook:** add it to `plugins/delivery/hooks/hooks.json`, scripts executable (`chmod 755`), paths via `${CLAUDE_PLUGIN_ROOT}`.
 
-Run `scripts/lint-skills.sh` and `claude plugin validate .` before opening a PR. CI runs the lint.
+Run `scripts/lint-skills.sh` and `claude plugin validate .` and `claude plugin validate plugins/delivery` before opening a PR. CI runs the lint.
 
 | Change | Where |
 |---|---|
-| Global house rule | `CLAUDE.md` |
+| Global house rule | `plugins/delivery/CLAUDE.md` |
 | Reusable workflow | New skill |
 | New specialist role | New agent |
-| Stack-specific rules | `skills/stack-<name>/` |
+| Stack-specific rules | `plugins/delivery/skills/stack-<name>/` |
 | Repo-specific conventions | That repo's CLAUDE.md (use `/delivery:bootstrap`) |
 
 Pushes to `main` post a Slack notification with the update command.
