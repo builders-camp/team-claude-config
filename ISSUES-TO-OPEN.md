@@ -18,7 +18,7 @@ Not fixed in code. Format: Title / Why / Suggested labels (priority + type). Del
 
 ## 4. Hidden consumers of `retired.txt` (resolved)
 - **Status:** Resolved: no consumers found (org code search + local repos), nothing to do.
-- **Why:** `retired.txt` said it was also read by "project session-start hooks (cloud)" in other repos. Those hooks may now fail or leave retired `skills/pm` in place. Grep the team repos' `.claude/` settings and hooks for `retired.txt`, `install.sh` and `team-claude-config`. Also check the three paths in `.repos` for hardcoded `~/.claude/{skills,agents,stacks,loops}` references.
+- **Why:** `retired.txt` said it was also read by "project session-start hooks (cloud)" in other repos. Those hooks may now fail or leave retired `skills/pm` in place. Grep the team repos' `.claude/` settings and hooks for `retired.txt`, `install.sh` and `team-claude-config`. Also check the paths in `.repos` for hardcoded `~/.claude/{skills,agents,stacks,loops}` references.
 - **Labels:** P1-high, bug
 
 ## 5. Stack skill is on-demand, not always-on

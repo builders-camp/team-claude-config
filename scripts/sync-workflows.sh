@@ -96,6 +96,6 @@ if [ "$APPLY" = true ] && [ ${#changed_repos[@]} -gt 0 ]; then
   echo ""
   echo "Next: review and commit in each repo (this script does not commit):"
   for repo in "${changed_repos[@]}"; do
-    echo "  cd \"$repo\" && git add .github/workflows/ && git commit -m 'ci: sync workflows from team-claude-config'"
+    echo "  cd \"$repo\" && git add .github/workflows/ && git commit -m 'ci: sync workflows from campkit'"
   done
 fi
