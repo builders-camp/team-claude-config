@@ -1,0 +1,4 @@
+# Workflow files from .github/workflows/ that scripts/sync-workflows.sh copies
+# into the repos listed in .repos. Anything not listed stays in this repo.
+# One filename per line. Blank lines and # comments are ignored.
+auto-assign-review.yml

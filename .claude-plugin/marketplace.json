@@ -1,0 +1,21 @@
+{
+  "name": "campkit",
+  "owner": {
+    "name": "Builders Camp"
+  },
+  "metadata": {
+    "description": "Builders Camp's Claude Code plugins: the delivery harness and the Team OS."
+  },
+  "plugins": [
+    {
+      "name": "delivery",
+      "source": "./plugins/delivery",
+      "description": "Builders Camp delivery harness: @pm routing, discovery, design, engineering, implement, review, QA, deploy, merge."
+    },
+    {
+      "name": "team-os",
+      "source": "./plugins/team-os",
+      "description": "Builders Camp ops skills (placeholder): newsletter, outreach, mentors, Cheque-Formação, end-of-day review."
+    }
+  ]
+}
