@@ -24,8 +24,8 @@ The Team OS splits method from facts: this plugin brings the method (skills), an
 ## Install
 
 ```bash
-claude plugin marketplace add builders-camp/team-claude-config
-claude plugin install team-os@builders-camp
+claude plugin marketplace add builders-camp/campkit
+claude plugin install team-os@campkit
 ```
 
 In the Claude app, each person adds the `team-os` skills by hand once they exist.

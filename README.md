@@ -1,8 +1,8 @@
-# team-claude-config
+# campkit
 
 <!-- counts: skills=22 agents=12 -->
 
-Builders Camp's Claude Code plugin marketplace (`builders-camp`). Two plugins:
+Builders Camp's Claude Code plugin marketplace (`campkit`). Two plugins:
 
 | Plugin | Contains |
 |---|---|
@@ -12,14 +12,18 @@ Builders Camp's Claude Code plugin marketplace (`builders-camp`). Two plugins:
 ## Install
 
 ```bash
-claude plugin marketplace add builders-camp/team-claude-config
-claude plugin install delivery@builders-camp
-claude plugin install team-os@builders-camp
+claude plugin marketplace add builders-camp/campkit
+claude plugin install delivery@campkit
+claude plugin install team-os@campkit
 ```
 
-In a session: `/plugin marketplace add builders-camp/team-claude-config`, then `/plugin install delivery@builders-camp`.
+In a session: `/plugin marketplace add builders-camp/campkit`, then `/plugin install delivery@campkit`.
 
-Update: `claude plugin marketplace update builders-camp && claude plugin update delivery@builders-camp`. The plugin has no `version` field, so every commit on `main` is a new version.
+The repo was renamed from `team-claude-config` to `campkit`; old links redirect.
+
+Private repo installs use each person's GitHub login; background auto-updates need GITHUB_TOKEN set.
+
+Update: `claude plugin marketplace update campkit && claude plugin update delivery@campkit`. The plugin has no `version` field, so every commit on `main` is a new version.
 
 Plugin components are namespaced: skills are `/delivery:plan`, `/delivery:fix`, and so on; agents are `delivery:pm` (`@agent-delivery:pm`). The rest of this README uses the short names.
 
@@ -30,14 +34,14 @@ The house rules in `plugins/delivery/CLAUDE.md` reach Claude through a `SessionS
 Add to `.claude/settings.json` (team) or `.claude/settings.local.json` (only you):
 
 ```json
-{ "enabledPlugins": { "delivery@builders-camp": false } }
+{ "enabledPlugins": { "delivery@campkit": false } }
 ```
 
 Or: `claude plugin disable delivery --scope project`.
 
 ## Roll back
 
-- Remove: `claude plugin uninstall delivery@builders-camp`, then `claude plugin marketplace remove builders-camp` (this also deletes plugin data).
+- Remove: `claude plugin uninstall delivery@campkit`, then `claude plugin marketplace remove campkit` (this also deletes plugin data).
 - Return to the pre-plugin setup: check out `641e75d`, the last commit before the plugin restructure (`git checkout 641e75d`), and run its `./install.sh`.
 
 ## Breaking changes

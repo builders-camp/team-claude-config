@@ -38,7 +38,7 @@ Not fixed in code. Format: Title / Why / Suggested labels (priority + type). Del
 - **Labels:** P2-medium, question
 
 ## 9. slack-notify wording and path coverage
-- **Why:** The workflow's change summary now lists `.claude-plugin/*` instead of `install.sh`, and the update command is `claude plugin marketplace update builders-camp && claude plugin update delivery@builders-camp`. It still does not summarise `plugins/delivery/hooks/` or `plugins/delivery/loops/` changes, and the shell block interpolates `${{ steps.changes.outputs.summary }}` directly (see the `gh-actions-safety` skill: pass through `env:`).
+- **Why:** The workflow's change summary now lists `.claude-plugin/*` instead of `install.sh`, and the update command is `claude plugin marketplace update campkit && claude plugin update delivery@campkit`. It still does not summarise `plugins/delivery/hooks/` or `plugins/delivery/loops/` changes, and the shell block interpolates `${{ steps.changes.outputs.summary }}` directly (see the `gh-actions-safety` skill: pass through `env:`).
 - **Labels:** P3-low, enhancement
 
 ## 10. team-os is a placeholder
