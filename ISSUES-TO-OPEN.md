@@ -58,7 +58,7 @@ Moving rules into skills does not enforce them. Each item below is advice Claude
 
 ### 13a. Block pushes to `main`
 - **Why:** "Never commit or push to main" is prompt-only. Add branch protection on `main` plus a `PreToolUse` hook that blocks `git push` to `main`/`master` unless the user said "commit to main" or "hotfix to main".
-- **Status:** hook done in #24; branch protection on `main` still pending (repo admin).
+- **Status:** hook done in #24 (`guard-main.sh` asks before any Claude push or commit to `main`). Branch protection is blocked: the `builders-camp` org is on GitHub Free, which only allows it on public repos, so neither this repo (once private) nor the private app repos can have it. Decision for the repo admin: move to a paid plan (GitHub Team), or rely on the hook and install `delivery` in every app repo.
 - **Labels:** P1-high, enhancement
 
 ### 13b. Approval hook for production DB writes
