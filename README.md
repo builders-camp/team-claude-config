@@ -44,7 +44,7 @@ Or: `claude plugin disable delivery --scope project`.
 
 - `install.sh` is gone. Nothing writes to `~/.claude/` any more. Install and update with the commands above.
 - The `@~/.claude/stacks/supabase-vercel/STACK.md` import no longer works. In the project's CLAUDE.md, replace it with the line `Stack: supabase-vercel`. The rules now live in the `stack-supabase-vercel` skill and load on demand.
-- `.repos` and `install.sh --sync-workflows` have no plugin equivalent yet. Sync workflows by hand.
+- `install.sh --sync-workflows` is replaced by `scripts/sync-workflows.sh` (see Syncing workflows).
 - Old symlinks into this repo must be removed by hand, or you get double hooks and duplicate skills. List them (this only lists):
 
   ```bash
@@ -204,6 +204,10 @@ Run `scripts/lint-skills.sh` and `claude plugin validate .` before opening a PR.
 | Repo-specific conventions | That repo's CLAUDE.md (use `/delivery:bootstrap`) |
 
 Pushes to `main` post a Slack notification with the update command.
+
+## Syncing workflows
+
+Maintainer tool, not part of the plugin install. `scripts/sync-workflows.sh` copies `.github/workflows/*` into the repos listed in `.repos` (one path per line, `~` expanded, `#` comments allowed; `--repos-file <path>` overrides). It is a dry run by default; `--apply` copies. It skips missing repos and repos with uncommitted changes in `.github/workflows`, and never commits, pushes or switches branches: review and commit in each repo yourself.
 
 ## Troubleshooting
 
