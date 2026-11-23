@@ -1,6 +1,6 @@
 # team-claude-config
 
-<!-- counts: skills=18 agents=12 -->
+<!-- counts: skills=19 agents=12 -->
 
 The shared Claude config for the team.
 
@@ -15,7 +15,8 @@ When you install this repo, these things end up symlinked into your `~/.claude/`
 - **`CLAUDE.md`** — the operating system. Default behavior, planning rules, agent strategy, output discipline. Applied to every Claude Code session you run, in any repo.
 - **`agents/`** — twelve specialized subagents (`@pm`, `@visionary`, `@analyst`, `@voc`, `@discovery`, `@designer`, `@pmm`, `@engineer`, `@researcher`, `@implementer`, `@reviewer`, `@qa`). Claude routes work to them based on task shape.
 - **`settings.json`** — routing-gate hooks (a `UserPromptSubmit` reminder and a `PreToolUse` warning), linked by `install.sh`. Skipped if you already have a personal `~/.claude/settings.json`.
-- **`skills/`** — eighteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`skills/`** — nineteen slash-commands you can invoke directly (`/plan`, `/fix`, `/deploy`, `/jtbd`, `/ost`, `/moscow`, `/recap`, etc.) for specific lifecycle moments.
+- **`voices/`** — per-author writing style files (one `<handle>.md` each), read by `/ship-story` to draft posts in an author's voice. Linked to `~/.claude/voices/`.
 - **`loops/`** — the generator -> judge loop kit (see below). Linked to `~/.claude/loops/`.
 - **`stacks/`** — opt-in stack packs. Each `stacks/<name>` is linked to `~/.claude/stacks/<name>`.
 
@@ -192,6 +193,7 @@ Three groups: lifecycle (day-to-day work), discovery frameworks, and meta (manag
 | `/merge` | Safe PR merge: pre-merge gate → squash merge → cleanup → opted-in stack pack post-merge steps. **Manual trigger only.** |
 | `/recap` | Plain-language recap of what shipped or changed |
 | `/browser-qa` | Read-only Playwright check of a deploy preview (never production); PASS/FAIL/SKIPPED with evidence. Fail-open. |
+| `/ship-story` | Turns a finished session into a redacted, review-ready ship story (notes, post drafts, insights page, guide draft) in a draft PR. Only for projects with `.claude/ship-story.md`. Never posts or publishes. Manual trigger only. |
 
 ### Discovery frameworks
 
