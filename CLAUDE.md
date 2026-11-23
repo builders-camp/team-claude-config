@@ -180,6 +180,12 @@ Stack-specific rules live in `~/.claude/stacks/<name>/STACK.md` and apply only w
 - For the Feature/Task shape's "## Epic / tracking link": if given a link for the epic this decomposes from, put it there. If not given one, write "Needs epic / tracking link — not yet scoped." Never guess or invent a link.
 - A Feature/Task issue is not build-ready while "## Open questions" still has unresolved items. Don't start implementation off it — say so in chat, and leave the issue open with those questions visible rather than resolving them silently.
 
+### Ship stories
+
+- Only applies when the project has a `.claude/ship-story.md`.
+- After a PR merges or something deploys, suggest `/ship-story` once per session, to whoever shipped it, as a single line.
+- Never run it unprompted. It is a manual command that only produces drafts for review.
+
 ## Review Escalation
 
 Do NOT run deep architectural review by default.

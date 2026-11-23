@@ -108,6 +108,20 @@ if [ -d "$REPO_DIR/loops" ]; then
   fi
 fi
 
+# Voices: symlink the whole dir (skipped if a personal non-symlink version exists)
+if [ -d "$REPO_DIR/voices" ]; then
+  target="$CLAUDE_DIR/voices"
+  if [ -L "$target" ]; then
+    rm "$target"
+  fi
+  if [ -e "$target" ]; then
+    echo "  Skipping voices — personal version exists (remove manually to use shared)"
+  else
+    ln -sf "$REPO_DIR/voices" "$target"
+    echo "  voices → symlinked"
+  fi
+fi
+
 # Stacks: symlink each stack pack individually (preserves personal stacks)
 if [ -d "$REPO_DIR/stacks" ]; then
   mkdir -p "$CLAUDE_DIR/stacks"
