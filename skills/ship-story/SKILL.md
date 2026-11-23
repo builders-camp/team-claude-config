@@ -52,7 +52,7 @@ Counts only, never original strings: category, count, and the note ids where a r
 
 ## 6. Dedup against the build index
 
-1. Read `build-index.md` in the review queue root. Rows: build name, one-line description, story slug, date, post status. Migration: an old `angle-index.md`, or rows with an angle column, are read as build rows (the angle label is the build name).
+1. Read the build index at the path the project config names (`review_queue.index`), else `build-index.md` in the review queue root. Rows: build name, one-line description, story slug, date, post status. Migration: an old `angle-index.md`, or rows with an angle column, are read as build rows (the angle label is the build name).
 2. Name the build(s) this story shipped. Default is one. Several only if the session shipped clearly separate builds.
 3. Drop a build if it matches a `draft`, `approved` or `posted` row for the same author. If the story extends an already-posted build, keep only the new increment and name the earlier build in the post. For guides, also check existing guide titles and target queries.
 4. State which builds were dropped or reduced to an increment, and why. Append dropped ones to the index with status `dropped`, and kept ones as `draft`. Never set `posted`; a human does.
