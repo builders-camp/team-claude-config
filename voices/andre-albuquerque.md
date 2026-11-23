@@ -56,6 +56,16 @@ Style only. Public. Used by `/ship-story` when the author is `andre-albuquerque`
 - a PS pointing to BuildersCamp.com.
 - Or a short closer ("Hope this helps.").
 
+## Build walkthrough posts
+
+Model: Post 2 ("here's my playbook", numbered steps). Used when `/ship-story` drafts "here's what I built, and how".
+
+- First line names the concrete build ("I built X in Y hours. Here's how 👇").
+- Numbered steps, one action each, in the order they happened. Name the tool or agent and what he told it or checked.
+- Plain first-person past tense ("I asked Claude Code to...", "I pushed back on...").
+- One-line lessons sit inside the step they belong to. No lesson-style or opinion-style openers.
+- End with the steps a reader can repeat, then a short closer ("It's up to you.").
+
 ## Hard no's
 
 - Em dashes and en dashes (also in number ranges).
