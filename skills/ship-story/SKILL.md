@@ -64,6 +64,7 @@ Draft 1 to N posts, one per surviving angle, in the author's voice.
 - The voice file wins for the author's personal posts, including anything it explicitly allows that the project copy rules would otherwise ban. Project copy rules govern everything else (page text, guide, captions, PR text).
 - Structure: strong first line, one idea per line, one ask. Link goes in the first comment, not the body. Tag only handles in `company_tags`.
 - Each post gets alt text for its media.
+- Each post ends with an Asset section: upload the GIF as an image (LinkedIn plays it in the feed), or the carousel PDF for a carousel post. The MP4 is an optional alternative only.
 - Write `posts/post-<n>.md`. Every line cites a note id in a comment line at the end of the file, not in the post body.
 
 ## 8. Insights page
@@ -82,7 +83,9 @@ Page contract:
 
 ## 9. Render and lint
 
-Run the commands from the config `renderer` key (render, then lint). Lint runs on the notes first, then on every final file. A lint hit blocks the PR step: fix the source, regenerate, re-run. Run the project's copy lint (the config's copy rules or guardrail script) on the review queue folder as well. Report frame size, duration, page count and file sizes. Commit binaries only within the size limits stated in config; otherwise leave them in scratch and list size plus the regeneration command in the README.
+Run the commands from the config `renderer` key (render, then lint). Lint runs on the notes first, then on every final file. A lint hit blocks the PR step: fix the source, regenerate, re-run. Run the project's copy lint (the config's copy rules or guardrail script) on the review queue folder as well. Report frame size, duration, page count and file sizes.
+
+The renderer produces an animated GIF as the primary LinkedIn asset, plus the carousel PDF. The MP4 is secondary. GIF expectations: loops forever, about 10 to 12 fps, 4:5, under 8 MB (aim for 3 to 5 MB). The renderer may offer a flag to skip the GIF. After render, check the GIF size, view a few extracted frames, and flag it if it exceeds 8 MB. JPG cannot animate, so GIF is the format for an image with motion. Commit binaries only within the size limits stated in config; otherwise leave them in scratch and list size plus the regeneration command in the README.
 
 ## 10. Guide draft
 
@@ -94,7 +97,7 @@ A general, tool-agnostic how-to that someone can follow without having seen the 
 
 ## 11. Review README and PR
 
-1. Write `README.md` in the story folder: summary, status table (post(s), page, MP4, carousel PDF, guide; status `draft`), posts with first line and alt text, assets with regeneration command, guide summary, redaction report link, checks run, an approvals table (reviewer, scope, decision, date), and an empty publish log.
+1. Write `README.md` in the story folder: summary, status table (post(s), page, GIF, MP4 (optional), carousel PDF, guide; status `draft`), posts with first line and alt text, assets with regeneration command, guide summary, redaction report link, checks run, an approvals table (reviewer, scope, decision, date), and an empty publish log.
 2. Branch and title from the config `pr` key. Open a DRAFT PR (`gh pr create --draft`) with the body from the project's PR template via `--body-file`. If there is no template, use a short body: what was built, what to review, what was withheld.
 3. Apply the labels the project requires.
 4. Delete the scratch dir (`rm -rf`), including `raw.jsonl`, frames and cursors.
